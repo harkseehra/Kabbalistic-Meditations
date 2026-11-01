@@ -28,12 +28,19 @@ const GROUP = (cls) => cls.split(' ')[0].toLowerCase();
     ))}
   </section>
 
-  <script is:inline>
-    (function () {
+  <script>
+    // Chip filter must re-bind on every page switch: under view
+    // transitions the page HTML swaps without re-running page scripts,
+    // which left the chips dead after in-site navigation. astro:page-load
+    // fires on initial load and after each switch; the bound guard keeps
+    // a second run from stacking duplicate listeners.
+    function bindChips() {
       var chips = document.querySelectorAll('.chip-row .chip');
       var items = document.querySelectorAll('.prayer-item');
       if (!chips.length) return;
       chips.forEach(function (chip) {
+        if (chip.dataset.bound) return;
+        chip.dataset.bound = 'true';
         chip.addEventListener('click', function () {
           var f = chip.getAttribute('data-filter');
           chips.forEach(function (c) {
@@ -46,6 +53,8 @@ const GROUP = (cls) => cls.split(' ')[0].toLowerCase();
           });
         });
       });
-    })();
+    }
+    bindChips();
+    document.addEventListener('astro:page-load', bindChips);
   </script>
 </BaseLayout>
