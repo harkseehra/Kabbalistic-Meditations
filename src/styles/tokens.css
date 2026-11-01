@@ -16,7 +16,7 @@
                 "Palatino Linotype", Palatino, Georgia, serif;
   --font-mono:  "Berkeley Mono", "IBM Plex Mono", "JetBrains Mono",
                 ui-monospace, Menlo, monospace;
-  --font-hebrew: "Noto Serif Hebrew", "Taamey Frank CLM", "David Libre", serif;
+  --font-hebrew: "Frank Ruhl Libre", "Noto Serif Hebrew", "Taamey Frank CLM", "David Libre", serif;
 
   /* Scale */
   --measure: 40rem;

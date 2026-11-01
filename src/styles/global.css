@@ -152,7 +152,7 @@ footer {
 }
 .letter-card .glyph {
   font-family: var(--font-hebrew);
-  font-size: 4.5rem;
+  font-size: 6.5rem;
   line-height: 1.2;
   color: var(--ink-bright);
 }
@@ -170,7 +170,7 @@ footer {
 }
 .holy-name .glyph {
   font-family: var(--font-hebrew);
-  font-size: 3rem;
+  font-size: 4.5rem;
   line-height: 1.3;
   color: var(--accent);
 }
@@ -182,4 +182,4 @@ footer {
 table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: var(--t-sm); }
 th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--rule); }
 th { color: var(--ink-dim); font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; font-size: var(--t-xs); }
-td.hebrew { font-family: var(--font-hebrew); font-size: var(--t-lg); }
+td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
