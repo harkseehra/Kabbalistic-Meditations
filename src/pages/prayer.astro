@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PRAYER_ROWS } from '../lib/prayer.js';
+---
+
+<BaseLayout title="Prayer">
+  <h1>Prayer</h1>
+
+  <p>Below is prayer.</p>
+
+  <table>
+    <thead>
+      <tr><th>#</th><th>Act of creation</th><th>Hebrew</th><th>Name</th><th>Pronunciation</th><th>Class</th></tr>
+    </thead>
+    <tbody>
+      {PRAYER_ROWS.map((r) => (
+        <tr>
+          <td>{r.n}</td>
+          <td>{r.act}</td>
+          <td class="hebrew">{r.hebrew}</td>
+          <td>{r.name}</td>
+          <td>{r.pron}</td>
+          <td>{r.cls}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</BaseLayout>
