@@ -90,7 +90,7 @@ hr {
   margin: 3rem 0;
 }
 
-/* Header — the only coloured part of the site. Gradient bar, real depth. */
+/* Header — flat, in his colours. No gradient, no reflections. */
 #site-header {
   position: sticky;
   top: 0;
@@ -99,15 +99,15 @@ hr {
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   padding: 1rem 1.5rem;
-  background: linear-gradient(180deg, var(--header-bg-top), var(--header-bg-bottom));
-  border-bottom: 1px solid var(--header-border);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25), 0 12px 32px rgba(0, 0, 0, 0.18);
+  background: var(--header-bg);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
   color: var(--header-ink);
 }
 
 #site-header .site-name { justify-self: start; }
 #site-header .site-wordmark { font-size: var(--t-sm); letter-spacing: 0.08em; color: var(--header-ink); }
-#site-header .site-wordmark .cursor { color: var(--header-accent); }
+#site-header .site-wordmark .cursor { color: var(--header-ink); }
 #site-header .site-name { background-image: none; }
 #site-header .site-name:hover { background-image: none; color: var(--header-ink); }
 
@@ -117,25 +117,23 @@ hr {
   font-size: var(--t-sm);
   letter-spacing: 0.02em;
   padding: 0.45rem 1.1rem;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid var(--header-btn-border);
   border-radius: 0;
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--header-btn-bg);
   background-image: none;
   color: var(--header-ink);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: transform 120ms ease, border-color 120ms ease, background-color 120ms ease;
 }
 #site-header nav a:hover {
   background-image: none;
   color: var(--header-ink);
-  border-color: var(--header-accent);
+  border-color: var(--header-ink);
   transform: translateY(-1px);
 }
 #site-header nav a.active {
-  background-color: var(--header-accent);
+  background-color: var(--header-active-bg);
   border-color: transparent;
-  color: #101410;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  color: var(--header-active-ink);
 }
 @media (max-width: 640px) {
   #site-header { grid-template-columns: 1fr auto; row-gap: 0.75rem; padding: 0.9rem 1rem; }
@@ -145,24 +143,21 @@ hr {
 
 .header-controls { display: flex; gap: 0.5rem; align-items: center; justify-self: end; }
 
-/* Theme toggle: flat colour per mode, plain icons, no reflections */
+/* Theme toggle: transparent on the coloured bar, icon in the header ink */
 #theme-toggle {
-  background-color: #005b96;
-  border: none;
+  background-color: transparent;
+  border: 1px solid var(--header-btn-border);
   border-radius: 0;
   padding: 0.5rem;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
   font-family: var(--font-serif);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  transition: transform 120ms ease;
+  transition: transform 120ms ease, border-color 120ms ease;
 }
-#theme-toggle:hover { transform: translateY(-1px); }
-#theme-toggle svg { width: 1.25rem; height: 1.25rem; display: block; }
-#theme-toggle .icon-sun { color: #ffffff; }
-#theme-toggle .icon-moon { color: #101410; display: none; }
-[data-theme="night"] #theme-toggle { background-color: #6fcb9f; }
+#theme-toggle:hover { transform: translateY(-1px); border-color: var(--header-ink); }
+#theme-toggle svg { width: 1.4rem; height: 1.4rem; display: block; color: var(--header-ink); }
+#theme-toggle .icon-moon { display: none; }
 [data-theme="night"] #theme-toggle .icon-sun { display: none; }
 [data-theme="night"] #theme-toggle .icon-moon { display: block; }
 

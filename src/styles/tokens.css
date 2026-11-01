@@ -10,13 +10,13 @@
   --paper-glass: rgba(255, 255, 255, 0.82);
   --theme-transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 
-  /* Header — forest. Dark green gradient bar, punchy leaf accent. */
-  --header-bg-top: #143522;
-  --header-bg-bottom: #0c1f16;
-  --header-ink: #e9f2e9;
-  --header-ink-dim: #9db89f;
-  --header-accent: #7cc984;
-  --header-border: rgba(124, 201, 132, 0.35);
+  /* Header — flat, in his colours. Blue by day, green by night. */
+  --header-bg: #005b96;
+  --header-ink: #ffffff;
+  --header-btn-bg: rgba(255, 255, 255, 0.12);
+  --header-btn-border: rgba(255, 255, 255, 0.35);
+  --header-active-bg: #ffffff;
+  --header-active-ink: #005b96;
 
   /* Type — Baskervville ships regular + italic only, so weight stays 400
      and presence comes from size and spacing, never synthetic bold */
@@ -50,13 +50,13 @@
   --accent:     #7ab8ff;
   --paper-glass: rgba(0, 0, 0, 0.82);
 
-  /* Header — royal blue, like streams. */
-  --header-bg-top: #22386e;
-  --header-bg-bottom: #17264f;
-  --header-ink: #dfe8ff;
-  --header-ink-dim: #8b9cc9;
-  --header-accent: #7ab8ff;
-  --header-border: rgba(122, 184, 255, 0.35);
+  /* Header — flat green by night. */
+  --header-bg: #6fcb9f;
+  --header-ink: #101410;
+  --header-btn-bg: rgba(0, 0, 0, 0.1);
+  --header-btn-border: rgba(0, 0, 0, 0.25);
+  --header-active-bg: #101410;
+  --header-active-ink: #6fcb9f;
 }
 
 /* Desktop only: a little more breathing room. Mobile keeps 40rem. */
