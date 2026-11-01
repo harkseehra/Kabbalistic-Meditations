@@ -44,20 +44,15 @@ const base = import.meta.env.BASE_URL;
       function currentTheme() {
         return root.getAttribute('data-theme') || 'day';
       }
-      function syncLabel() {
-        if (toggle) toggle.textContent = currentTheme() === 'night' ? 'Day' : 'Night';
-      }
       function applyTheme(theme) {
         localStorage.setItem('theme', theme);
         theme === 'night'
           ? root.setAttribute('data-theme', 'night')
           : root.removeAttribute('data-theme');
-        syncLabel();
       }
       toggle?.addEventListener('click', () => {
         applyTheme(currentTheme() === 'night' ? 'day' : 'night');
       });
-      syncLabel();
     </script>
   </body>
 </html>
