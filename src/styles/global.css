@@ -7,13 +7,6 @@
   border-radius: 0;
 }
 
-@keyframes fade-rise {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-h1 { animation: fade-rise 0.8s var(--ease-apple) both; }
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
@@ -53,9 +46,9 @@ main {
   margin: 0 auto;
   padding: 4rem 1.5rem;
   width: 100%;
-  /* Fade lives on main, not body: a transform on body would pin the
-     fixed side button to the document instead of the viewport. */
-  animation: fade-rise 0.6s var(--ease-apple) both;
+  /* No entrance animation here: a page switch animates exactly two
+     things — the root crossfade and the nav pill morph. Fewer moving
+     pieces is what makes it smooth. */
 }
 
 a {
@@ -250,9 +243,8 @@ th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var
 th { color: var(--ink-dim); font-family: var(--font-sans); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; font-size: var(--t-xs); }
 td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
 
-/* Page switches, Dynamic Island style: the page crossfades cleanly
-   (no sliding on the whole page, so the pill morph reads clearly),
-   and the active nav pill morphs — slides and resizes — to its new spot. */
+/* Page switches, kept simple: one clean crossfade plus the nav pill
+   morph. Nothing else moves, so nothing stutters. */
 @keyframes vt-fade-out {
   to { opacity: 0; }
 }
@@ -260,10 +252,10 @@ td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
   from { opacity: 0; }
   to { opacity: 1; }
 }
-::view-transition-old(root) { animation: vt-fade-out 0.3s var(--ease-apple) both; }
-::view-transition-new(root) { animation: vt-fade-in 0.4s var(--ease-apple) both; }
+::view-transition-old(root) { animation: vt-fade-out 0.25s var(--ease-apple) both; }
+::view-transition-new(root) { animation: vt-fade-in 0.35s var(--ease-apple) both; }
 ::view-transition-group(active-nav) {
-  animation-duration: 0.65s;
-  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  animation-duration: 0.5s;
+  animation-timing-function: var(--ease-apple);
   z-index: 2;
 }

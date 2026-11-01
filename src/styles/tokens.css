@@ -44,18 +44,17 @@
 }
 
 [data-theme="night"] {
-  /* Winternight — night. Vancouver-sunset dusk body, not black;
-     the colour lives in the header only. Text runs at the SAME size
-     as day (the earlier 18% night bump made night feel like a different
-     site); readability comes from brighter ink, not bigger type. */
+  /* Winternight — night. His colours: background #172022, accent #83ADB5.
+     Cards and rules are tints of the background so everything stays in
+     one quiet family. Text runs at the same size as day. */
   --ink:        #f2f4f8;
   --ink-dim:    #b8bfcf;
   --ink-bright: #ffffff;
-  --paper:      #232a3d;
-  --paper-raised: #2e3648;
-  --rule:       #3a4358;
-  --accent:     #7ab8ff;
-  --paper-glass: rgba(35, 42, 61, 0.82);
+  --paper:      #172022;
+  --paper-raised: #333b3d;
+  --rule:       #41484a;
+  --accent:     #83ADB5;
+  --paper-glass: rgba(23, 32, 34, 0.82);
 
   /* Header — flat green by night. */
   --header-bg: #6fcb9f;
