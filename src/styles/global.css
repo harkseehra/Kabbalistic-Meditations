@@ -53,9 +53,9 @@ main {
 }
 
 /* Night readability: body text runs semibold with slightly wider
-   tracking — Playfair now carries real 600, so this is a true weight,
-   not synthesis. Hebrew keeps zero tracking (nikkud) and headings keep
-   their own weights — this touches page and footer text only. */
+   tracking — Cormorant Garamond now carries real 600, so this is a true
+   weight, not synthesis. Hebrew keeps zero tracking (nikkud) and headings
+   keep their own weights — this touches page and footer text only. */
 [data-theme="night"] main,
 [data-theme="night"] footer {
   font-weight: 600;
@@ -288,4 +288,75 @@ td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
   .holy-name:hover {
     transform: none;
   }
+}
+
+/* Prayer — a study tool, not a hurried table. Each of the 32 acts gets
+   its own open block with room around it, so the prayer is read slowly.
+   No pronunciation anywhere on this page. Class chips filter the list
+   the way the first study page filtered its rows. */
+.prayer-list { margin-top: 2rem; }
+.prayer-item {
+  padding: 2.5rem 0;
+  border-top: 1px solid var(--rule);
+}
+.prayer-item:first-child { border-top: none; }
+.prayer-n {
+  font-family: var(--font-sans);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  color: var(--dim);
+  margin-bottom: 1rem;
+}
+.prayer-hebrew {
+  font-family: var(--font-hebrew);
+  font-size: 2.5rem;
+  line-height: 1.4;
+  letter-spacing: 0;
+  margin-bottom: 1.25rem;
+}
+.prayer-act {
+  line-height: 1.9;
+  margin: 0 0 1.25rem;
+}
+.prayer-meta {
+  font-size: var(--t-sm);
+  color: var(--dim);
+  letter-spacing: 0.02em;
+}
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.5rem 0 0.5rem;
+}
+.chip {
+  font-family: var(--font-sans);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 150ms ease-out, border-color 200ms ease-out, background-color 200ms ease-out;
+}
+.chip:hover {
+  border-color: var(--ink);
+  transform: translateY(-1px);
+}
+.chip:active {
+  transition-duration: 100ms;
+  transform: scale(0.97);
+}
+.chip:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.chip.is-active {
+  background: var(--accent);
+  border-color: transparent;
+  color: var(--accent-ink);
 }

@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { PRAYER_ROWS } from '../lib/prayer.js';
+
+const GROUP = (cls) => cls.split(' ')[0].toLowerCase();
 ---
 
 <BaseLayout title="Prayer">
@@ -8,21 +10,43 @@ import { PRAYER_ROWS } from '../lib/prayer.js';
 
   <p>Below is prayer.</p>
 
-  <table>
-    <thead>
-      <tr><th>#</th><th>Act of creation</th><th>Hebrew</th><th>Name</th><th>Pronunciation</th><th>Class</th></tr>
-    </thead>
-    <tbody>
-      {PRAYER_ROWS.map((r) => (
-        <tr>
-          <td>{r.n}</td>
-          <td>{r.act}</td>
-          <td class="hebrew">{r.hebrew}</td>
-          <td>{r.name}</td>
-          <td>{r.pron}</td>
-          <td>{r.cls}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
+  <div class="chip-row" role="group" aria-label="Filter by class">
+    <button type="button" class="chip is-active" data-filter="all" aria-pressed="true">All</button>
+    <button type="button" class="chip" data-filter="sefirah" aria-pressed="false">Sefirot</button>
+    <button type="button" class="chip" data-filter="mother" aria-pressed="false">Mothers</button>
+    <button type="button" class="chip" data-filter="double" aria-pressed="false">Doubles</button>
+    <button type="button" class="chip" data-filter="elemental" aria-pressed="false">Elementals</button>
+  </div>
+
+  <section class="prayer-list">
+    {PRAYER_ROWS.map((r) => (
+      <article class="prayer-item" data-class={GROUP(r.cls)}>
+        <div class="prayer-n">{r.n}</div>
+        <div class="prayer-hebrew">{r.hebrew}</div>
+        <p class="prayer-act">{r.act}</p>
+        <div class="prayer-meta">{r.name} · {r.cls}</div>
+      </article>
+    ))}
+  </section>
+
+  <script is:inline>
+    (function () {
+      var chips = document.querySelectorAll('.chip-row .chip');
+      var items = document.querySelectorAll('.prayer-item');
+      if (!chips.length) return;
+      chips.forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          var f = chip.getAttribute('data-filter');
+          chips.forEach(function (c) {
+            var on = c === chip;
+            c.classList.toggle('is-active', on);
+            c.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+          items.forEach(function (it) {
+            it.hidden = f !== 'all' && it.getAttribute('data-class') !== f;
+          });
+        });
+      });
+    })();
+  </script>
 </BaseLayout>

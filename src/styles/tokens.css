@@ -7,6 +7,7 @@
   --paper-raised: #f5f5f5;
   --rule:       #e0e0e0;
   --accent:     #1e6b41;
+  --accent-ink: #ffffff;
   --paper-glass: rgba(255, 255, 255, 0.82);
   --theme-transition: background 0.35s ease-out, color 0.35s ease-out, border-color 0.35s ease-out;
 
@@ -18,10 +19,11 @@
   --header-active-bg: #ffffff;
   --header-active-ink: #005b96;
 
-  /* Type — Playfair Display, medium 500 base, semibold 600 at night:
-     real weights, no synthesis. Sans for headings and top elements
-     (Oswald), serif for text. */
-  --font-serif: "Playfair Display", "Libre Baskerville", Georgia, serif;
+  /* Type — Cormorant Garamond, the Sigurd-Regular alike: elegant,
+     high-contrast, classic serif with a slightly condensed feel.
+     Medium 500 base, semibold 600 at night — real weights.
+     Sans for headings and top elements (Oswald), serif for text. */
+  --font-serif: "Cormorant Garamond", "Libre Baskerville", Georgia, serif;
   --font-sans: "Oswald", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
   --font-mono:  "Berkeley Mono", "IBM Plex Mono", "JetBrains Mono",
                 ui-monospace, Menlo, monospace;
@@ -53,6 +55,7 @@
   --paper-raised: #333b3d;
   --rule:       #41484a;
   --accent:     #83ADB5;
+  --accent-ink: #172022;
   --paper-glass: rgba(23, 32, 34, 0.82);
 
   /* Header — flat green by night. */
