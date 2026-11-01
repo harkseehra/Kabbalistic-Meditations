@@ -420,13 +420,14 @@ td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
   filter: invert(1);
 }
 
-/* Twelve-letters cards: mobile-only replacement for the table, so the
-   rows never squeeze on a narrow screen. Desktop keeps the table. */
-.letters-cards { display: none; }
+/* Twelve-letters and holy-names cards: mobile-only replacements for the
+   tables, so the rows never squeeze on a narrow screen. Desktop keeps
+   the tables. */
+.letters-cards, .holy-names-cards { display: none; }
 @media (max-width: 640px) {
-  table.letters-table { display: none; }
-  .letters-cards { display: grid; gap: 1rem; margin: 1.5rem 0; }
-  .letters-cards .letter-card { padding: 1rem 1.25rem; }
-  .letters-cards p { margin: 0.4rem 0; }
-  .letters-cards .card-letter { font-family: var(--font-hebrew); font-size: 1.75rem; }
+  table.letters-table, table.holy-names-table { display: none; }
+  .letters-cards, .holy-names-cards { display: grid; gap: 1rem; margin: 1.5rem 0; }
+  .letters-cards .letter-card, .holy-names-cards .letter-card { padding: 1rem 1.25rem; }
+  .letters-cards p, .holy-names-cards p { margin: 0.4rem 0; }
+  .letters-cards .card-letter, .holy-names-cards .card-letter { font-family: var(--font-hebrew); font-size: 1.75rem; }
 }

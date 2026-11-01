@@ -112,7 +112,7 @@ import { ORGAN_ICONS } from '../lib/icons-organs.js';
 
   <h2>The holy names of the week</h2>
 
-  <table>
+  <table class="holy-names-table">
     <thead>
       <tr><th>Day</th><th>Name</th><th>Sefirah</th></tr>
     </thead>
@@ -126,4 +126,14 @@ import { ORGAN_ICONS } from '../lib/icons-organs.js';
       ))}
     </tbody>
   </table>
+
+  <div class="holy-names-cards">
+    {HOLY_NAMES.map((h) => (
+      <article class="letter-card">
+        <p class="dim small">{h.day}</p>
+        <p class="card-letter">{h.pointed} — {h.name}</p>
+        <p class="dim">{h.sefirah}</p>
+      </article>
+    ))}
+  </div>
 </BaseLayout>
