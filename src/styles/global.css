@@ -381,7 +381,14 @@ td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
   vertical-align: middle;
   margin-right: 0.5rem;
 }
+.organ-icon {
+  width: 2rem;
+  height: 2rem;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
 [data-theme="night"] .transit-icon,
-[data-theme="night"] .sign-icon {
+[data-theme="night"] .sign-icon,
+[data-theme="night"] .organ-icon {
   filter: invert(1);
 }

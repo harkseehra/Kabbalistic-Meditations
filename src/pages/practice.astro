@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { LETTERS, HOLY_NAMES } from '../lib/transits.js';
 import { SIGN_ICONS } from '../lib/icons-signs.js';
+import { ORGAN_ICONS } from '../lib/icons-organs.js';
 ---
 
 <BaseLayout title="How to practice">
@@ -91,7 +92,7 @@ import { SIGN_ICONS } from '../lib/icons-signs.js';
         <tr>
           <td class="hebrew">{l.glyph} {l.pointed} — {l.name}</td>
           <td><img class="sign-icon" src={SIGN_ICONS[l.sign]} alt="" />{l.sign}</td>
-          <td>{l.organ}</td>
+          <td><img class="organ-icon" src={ORGAN_ICONS[l.organ]} alt="" />{l.organ}</td>
           <td>{l.sense}</td>
         </tr>
       ))}
