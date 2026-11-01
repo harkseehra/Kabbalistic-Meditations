@@ -36,9 +36,13 @@ html {
   font-family: var(--font-serif);
   font-size: var(--t-base);
   line-height: var(--leading);
+  letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
   transition: var(--theme-transition);
 }
+
+/* Hebrew glyphs and pointed names take no tracking — it breaks nikkud */
+.glyph, .pointed, td.hebrew { letter-spacing: 0; }
 
 body {
   background: var(--paper);
@@ -133,6 +137,7 @@ footer {
   margin: 2rem 0;
 }
 @media (max-width: 640px) { .transit-grid { grid-template-columns: 1fr; } }
+@media (min-width: 1024px) { .transit-grid { gap: 2rem; } }
 
 .letter-card {
   border: 1px solid var(--rule);
