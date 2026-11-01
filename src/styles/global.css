@@ -44,7 +44,6 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  animation: fade-rise 0.6s var(--ease-apple) both;
   transition: var(--theme-transition);
 }
 
@@ -54,6 +53,9 @@ main {
   margin: 0 auto;
   padding: 4rem 1.5rem;
   width: 100%;
+  /* Fade lives on main, not body: a transform on body would pin the
+     fixed side button to the document instead of the viewport. */
+  animation: fade-rise 0.6s var(--ease-apple) both;
 }
 
 a {
