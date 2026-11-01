@@ -1,0 +1,29 @@
+---
+const base = import.meta.env.BASE_URL;
+const nav = [
+  { href: `${base}`, label: 'today' },
+  { href: `${base}practice/`, label: 'practice' },
+];
+const current = Astro.url.pathname;
+---
+
+<header id="site-header">
+  <a class="site-name" href={base}>
+    <span class="site-wordmark">KABBALISTIC MEDITATIONS<span class="cursor">▌</span></span>
+  </a>
+  <nav>
+    {nav.map(({ href, label }) => (
+      <a href={href} class:list={[{ active: current === href || current === href.replace(/\/$/, '') }]}>
+        [{label}]
+      </a>
+    ))}
+  </nav>
+  <div class="header-controls">
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+      <span class="theme-icon">◑</span>
+    </button>
+    <button class="coffee-toggle" id="coffee-toggle" aria-label="Toggle parchment mode" title="Parchment mode">
+      ☕
+    </button>
+  </div>
+</header>

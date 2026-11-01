@@ -1,0 +1,64 @@
+:root {
+  /* Night mode — macOS-style pure dark (default) */
+  --ink:        #F0F0F0;
+  --ink-dim:    #8E8E93;
+  --ink-bright: #FFFFFF;
+  --paper:      #000000;
+  --paper-raised: #1C1C1E;
+  --rule:       #2C2C2E;
+  --accent:     #c85a3a;
+  --paper-glass: rgba(0, 0, 0, 0.82);
+  --theme-transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+
+  /* Type */
+  --font-serif: "IM Fell English", "Iowan Old Style", "Source Serif Pro",
+                "Palatino Linotype", Palatino, Georgia, serif;
+  --font-mono:  "Berkeley Mono", "IBM Plex Mono", "JetBrains Mono",
+                ui-monospace, Menlo, monospace;
+  --font-hebrew: "Noto Serif Hebrew", "Taamey Frank CLM", "David Libre", serif;
+
+  /* Scale */
+  --measure: 40rem;
+  --leading: 1.75;
+  --leading-tight: 1.25;
+  --t-xs:   0.9rem;
+  --t-sm:   1.05rem;
+  --t-base: 1.35rem;
+  --t-lg:   1.5rem;
+  --t-xl:   1.95rem;
+  --t-2xl:  2.7rem;
+  --t-3xl:  3.6rem;
+}
+
+[data-theme="moonlight"] {
+  --ink:        #c8c2b8;
+  --ink-dim:    #807870;
+  --ink-bright: #e8e4dc;
+  --paper:      #0d0b08;
+  --paper-raised: #15110a;
+  --rule:       #2e2a24;
+  --accent:     #c85a3a;
+  --paper-glass: rgba(13, 11, 8, 0.82);
+}
+
+[data-theme="sun"] {
+  --ink:        #111111;
+  --ink-dim:    #555555;
+  --ink-bright: #000000;
+  --paper:      #FFFFFF;
+  --paper-raised: #F5F5F5;
+  --rule:       #E0E0E0;
+  --accent:     #8B0000;
+  --paper-glass: rgba(255, 255, 255, 0.82);
+}
+
+[data-theme="day"] {
+  --ink:        #5c3d0a;
+  --ink-dim:    #8a6030;
+  --ink-bright: #2a1505;
+  --paper:      #f5edd8;
+  --paper-raised: #ede0c4;
+  --rule:       #c8b48a;
+  --accent:     #c85a3a;
+  --paper-glass: rgba(245, 237, 216, 0.85);
+}

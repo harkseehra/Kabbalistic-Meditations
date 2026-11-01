@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Kabbalistic Meditations">
+  <div class="epigraph-block">
+    <p class="epigraph">Every letter is a living entity — a version of you.</p>
+  </div>
+
+  <h1>Today's letters</h1>
+  <p class="dim" id="today-line">Loading today's transits…</p>
+  <noscript><p>Today's letters need JavaScript — the sun and moon positions are computed in your browser, live.</p></noscript>
+
+  <div class="transit-grid">
+    <section class="letter-card" id="day-card">
+      <p class="label">Day · the sun's letter</p>
+      <p class="glyph" id="day-glyph">–</p>
+      <p class="name"><span id="day-name">…</span> <span class="pointed" id="day-pointed"></span></p>
+      <p class="meta" id="day-meta"></p>
+      <p id="day-note"></p>
+    </section>
+
+    <section class="letter-card" id="night-card">
+      <p class="label">Night · the moon's letter</p>
+      <p class="glyph" id="night-glyph">–</p>
+      <p class="name"><span id="night-name">…</span> <span class="pointed" id="night-pointed"></span></p>
+      <p class="meta" id="night-meta"></p>
+      <p id="night-note"></p>
+    </section>
+  </div>
+
+  <section class="holy-name">
+    <p class="label dim small">THE DAY'S HOLY NAME</p>
+    <p class="glyph" id="holy-glyph">–</p>
+    <p class="name"><span id="holy-name">…</span> <span class="dim" id="holy-sefirah"></span></p>
+    <p class="dim small" id="holy-note">Pronounced mentally, in the mind and heart — not spoken aloud with the mouth.</p>
+  </section>
+
+  <p class="dim small" id="cusp-note" hidden>
+    The moon is within a degree of a sign boundary tonight, so the night letter may turn
+    as the night goes on. Check again later if it matters to your practice.
+  </p>
+
+  <hr />
+
+  <p class="small">
+    How this page works: the sun's letter comes from the calendar date; the moon's letter
+    is computed live in your browser from the moon's actual position. Sign boundaries are
+    the standard tropical dates, approximate by a day. Letter, sign, and organ correspondences
+    follow Sefer Yetzirah, chapter 5.
+  </p>
+  <p class="small">
+    New to the practice? Read <a href={`${import.meta.env.BASE_URL}practice/`}>how to practice</a>.
+  </p>
+
+  <script>
+    import { sunLetter, moonLetter, holyNameOfDay } from '../lib/transits.js';
+
+    const now = new Date();
+    const dayLetter = sunLetter(now);
+    const night = moonLetter(now);
+    const holy = holyNameOfDay(now);
+
+    const dateLine = now.toLocaleDateString(undefined, {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+    });
+    document.getElementById('today-line').textContent =
+      `${dateLine} · Sun in ${dayLetter.sign} · Moon in ${night.letter.sign}`;
+
+    const set = (prefix, letter, meta) => {
+      document.getElementById(`${prefix}-glyph`).textContent = letter.glyph;
+      document.getElementById(`${prefix}-name`).textContent = letter.name;
+      document.getElementById(`${prefix}-pointed`).textContent = letter.pointed;
+      document.getElementById(`${prefix}-meta`).textContent = meta;
+      document.getElementById(`${prefix}-note`).textContent =
+        `${letter.organ}, ${letter.sense}. ${letter.note}`;
+    };
+
+    set('day', dayLetter, `${dayLetter.sign} · ${dayLetter.translit}`);
+    set('night', night.letter, `${night.letter.sign} · ${night.letter.translit}`);
+
+    document.getElementById('holy-glyph').textContent = holy.pointed;
+    document.getElementById('holy-name').textContent = holy.name;
+    document.getElementById('holy-sefirah').textContent = `· ${holy.sefirah}`;
+
+    if (night.nearCusp) {
+      document.getElementById('cusp-note').hidden = false;
+    }
+  </script>
+</BaseLayout>

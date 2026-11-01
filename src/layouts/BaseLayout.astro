@@ -1,0 +1,76 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Kabbalistic meditations: the letters of the day and the night, and how to practice them.' } = Astro.props;
+const siteTitle = title === 'Kabbalistic Meditations' ? 'KABBALISTIC MEDITATIONS' : `${title} · Kabbalistic Meditations`;
+const base = import.meta.env.BASE_URL;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{siteTitle}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Noto+Serif+Hebrew:wght@400;700&display=swap" />
+    <!-- Apply saved theme before paint; fall back to system preference -->
+    <script is:inline>
+      const saved = localStorage.getItem('theme');
+      if (saved) {
+        if (saved !== 'night') document.documentElement.setAttribute('data-theme', saved);
+      } else {
+        if (!window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.documentElement.setAttribute('data-theme', 'sun');
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      const root = document.documentElement;
+      const map = { night: '◑', moonlight: '☽', sun: '☀', day: '○' };
+      const order = ['night', 'moonlight', 'sun', 'day'];
+
+      function currentTheme() {
+        return root.getAttribute('data-theme') || 'night';
+      }
+      function syncIcon() {
+        const icon = document.querySelector('#theme-toggle .theme-icon');
+        const coffee = document.getElementById('coffee-toggle');
+        const theme = currentTheme();
+        if (icon) icon.textContent = map[theme] ?? '◑';
+        coffee?.classList.toggle('active', theme === 'moonlight' || theme === 'day');
+      }
+      function applyTheme(theme) {
+        localStorage.setItem('theme', theme);
+        theme === 'night'
+          ? root.removeAttribute('data-theme')
+          : root.setAttribute('data-theme', theme);
+        syncIcon();
+      }
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const next = order[(order.indexOf(currentTheme()) + 1) % order.length];
+        applyTheme(next);
+      });
+      document.getElementById('coffee-toggle')?.addEventListener('click', () => {
+        applyTheme(currentTheme() === 'day' ? 'night' : 'day');
+      });
+      syncIcon();
+    </script>
+  </body>
+</html>
