@@ -55,6 +55,14 @@ const base = import.meta.env.BASE_URL;
       toggle?.addEventListener('click', () => {
         applyTheme(currentTheme() === 'night' ? 'day' : 'night');
       });
+      // Animated page switches don't re-run the head theme script, so
+      // re-apply the saved theme after every page change.
+      function applySavedTheme() {
+        const saved = localStorage.getItem('theme');
+        const night = saved === 'night' || (saved !== 'day' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        night ? root.setAttribute('data-theme', 'night') : root.removeAttribute('data-theme');
+      }
+      document.addEventListener('astro:page-load', applySavedTheme);
     </script>
   </body>
 </html>

@@ -63,35 +63,42 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <script>
     import { sunLetter, moonLetter, holyNameOfDay } from '../lib/transits.js';
 
-    const now = new Date();
-    const dayLetter = sunLetter(now);
-    const night = moonLetter(now);
-    const holy = holyNameOfDay(now);
+    // Runs on first load and again on every animated page switch, so
+    // returning to Today re-renders the letters instead of leaving the
+    // "Loading…" placeholder behind.
+    function renderToday() {
+      const now = new Date();
+      const dayLetter = sunLetter(now);
+      const night = moonLetter(now);
+      const holy = holyNameOfDay(now);
 
-    const dateLine = now.toLocaleDateString(undefined, {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-    });
-    document.getElementById('today-line').textContent =
-      `${dateLine} · Sun in ${dayLetter.sign} · Moon in ${night.letter.sign}`;
+      const dateLine = now.toLocaleDateString(undefined, {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+      });
+      document.getElementById('today-line').textContent =
+        `${dateLine} · Sun in ${dayLetter.sign} · Moon in ${night.letter.sign}`;
 
-    const set = (prefix, letter, meta) => {
-      document.getElementById(`${prefix}-glyph`).textContent = letter.glyph;
-      document.getElementById(`${prefix}-name`).textContent = letter.name;
-      document.getElementById(`${prefix}-pointed`).textContent = letter.pointed;
-      document.getElementById(`${prefix}-meta`).textContent = meta;
-      document.getElementById(`${prefix}-note`).textContent =
-        `${letter.organ}, ${letter.sense}. ${letter.note}`;
-    };
+      const set = (prefix, letter, meta) => {
+        document.getElementById(`${prefix}-glyph`).textContent = letter.glyph;
+        document.getElementById(`${prefix}-name`).textContent = letter.name;
+        document.getElementById(`${prefix}-pointed`).textContent = letter.pointed;
+        document.getElementById(`${prefix}-meta`).textContent = meta;
+        document.getElementById(`${prefix}-note`).textContent =
+          `${letter.organ}, ${letter.sense}. ${letter.note}`;
+      };
 
-    set('day', dayLetter, `${dayLetter.sign} · ${dayLetter.translit}`);
-    set('night', night.letter, `${night.letter.sign} · ${night.letter.translit}`);
+      set('day', dayLetter, `${dayLetter.sign} · ${dayLetter.translit}`);
+      set('night', night.letter, `${night.letter.sign} · ${night.letter.translit}`);
 
-    document.getElementById('holy-glyph').textContent = holy.pointed;
-    document.getElementById('holy-name').textContent = holy.name;
-    document.getElementById('holy-sefirah').textContent = `· ${holy.sefirah}`;
+      document.getElementById('holy-glyph').textContent = holy.pointed;
+      document.getElementById('holy-name').textContent = holy.name;
+      document.getElementById('holy-sefirah').textContent = `· ${holy.sefirah}`;
 
-    if (night.nearCusp) {
-      document.getElementById('cusp-note').hidden = false;
+      if (night.nearCusp) {
+        document.getElementById('cusp-note').hidden = false;
+      }
     }
+    renderToday();
+    document.addEventListener('astro:page-load', renderToday);
   </script>
 </BaseLayout>
