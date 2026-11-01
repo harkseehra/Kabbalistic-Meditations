@@ -90,7 +90,7 @@ hr {
   margin: 3rem 0;
 }
 
-/* Header */
+/* Header — the only coloured part of the site. Gradient bar, real depth. */
 #site-header {
   position: sticky;
   top: 0;
@@ -99,36 +99,42 @@ hr {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  background: var(--paper-glass);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--rule);
+  background: linear-gradient(180deg, var(--header-bg-top), var(--header-bg-bottom));
+  border-bottom: 1px solid var(--header-border);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25), 0 12px 32px rgba(0, 0, 0, 0.18);
+  color: var(--header-ink);
 }
 
-#site-header .site-wordmark { font-size: var(--t-sm); letter-spacing: 0.08em; }
-#site-header .site-wordmark .cursor { color: var(--accent); }
+#site-header .site-wordmark { font-size: var(--t-sm); letter-spacing: 0.08em; color: var(--header-ink); }
+#site-header .site-wordmark .cursor { color: var(--header-accent); }
+#site-header .site-name { background-image: none; }
+#site-header .site-name:hover { background-image: none; color: var(--header-ink); }
 
-/* Nav as GTA 6-style buttons: bold pills, subtle gloss, accent when active */
+/* Nav as proper buttons on the coloured bar */
 #site-header nav { display: flex; gap: 0.6rem; }
 #site-header nav a {
   font-size: var(--t-sm);
   letter-spacing: 0.02em;
   padding: 0.45rem 1.1rem;
-  border: 1px solid var(--rule);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 999px;
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0));
-  color: var(--ink);
+  background-color: rgba(255, 255, 255, 0.08);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+  color: var(--header-ink);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: transform 120ms ease, border-color 120ms ease, background-color 120ms ease;
 }
 #site-header nav a:hover {
-  color: var(--ink-bright);
-  border-color: var(--accent);
+  color: var(--header-ink);
+  border-color: var(--header-accent);
   transform: translateY(-1px);
 }
 #site-header nav a.active {
-  background-color: var(--accent);
+  background-color: var(--header-accent);
   background-image: none;
-  border-color: var(--accent);
+  border-color: transparent;
   color: #101410;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 @media (max-width: 640px) {
   #site-header nav { gap: 0.4rem; }
@@ -137,18 +143,20 @@ hr {
 
 .header-controls { display: flex; gap: 0.5rem; align-items: center; }
 .header-controls button {
-  background: none;
-  border: 1px solid var(--rule);
+  background-color: rgba(255, 255, 255, 0.08);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 999px;
-  color: var(--ink);
+  color: var(--header-ink);
   font-size: var(--t-sm);
   letter-spacing: 0.02em;
   padding: 0.45rem 1.1rem;
   cursor: pointer;
   font-family: var(--font-serif);
-  transition: border-color 120ms ease, color 120ms ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: border-color 120ms ease, transform 120ms ease;
 }
-.header-controls button:hover { border-color: var(--accent); color: var(--ink-bright); }
+.header-controls button:hover { border-color: var(--header-accent); transform: translateY(-1px); }
 
 footer {
   border-top: 1px solid var(--rule);
