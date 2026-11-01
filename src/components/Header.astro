@@ -15,16 +15,13 @@ const current = Astro.url.pathname;
   <nav>
     {nav.map(({ href, label }) => (
       <a href={href} class:list={[{ active: current === href || current === href.replace(/\/$/, '') }]}>
-        [{label}]
+        {label}
       </a>
     ))}
   </nav>
   <div class="header-controls">
     <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
-      <span class="theme-icon">◑</span>
-    </button>
-    <button class="coffee-toggle" id="coffee-toggle" aria-label="Toggle parchment mode" title="Parchment mode">
-      ☕
+      Night
     </button>
   </div>
 </header>
