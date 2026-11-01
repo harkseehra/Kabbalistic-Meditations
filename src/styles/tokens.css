@@ -8,7 +8,8 @@
   --rule:       #e0e0e0;
   --accent:     #1e6b41;
   --paper-glass: rgba(255, 255, 255, 0.82);
-  --theme-transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  --theme-transition: background 0.5s cubic-bezier(0.22, 1, 0.36, 1), color 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-apple: cubic-bezier(0.22, 1, 0.36, 1);
 
   /* Header — flat, in his colours. Blue by day, green by night. */
   --header-bg: #005b96;
@@ -18,10 +19,14 @@
   --header-active-bg: #ffffff;
   --header-active-ink: #005b96;
 
-  /* Type — Baskervville ships regular + italic only, so weight stays 400
-     and presence comes from size and spacing, never synthetic bold */
+  /* Type — Baskervville ships regular + italic only, so body weight stays
+     400 and presence comes from size and spacing, never synthetic bold.
+     Headings are Inter (real 500/600 weights) — sans for headings,
+     serif for text. */
   --font-serif: "Baskervville", "Libre Baskerville", "Iowan Old Style",
                 "Palatino Linotype", Palatino, Georgia, serif;
+  --font-sans: "Inter", -apple-system, "SF Pro Display", "Helvetica Neue",
+               Arial, sans-serif;
   --font-mono:  "Berkeley Mono", "IBM Plex Mono", "JetBrains Mono",
                 ui-monospace, Menlo, monospace;
   --font-hebrew: "Frank Ruhl Libre", "Noto Serif Hebrew", "Taamey Frank CLM", "David Libre", serif;
@@ -40,15 +45,19 @@
 }
 
 [data-theme="night"] {
-  /* Winternight — night. Black body; the colour lives in the header only. */
-  --ink:        #f0f0f0;
-  --ink-dim:    #8e8e93;
+  /* Winternight — night. Vancouver-sunset dusk body, not black;
+     the colour lives in the header only. Text runs 18% larger here
+     (the root size below lifts every rem on the page) and brighter,
+     for readability against the dusk. */
+  --ink:        #f2f4f8;
+  --ink-dim:    #b8bfcf;
   --ink-bright: #ffffff;
-  --paper:      #000000;
-  --paper-raised: #1c1c1e;
-  --rule:       #2c2c2e;
+  --paper:      #232a3d;
+  --paper-raised: #2e3648;
+  --rule:       #3a4358;
   --accent:     #7ab8ff;
-  --paper-glass: rgba(0, 0, 0, 0.82);
+  --paper-glass: rgba(35, 42, 61, 0.82);
+  --t-base: 1.59rem;
 
   /* Header — flat green by night. */
   --header-bg: #6fcb9f;

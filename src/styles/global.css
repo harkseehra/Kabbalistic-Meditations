@@ -7,17 +7,12 @@
   border-radius: 0;
 }
 
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(6px); }
+@keyframes fade-rise {
+  from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes type-reveal {
-  from { clip-path: inset(0 100% 0 0); }
-  to   { clip-path: inset(0 0% 0 0); }
-}
-
-h1 { animation: type-reveal 0.7s ease both; }
+h1 { animation: fade-rise 0.8s var(--ease-apple) both; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -49,7 +44,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  animation: fade-in 0.35s ease both;
+  animation: fade-rise 0.6s var(--ease-apple) both;
   transition: var(--theme-transition);
 }
 
@@ -68,17 +63,17 @@ a {
   background-repeat: no-repeat;
   background-position: 0 100%;
   background-size: 0% 100%;
-  transition: background-size 80ms ease, color 80ms ease;
+  transition: background-size 0.25s var(--ease-apple), color 0.25s var(--ease-apple);
 }
 
 a:hover { background-size: 100% 100%; color: var(--paper); }
 
 p { margin-bottom: 1.5rem; }
 
-h1, h2, h3 { line-height: var(--leading-tight); margin-bottom: 1rem; }
-h1 { font-size: var(--t-3xl); font-weight: 400; }
-h2 { font-size: var(--t-xl); font-weight: 400; margin-top: 3rem; }
-h3 { font-size: var(--t-lg); font-weight: 400; margin-top: 2rem; }
+h1, h2, h3 { font-family: var(--font-sans); line-height: var(--leading-tight); margin-bottom: 1rem; letter-spacing: -0.01em; }
+h1 { font-size: var(--t-3xl); font-weight: 600; }
+h2 { font-size: var(--t-xl); font-weight: 600; margin-top: 3rem; }
+h3 { font-size: var(--t-lg); font-weight: 500; margin-top: 2rem; }
 
 .dim { color: var(--ink-dim); }
 .small { font-size: var(--t-sm); }
@@ -122,7 +117,7 @@ hr {
   background-color: var(--header-btn-bg);
   background-image: none;
   color: var(--header-ink);
-  transition: transform 120ms ease, border-color 120ms ease, background-color 120ms ease;
+  transition: transform 0.25s var(--ease-apple), border-color 0.25s var(--ease-apple), background-color 0.25s var(--ease-apple);
 }
 #site-header nav a:hover {
   background-image: none;
@@ -156,7 +151,7 @@ hr {
   align-items: center;
   cursor: pointer;
   font-family: var(--font-serif);
-  transition: transform 120ms ease, border-color 120ms ease;
+  transition: transform 0.25s var(--ease-apple), border-color 0.25s var(--ease-apple);
 }
 #theme-toggle:hover { transform: translateY(-1px); border-color: var(--header-ink); }
 #theme-toggle:active { transform: scale(0.98); }
@@ -187,6 +182,11 @@ footer {
   border: 1px solid var(--rule);
   background: var(--paper-raised);
   padding: 1.5rem;
+  transition: transform 0.4s var(--ease-apple), box-shadow 0.4s var(--ease-apple), background 0.5s var(--ease-apple), border-color 0.5s var(--ease-apple);
+}
+.letter-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
 .letter-card .label {
   font-size: var(--t-xs);
@@ -211,6 +211,11 @@ footer {
   padding: 1.5rem;
   text-align: center;
   margin: 2rem 0;
+  transition: transform 0.4s var(--ease-apple), box-shadow 0.4s var(--ease-apple), background 0.5s var(--ease-apple), border-color 0.5s var(--ease-apple);
+}
+.holy-name:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
 .holy-name .glyph {
   font-family: var(--font-hebrew);
@@ -225,5 +230,5 @@ footer {
 
 table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: var(--t-sm); }
 th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--rule); }
-th { color: var(--ink-dim); font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; font-size: var(--t-xs); }
+th { color: var(--ink-dim); font-family: var(--font-sans); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; font-size: var(--t-xs); }
 td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
