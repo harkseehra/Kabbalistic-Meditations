@@ -51,6 +51,17 @@ main {
      pieces is what makes it smooth. */
 }
 
+/* Night readability: body text runs one weight heavier with slightly
+   wider tracking. Baskervville's regular strokes are thin and vanish
+   on dark backgrounds; the extra weight and air keep them legible.
+   Hebrew keeps zero tracking (nikkud) and headings keep their own
+   weights — this touches page and footer text only. */
+[data-theme="night"] main,
+[data-theme="night"] footer {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
 a {
   color: var(--ink);
   text-decoration: none;

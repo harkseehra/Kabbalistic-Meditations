@@ -46,8 +46,10 @@
 [data-theme="night"] {
   /* Winternight — night. His colours: background #172022, accent #83ADB5.
      Cards and rules are tints of the background so everything stays in
-     one quiet family. Text runs at the same size as day. */
-  --ink:        #f2f4f8;
+     one quiet family. Text runs at the same size as day. Body text is
+     a softer off-white, not near-white: near-white on dark glows and
+     blurs (halation), which is what made it unreadable. */
+  --ink:        #E0E0E0;
   --ink-dim:    #b8bfcf;
   --ink-bright: #ffffff;
   --paper:      #172022;
