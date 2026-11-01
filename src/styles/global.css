@@ -91,7 +91,7 @@ hr {
   top: 0;
   z-index: 10;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr;
   align-items: center;
   padding: 1rem 1.5rem;
   background: var(--header-bg);
@@ -137,28 +137,34 @@ hr {
   transform: scale(0.98);
 }
 @media (max-width: 640px) {
-  #site-header { grid-template-columns: 1fr auto; row-gap: 0.75rem; padding: 0.9rem 1rem; }
+  #site-header { grid-template-columns: 1fr; row-gap: 0.75rem; padding: 0.9rem 1rem; }
   #site-header nav { grid-column: 1 / -1; grid-row: 2; gap: 0.4rem; justify-content: flex-end; }
   #site-header nav a { padding: 0.35rem 0.8rem; }
 }
 
-.header-controls { display: flex; gap: 0.5rem; align-items: center; justify-self: end; }
-
-/* Theme toggle: transparent on the coloured bar, icon in the header ink */
+/* Theme toggle: a plain side button on the right edge of the screen,
+   vertically centred — not part of the header bar. 10% smaller. */
 #theme-toggle {
-  background-color: transparent;
-  border: 1px solid var(--header-btn-border);
-  border-radius: 10px;
-  padding: 0.5rem;
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background-color: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-right: none;
+  border-radius: 10px 0 0 10px;
+  padding: 0.45rem;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
-  font-family: var(--font-serif);
-  transition: transform 0.25s var(--ease-apple), border-color 0.25s var(--ease-apple);
+  color: var(--ink);
+  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.12);
+  transition: transform 0.25s var(--ease-apple), background 0.25s var(--ease-apple), border-color 0.25s var(--ease-apple);
 }
-#theme-toggle:hover { transform: translateY(-1px); border-color: var(--header-ink); }
-#theme-toggle:active { transform: scale(0.98); }
-#theme-toggle svg { width: 1.4rem; height: 1.4rem; display: block; color: var(--header-ink); }
+#theme-toggle:hover { transform: translateY(-50%) translateX(-2px); }
+#theme-toggle:active { transform: translateY(-50%) scale(0.98); }
+#theme-toggle svg { width: 1.26rem; height: 1.26rem; display: block; color: var(--ink); }
 #theme-toggle .icon-moon { display: none; }
 [data-theme="night"] #theme-toggle .icon-sun { display: none; }
 [data-theme="night"] #theme-toggle .icon-moon { display: block; }
