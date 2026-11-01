@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Blog">
+  <div dir="ltr">
+    <h1>Blog</h1>
+    <p class="dim">Writings on the letters, as they come.</p>
+    <section class="letter-card blog-highlight">
+      <p class="label dim small">1 NOVEMBER 2026</p>
+      <p class="name"><a href={`${base}blog/nun-letter-of-the-month/`}>Nun: The Letter That Writes What It Smells</a></p>
+      <p>Nun is this month's letter — smell more, write more, and become what you fear.</p>
+    </section>
+  </div>
+</BaseLayout>
