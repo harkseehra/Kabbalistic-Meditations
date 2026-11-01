@@ -83,7 +83,7 @@ import { ORGAN_ICONS } from '../lib/icons-organs.js';
 
   <h2>The twelve letters</h2>
 
-  <table>
+  <table class="letters-table">
     <thead>
       <tr><th>Letter</th><th>Sign</th><th>Organ</th><th>Sense</th></tr>
     </thead>
@@ -98,6 +98,17 @@ import { ORGAN_ICONS } from '../lib/icons-organs.js';
       ))}
     </tbody>
   </table>
+
+  <div class="letters-cards">
+    {LETTERS.map((l) => (
+      <article class="letter-card">
+        <p class="card-letter">{l.glyph} {l.pointed} — {l.name}</p>
+        <p><img class="sign-icon" src={SIGN_ICONS[l.sign]} alt="" />{l.sign}</p>
+        <p><img class="organ-icon" src={ORGAN_ICONS[l.organ]} alt="" />{l.organ}</p>
+        <p class="dim">{l.sense}</p>
+      </article>
+    ))}
+  </div>
 
   <h2>The holy names of the week</h2>
 

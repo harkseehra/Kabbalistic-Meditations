@@ -12,7 +12,12 @@ const current = Astro.url.pathname;
   <a class="site-name" href={base}>
     <span class="site-wordmark">KABBALISTIC MEDITATIONS<span class="cursor">▌</span></span>
   </a>
-  <nav>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false" aria-controls="site-nav">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <nav id="site-nav">
     {nav.map(({ href, label }) => {
       const isActive = current === href || current === href.replace(/\/$/, '');
       return (
@@ -33,3 +38,25 @@ const current = Astro.url.pathname;
   <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g fill="currentColor"><path d="M11.17 6.06 12.83 6.06 12 2.5Z"/><path d="M15.61 7.21 16.79 8.39 18.72 5.28Z"/><path d="M17.94 11.17 17.94 12.83 21.5 12Z"/><path d="M16.79 15.61 15.61 16.79 18.72 18.72Z"/><path d="M12.83 17.94 11.17 17.94 12 21.5Z"/><path d="M8.39 16.79 7.21 15.61 5.28 18.72Z"/><path d="M6.06 12.83 6.06 11.17 2.5 12Z"/><path d="M7.21 8.39 8.39 7.21 5.28 5.28Z"/></g></svg>
   <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/><path fill="currentColor" d="M18.5 3.5 19.2 5.3 21 6 19.2 6.7 18.5 8.5 17.8 6.7 16 6 17.8 5.3Z"/></svg>
 </button>
+
+<script>
+  // Burger menu: re-bind after every page switch, since view transitions
+  // swap the header markup and plain scripts do not re-run on them.
+  function bindNavToggle() {
+    const btn = document.getElementById('nav-toggle');
+    const header = document.getElementById('site-header');
+    if (!btn || !header || btn.dataset.bound) return;
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', () => {
+      const open = header.classList.toggle('nav-open');
+      btn.setAttribute('aria-expanded', String(open));
+    });
+    header.querySelectorAll('nav a').forEach((a) => {
+      a.addEventListener('click', () => {
+        header.classList.remove('nav-open');
+        btn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+  document.addEventListener('astro:page-load', bindNavToggle);
+</script>
