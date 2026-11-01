@@ -23,6 +23,7 @@ html {
   color: var(--ink);
   font-family: var(--font-serif);
   font-size: var(--t-base);
+  font-weight: 500;
   line-height: var(--leading);
   letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
@@ -51,11 +52,10 @@ main {
      pieces is what makes it smooth. */
 }
 
-/* Night readability: body text runs one weight heavier with slightly
-   wider tracking. Baskervville's regular strokes are thin and vanish
-   on dark backgrounds; the extra weight and air keep them legible.
-   Hebrew keeps zero tracking (nikkud) and headings keep their own
-   weights — this touches page and footer text only. */
+/* Night readability: body text runs semibold with slightly wider
+   tracking — Playfair now carries real 600, so this is a true weight,
+   not synthesis. Hebrew keeps zero tracking (nikkud) and headings keep
+   their own weights — this touches page and footer text only. */
 [data-theme="night"] main,
 [data-theme="night"] footer {
   font-weight: 600;
@@ -69,7 +69,7 @@ a {
   background-repeat: no-repeat;
   background-position: 0 100%;
   background-size: 0% 100%;
-  transition: background-size 0.25s var(--ease-apple), color 0.25s var(--ease-apple);
+  transition: background-size 0.15s ease-out, color 0.15s ease-out;
 }
 
 a:hover { background-size: 100% 100%; color: var(--paper); }
@@ -99,7 +99,7 @@ hr {
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 0.5rem 1.5rem;
   background: var(--header-bg);
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
@@ -118,6 +118,7 @@ hr {
   font-family: var(--font-sans);
   font-size: var(--t-sm);
   font-weight: 600;
+  line-height: 1.25;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 0.45rem 1.1rem;
@@ -126,7 +127,7 @@ hr {
   background-color: var(--header-btn-bg);
   background-image: none;
   color: var(--header-ink);
-  transition: transform 0.25s var(--ease-apple), border-color 0.25s var(--ease-apple), background-color 0.25s var(--ease-apple);
+  transition: transform 150ms ease-out, border-color 200ms ease-out, background-color 200ms ease-out;
 }
 #site-header nav a:hover {
   background-image: none;
@@ -140,42 +141,50 @@ hr {
   color: var(--header-active-ink);
 }
 #site-header nav a:active {
-  transform: scale(0.98);
+  transition-duration: 100ms;
+  transform: scale(0.97);
+}
+#site-header nav a:focus-visible {
+  outline: 2px solid var(--header-ink);
+  outline-offset: 2px;
 }
 @media (max-width: 640px) {
-  #site-header { grid-template-columns: 1fr; row-gap: 0.75rem; padding: 0.9rem 1rem; }
+  #site-header { grid-template-columns: 1fr; row-gap: 0.5rem; padding: 0.6rem 1rem; }
   #site-header nav { grid-column: 1 / -1; grid-row: 2; gap: 0.4rem; justify-content: flex-end; }
   #site-header nav a { padding: 0.35rem 0.8rem; }
 }
 
-/* Theme toggle: a floating side button on the right edge of the screen,
-   vertically centred, gently bobbing — visible all the time as you scroll.
-   10% smaller. */
+/* Theme toggle: a floating button near the right edge of the screen,
+   vertically centred, gently bobbing — detached from the edge, not
+   stuck to it. 10% smaller. */
 @keyframes float-y {
   0%, 100% { translate: 0 calc(-50% - 3px); }
   50%     { translate: 0 calc(-50% + 3px); }
 }
 #theme-toggle {
   position: fixed;
-  right: 0;
+  right: 1rem;
   top: 50%;
   translate: 0 -50%;
   animation: float-y 5s ease-in-out infinite;
   z-index: 20;
   background-color: var(--paper-raised);
   border: 1px solid var(--rule);
-  border-right: none;
-  border-radius: 10px 0 0 10px;
+  border-radius: 10px;
   padding: 0.45rem;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
   color: var(--ink);
-  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.12);
-  transition: transform 0.25s var(--ease-apple), background 0.25s var(--ease-apple), border-color 0.25s var(--ease-apple);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+  transition: transform 150ms ease-out, background 200ms ease-out, border-color 200ms ease-out;
 }
 #theme-toggle:hover { transform: translateX(-2px); }
-#theme-toggle:active { transform: scale(0.98); }
+#theme-toggle:active { transition-duration: 100ms; transform: scale(0.97); }
+#theme-toggle:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
 #theme-toggle svg { width: 1.26rem; height: 1.26rem; display: block; color: var(--ink); }
 #theme-toggle .icon-moon { display: none; }
 [data-theme="night"] #theme-toggle .icon-sun { display: none; }
@@ -203,7 +212,7 @@ footer {
   border: 1px solid var(--rule);
   background: var(--paper-raised);
   padding: 1.5rem;
-  transition: transform 0.4s var(--ease-apple), box-shadow 0.4s var(--ease-apple), background 0.5s var(--ease-apple), border-color 0.5s var(--ease-apple);
+  transition: transform 250ms ease-out, box-shadow 250ms ease-out, background 300ms ease-out, border-color 300ms ease-out;
 }
 .letter-card:hover {
   transform: translateY(-2px);
@@ -232,7 +241,7 @@ footer {
   padding: 1.5rem;
   text-align: center;
   margin: 2rem 0;
-  transition: transform 0.4s var(--ease-apple), box-shadow 0.4s var(--ease-apple), background 0.5s var(--ease-apple), border-color 0.5s var(--ease-apple);
+  transition: transform 250ms ease-out, box-shadow 250ms ease-out, background 300ms ease-out, border-color 300ms ease-out;
 }
 .holy-name:hover {
   transform: translateY(-2px);
@@ -263,10 +272,20 @@ td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
   from { opacity: 0; }
   to { opacity: 1; }
 }
-::view-transition-old(root) { animation: vt-fade-out 0.25s var(--ease-apple) both; }
-::view-transition-new(root) { animation: vt-fade-in 0.35s var(--ease-apple) both; }
+::view-transition-old(root) { animation: vt-fade-out 0.25s ease-out both; }
+::view-transition-new(root) { animation: vt-fade-in 0.35s ease-out both; }
 ::view-transition-group(active-nav) {
-  animation-duration: 0.5s;
-  animation-timing-function: var(--ease-apple);
+  animation-duration: 0.4s;
+  animation-timing-function: ease-in-out;
   z-index: 2;
+}
+
+/* Touch devices have no hover: hover lifts stay off, press feedback stays. */
+@media (hover: none) {
+  #site-header nav a:hover,
+  #theme-toggle:hover,
+  .letter-card:hover,
+  .holy-name:hover {
+    transform: none;
+  }
 }

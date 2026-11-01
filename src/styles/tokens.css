@@ -8,8 +8,7 @@
   --rule:       #e0e0e0;
   --accent:     #1e6b41;
   --paper-glass: rgba(255, 255, 255, 0.82);
-  --theme-transition: background 0.5s cubic-bezier(0.22, 1, 0.36, 1), color 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-apple: cubic-bezier(0.22, 1, 0.36, 1);
+  --theme-transition: background 0.35s ease-out, color 0.35s ease-out, border-color 0.35s ease-out;
 
   /* Header — flat, in his colours. Blue by day, green by night. */
   --header-bg: #005b96;
@@ -19,12 +18,10 @@
   --header-active-bg: #ffffff;
   --header-active-ink: #005b96;
 
-  /* Type — Baskervville ships regular + italic only, so body weight stays
-     400 and presence comes from size and spacing, never synthetic bold.
-     Headings and header nav are Oswald — a condensed, bold, movie-poster
-     style sans — sans for headings and top elements, serif for text. */
-  --font-serif: "Baskervville", "Libre Baskerville", "Iowan Old Style",
-                "Palatino Linotype", Palatino, Georgia, serif;
+  /* Type — Playfair Display, medium 500 base, semibold 600 at night:
+     real weights, no synthesis. Sans for headings and top elements
+     (Oswald), serif for text. */
+  --font-serif: "Playfair Display", "Libre Baskerville", Georgia, serif;
   --font-sans: "Oswald", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
   --font-mono:  "Berkeley Mono", "IBM Plex Mono", "JetBrains Mono",
                 ui-monospace, Menlo, monospace;
