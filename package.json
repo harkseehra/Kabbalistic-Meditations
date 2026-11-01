@@ -1,0 +1,1 @@
+{"dependencies":{"astro":"^5.0.0"},"engines":{"node":">=20.0.0"},"name":"kabbalistic-meditations","scripts":{"astro":"astro","build":"astro build","dev":"astro dev","preview":"astro preview"},"type":"module","version":"0.1.0"}
