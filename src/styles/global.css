@@ -365,3 +365,23 @@ td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
   border-color: transparent;
   color: var(--accent-ink);
 }
+
+/* Icons: minimal monochrome line art. Black lines by day; inverted to
+   white at night so they read on the dark cards and table. Decorative —
+   the letter and sign text beside them carries the meaning. */
+.transit-icon {
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 0.75rem;
+}
+.sign-icon {
+  width: 2rem;
+  height: 2rem;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+[data-theme="night"] .transit-icon,
+[data-theme="night"] .sign-icon {
+  filter: invert(1);
+}
