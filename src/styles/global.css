@@ -293,19 +293,23 @@ td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
 /* Prayer — a study tool, not a hurried table. Each of the 32 acts gets
    its own open block with room around it, so the prayer is read slowly.
    No pronunciation anywhere on this page. Class chips filter the list
-   the way the first study page filtered its rows. */
+   the way the first study page filtered its rows.
+   Presentation follows bible.com's reader: the prayer text itself is
+   the dominant text, large serif, plain background, left-aligned;
+   numbers are small, dim superscripts inline before each act, receding
+   instead of interrupting; blocks are separated by space, not rules. */
 .prayer-list { margin-top: 2rem; }
 .prayer-item {
-  padding: 2.5rem 0;
-  border-top: 1px solid var(--rule);
+  padding: 3rem 0;
 }
-.prayer-item:first-child { border-top: none; }
 .prayer-n {
   font-family: var(--font-sans);
-  font-size: var(--t-xs);
-  letter-spacing: 0.08em;
+  font-size: 0.55em;
+  line-height: 0;
+  vertical-align: super;
   color: var(--dim);
-  margin-bottom: 1rem;
+  margin-right: 0.5em;
+  letter-spacing: 0;
 }
 .prayer-hebrew {
   font-family: var(--font-hebrew);
@@ -315,7 +319,8 @@ td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
   margin-bottom: 1.25rem;
 }
 .prayer-act {
-  line-height: 1.9;
+  font-size: 1.6rem;
+  line-height: 1.6;
   margin: 0 0 1.25rem;
 }
 .prayer-meta {

@@ -21,9 +21,8 @@ const GROUP = (cls) => cls.split(' ')[0].toLowerCase();
   <section class="prayer-list">
     {PRAYER_ROWS.map((r) => (
       <article class="prayer-item" data-class={GROUP(r.cls)}>
-        <div class="prayer-n">{r.n}</div>
         <div class="prayer-hebrew">{r.hebrew}</div>
-        <p class="prayer-act">{r.act}</p>
+        <p class="prayer-act"><span class="prayer-n">{r.n}</span>{' '}{r.act}</p>
         <div class="prayer-meta">{r.name} · {r.cls}</div>
       </article>
     ))}
