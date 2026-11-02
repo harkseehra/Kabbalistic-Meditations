@@ -1,8 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { LETTERS, HOLY_NAMES } from '../lib/transits.js';
+import { LETTERS, HOLY_NAMES, MOTHERS, DOUBLES } from '../lib/transits.js';
 import { SIGN_ICONS } from '../lib/icons-signs.js';
 import { ORGAN_ICONS } from '../lib/icons-organs.js';
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const rangeOf = (l) => `${MONTHS[l.start[0] - 1]} ${l.start[1]} – ${MONTHS[l.end[0] - 1]} ${l.end[1]}`;
 ---
 
 <BaseLayout title="How to practice">
@@ -21,8 +24,8 @@ import { ORGAN_ICONS } from '../lib/icons-organs.js';
   </p>
 
   <p class="dim small">
-    A note before anything else: the letter-to-sign and letter-to-organ correspondences
-    below come from Sefer Yetzirah, chapter 5. The practice itself — how the letters are
+    A note before anything else: the correspondences below come from Sefer Yetzirah,
+    chapters 3, 4 and 5. The practice itself — how the letters are
     used here, and what they open up — is my own experience, not official teaching.
   </p>
 
@@ -81,6 +84,74 @@ import { ORGAN_ICONS } from '../lib/icons-organs.js';
     each letter has its own memory — as our body parts, and as our main sefirot points.
   </p>
 
+  <h2>The 22 letters, in three groups</h2>
+
+  <p>
+    There are 22 letters, and they come in a set order. First the 3 mothers.
+    Then the 7 doubles. Then the 12 commons, last. That order is the manner
+    of it — do not skip ahead.
+  </p>
+  <p>
+    Each letter is a practice on its own. Pick one and sit with it, alone,
+    as you like. A practice holds the month's letter, the day's letter, and
+    the moon's letter. For the verse connected to it, see the
+    <a href={`${import.meta.env.BASE_URL}prayer/`}>prayer</a> section.
+  </p>
+
+  <h2>The three mothers</h2>
+
+  <table class="mothers-table">
+    <thead>
+      <tr><th>Letter</th><th>Element</th><th>Place</th></tr>
+    </thead>
+    <tbody>
+      {MOTHERS.map((m) => (
+        <tr>
+          <td class="hebrew">{m.glyph} {m.pointed} — {m.name}</td>
+          <td>{m.element}</td>
+          <td>{m.place}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <div class="mothers-cards">
+    {MOTHERS.map((m) => (
+      <article class="letter-card">
+        <p class="card-letter">{m.glyph} {m.pointed} — {m.name}</p>
+        <p>{m.element}</p>
+        <p class="dim">{m.place}</p>
+      </article>
+    ))}
+  </div>
+
+  <h2>The seven days</h2>
+
+  <table class="doubles-table">
+    <thead>
+      <tr><th>Day</th><th>Letter</th><th>Planet</th></tr>
+    </thead>
+    <tbody>
+      {DOUBLES.map((d) => (
+        <tr>
+          <td>{d.day}</td>
+          <td class="hebrew">{d.glyph} {d.pointed} — {d.name}</td>
+          <td>{d.planet}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <div class="doubles-cards">
+    {DOUBLES.map((d) => (
+      <article class="letter-card">
+        <p class="dim small">{d.day}</p>
+        <p class="card-letter">{d.glyph} {d.pointed} — {d.name}</p>
+        <p class="dim">{d.planet}</p>
+      </article>
+    ))}
+  </div>
+
   <h2>The twelve letters</h2>
 
   <table class="letters-table">
@@ -91,7 +162,7 @@ import { ORGAN_ICONS } from '../lib/icons-organs.js';
       {LETTERS.map((l) => (
         <tr>
           <td class="hebrew">{l.glyph} {l.pointed} — {l.name}</td>
-          <td><img class="sign-icon" src={SIGN_ICONS[l.sign]} alt="" />{l.sign}</td>
+          <td><img class="sign-icon" src={SIGN_ICONS[l.sign]} alt="" />{l.sign}<div class="dim small">{rangeOf(l)}</div></td>
           <td><img class="organ-icon" src={ORGAN_ICONS[l.organ]} alt="" />{l.organ}</td>
           <td>{l.sense}</td>
         </tr>
@@ -104,6 +175,7 @@ import { ORGAN_ICONS } from '../lib/icons-organs.js';
       <article class="letter-card">
         <p class="card-letter">{l.glyph} {l.pointed} — {l.name}</p>
         <p><img class="sign-icon" src={SIGN_ICONS[l.sign]} alt="" />{l.sign}</p>
+        <p class="dim small">{rangeOf(l)}</p>
         <p><img class="organ-icon" src={ORGAN_ICONS[l.organ]} alt="" />{l.organ}</p>
         <p class="dim">{l.sense}</p>
       </article>

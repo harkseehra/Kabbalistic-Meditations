@@ -18,6 +18,26 @@ export const LETTERS = [
   { glyph: 'ק', name: 'Kuf',   pointed: 'קוֹף',  translit: 'KOF',     sign: 'Pisces',      start: [2, 19],  end: [3, 20],  organ: 'pancreas',    sense: 'laughter', note: 'The release after the tension.' },
 ];
 
+// The three mother letters, in order, per Sefer Yetzirah chapter 3
+// and the author's own teaching: each carries an element and a place.
+export const MOTHERS = [
+  { glyph: 'א', name: 'Alef', pointed: 'אָלֶף', element: 'breath', place: 'chest' },
+  { glyph: 'מ', name: 'Mem', pointed: 'מֵם', element: 'water', place: 'gut' },
+  { glyph: 'ש', name: 'Shin', pointed: 'שִׁין', element: 'fire', place: 'head' },
+];
+
+// The seven double letters, in weekday order Saturday to Friday,
+// per Sefer Yetzirah chapter 4: each carries a planet and a day.
+export const DOUBLES = [
+  { glyph: 'ב', name: 'Bet', pointed: 'בֵּית', day: 'Saturday', planet: 'Saturn' },
+  { glyph: 'ג', name: 'Gimel', pointed: 'גִּימֶל', day: 'Sunday', planet: 'Jupiter' },
+  { glyph: 'ד', name: 'Dalet', pointed: 'דָּלֶת', day: 'Monday', planet: 'Mars' },
+  { glyph: 'כ', name: 'Kaf', pointed: 'כַּף', day: 'Tuesday', planet: 'Sun' },
+  { glyph: 'פ', name: 'Peh', pointed: 'פֵּא', day: 'Wednesday', planet: 'Venus' },
+  { glyph: 'ר', name: 'Resh', pointed: 'רֵישׁ', day: 'Thursday', planet: 'Mercury' },
+  { glyph: 'ת', name: 'Tav', pointed: 'תָּו', day: 'Friday', planet: 'Moon' },
+];
+
 // Day names, in order, with the holy name of the day and its sefirah.
 // Source: the daily mapping used in the morning briefing (Zohar / Sha'arei Orah).
 export const HOLY_NAMES = [

@@ -423,13 +423,13 @@ td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
 /* Twelve-letters and holy-names cards: mobile-only replacements for the
    tables, so the rows never squeeze on a narrow screen. Desktop keeps
    the tables. */
-.letters-cards, .holy-names-cards { display: none; }
+.letters-cards, .holy-names-cards, .mothers-cards, .doubles-cards { display: none; }
 @media (max-width: 640px) {
-  table.letters-table, table.holy-names-table { display: none; }
-  .letters-cards, .holy-names-cards { display: grid; gap: 1rem; margin: 1.5rem 0; }
-  .letters-cards .letter-card, .holy-names-cards .letter-card { padding: 1rem 1.25rem; }
-  .letters-cards p, .holy-names-cards p { margin: 0.4rem 0; }
-  .letters-cards .card-letter, .holy-names-cards .card-letter { font-family: var(--font-hebrew); font-size: 1.75rem; }
+  table.letters-table, table.holy-names-table, table.mothers-table, table.doubles-table { display: none; }
+  .letters-cards, .holy-names-cards, .mothers-cards, .doubles-cards { display: grid; gap: 1rem; margin: 1.5rem 0; }
+  .letters-cards .letter-card, .holy-names-cards .letter-card, .mothers-cards .letter-card, .doubles-cards .letter-card { padding: 1rem 1.25rem; }
+  .letters-cards p, .holy-names-cards p, .mothers-cards p, .doubles-cards p { margin: 0.4rem 0; }
+  .letters-cards .card-letter, .holy-names-cards .card-letter, .mothers-cards .card-letter, .doubles-cards .card-letter { font-family: var(--font-hebrew); font-size: 1.75rem; }
 }
 
 /* Blog highlight on the home page and blog index cards. */
