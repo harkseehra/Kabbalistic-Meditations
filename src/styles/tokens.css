@@ -9,7 +9,10 @@
   --accent:     #1e6b41;
   --accent-ink: #ffffff;
   --paper-glass: rgba(255, 255, 255, 0.82);
-  --theme-transition: background 0.35s ease-out, color 0.35s ease-out, border-color 0.35s ease-out;
+  /* Motion: Apple's asymmetric curve — fast start, long soft settle.
+     No symmetric ease-in-out anywhere on the site. */
+  --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
+  --theme-transition: background 0.5s var(--ease-apple), color 0.5s var(--ease-apple), border-color 0.5s var(--ease-apple);
 
   /* Header — flat, in his colours. Blue by day, green by night. */
   --header-bg: #005b96;

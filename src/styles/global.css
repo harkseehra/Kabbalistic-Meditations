@@ -69,7 +69,7 @@ a {
   background-repeat: no-repeat;
   background-position: 0 100%;
   background-size: 0% 100%;
-  transition: background-size 0.15s ease-out, color 0.15s ease-out;
+  transition: background-size 0.15s var(--ease-apple), color 0.15s var(--ease-apple);
 }
 
 a:hover { background-size: 100% 100%; color: var(--paper); }
@@ -127,7 +127,7 @@ hr {
   background-color: var(--header-btn-bg);
   background-image: none;
   color: var(--header-ink);
-  transition: transform 150ms ease-out, border-color 200ms ease-out, background-color 200ms ease-out;
+  transition: transform 150ms var(--ease-apple), border-color 200ms var(--ease-apple), background-color 200ms var(--ease-apple);
 }
 #site-header nav a:hover {
   background-image: none;
@@ -204,7 +204,7 @@ hr {
   cursor: pointer;
   color: var(--ink);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
-  transition: transform 150ms ease-out, background 200ms ease-out, border-color 200ms ease-out;
+  transition: transform 150ms var(--ease-apple), background 200ms var(--ease-apple), border-color 200ms var(--ease-apple);
 }
 #theme-toggle:hover { transform: translateX(-2px); }
 #theme-toggle:active { transition-duration: 100ms; transform: scale(0.97); }
@@ -239,7 +239,10 @@ footer {
   border: 1px solid var(--rule);
   background: var(--paper-raised);
   padding: 1.5rem;
-  transition: transform 250ms ease-out, box-shadow 250ms ease-out, background 300ms ease-out, border-color 300ms ease-out;
+  /* Spring on the lift, Apple curve on the rest. First line is the
+     fallback for browsers without linear(). */
+  transition: transform 350ms var(--ease-apple), box-shadow 350ms var(--ease-apple), background 350ms var(--ease-apple), border-color 350ms var(--ease-apple);
+  transition: transform 350ms linear(0.000, 0.137, 0.409, 0.677, 0.879, 1.000, 1.056, 1.068, 1.057, 1.038, 1.020, 1.007, 0.999, 0.996, 0.995, 0.996, 0.998, 0.999, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000), box-shadow 350ms var(--ease-apple), background 350ms var(--ease-apple), border-color 350ms var(--ease-apple);
 }
 .letter-card:hover {
   transform: translateY(-2px);
@@ -268,7 +271,10 @@ footer {
   padding: 1.5rem;
   text-align: center;
   margin: 2rem 0;
-  transition: transform 250ms ease-out, box-shadow 250ms ease-out, background 300ms ease-out, border-color 300ms ease-out;
+  /* Spring on the lift, Apple curve on the rest. First line is the
+     fallback for browsers without linear(). */
+  transition: transform 350ms var(--ease-apple), box-shadow 350ms var(--ease-apple), background 350ms var(--ease-apple), border-color 350ms var(--ease-apple);
+  transition: transform 350ms linear(0.000, 0.137, 0.409, 0.677, 0.879, 1.000, 1.056, 1.068, 1.057, 1.038, 1.020, 1.007, 0.999, 0.996, 0.995, 0.996, 0.998, 0.999, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000), box-shadow 350ms var(--ease-apple), background 350ms var(--ease-apple), border-color 350ms var(--ease-apple);
 }
 .holy-name:hover {
   transform: translateY(-2px);
@@ -290,8 +296,10 @@ th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var
 th { color: var(--ink-dim); font-family: var(--font-sans); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; font-size: var(--t-xs); }
 td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
 
-/* Page switches, kept simple: one clean crossfade plus the nav pill
-   morph. Nothing else moves, so nothing stutters. */
+/* Page switches: one clean crossfade plus the nav pill morph. The
+   crossfade runs on Apple's curve; the pill settles on a tight spring
+   (6.8% overshoot, settled by mid-flight) with the Apple curve as the
+   fallback for browsers without linear(). */
 @keyframes vt-fade-out {
   to { opacity: 0; }
 }
@@ -299,11 +307,12 @@ td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
   from { opacity: 0; }
   to { opacity: 1; }
 }
-::view-transition-old(root) { animation: vt-fade-out 0.25s ease-out both; }
-::view-transition-new(root) { animation: vt-fade-in 0.35s ease-out both; }
+::view-transition-old(root) { animation: vt-fade-out 0.3s var(--ease-apple) both; }
+::view-transition-new(root) { animation: vt-fade-in 0.5s var(--ease-apple) both; }
 ::view-transition-group(active-nav) {
-  animation-duration: 0.4s;
-  animation-timing-function: ease-in-out;
+  animation-duration: 0.5s;
+  animation-timing-function: var(--ease-apple);
+  animation-timing-function: linear(0.000, 0.137, 0.409, 0.677, 0.879, 1.000, 1.056, 1.068, 1.057, 1.038, 1.020, 1.007, 0.999, 0.996, 0.995, 0.996, 0.998, 0.999, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000, 1.000);
   z-index: 2;
 }
 
@@ -373,7 +382,7 @@ td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
   background: transparent;
   color: var(--ink);
   cursor: pointer;
-  transition: transform 150ms ease-out, border-color 200ms ease-out, background-color 200ms ease-out;
+  transition: transform 150ms var(--ease-apple), border-color 200ms var(--ease-apple), background-color 200ms var(--ease-apple);
 }
 .chip:hover {
   border-color: var(--ink);
