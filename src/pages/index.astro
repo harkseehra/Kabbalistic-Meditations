@@ -15,7 +15,7 @@ import { SUN_ICON, MOON_ICON } from '../lib/icons-day.js';
   <div class="transit-grid">
     <section class="letter-card" id="day-card">
       <p class="label">Day · the sun's letter</p>
-      <img class="transit-icon" src={SUN_ICON} alt="" />
+      <span class="transit-icon" style={`--icon-src: url(${SUN_ICON})`} aria-hidden="true"></span>
       <p class="glyph" id="day-glyph">–</p>
       <p class="name"><span id="day-name">…</span> <span class="pointed" id="day-pointed"></span></p>
       <p class="meta" id="day-meta"></p>
@@ -24,7 +24,7 @@ import { SUN_ICON, MOON_ICON } from '../lib/icons-day.js';
 
     <section class="letter-card" id="night-card">
       <p class="label">Night · the moon's letter</p>
-      <img class="transit-icon" src={MOON_ICON} alt="" />
+      <span class="transit-icon" style={`--icon-src: url(${MOON_ICON})`} aria-hidden="true"></span>
       <p class="glyph" id="night-glyph">–</p>
       <p class="name"><span id="night-name">…</span> <span class="pointed" id="night-pointed"></span></p>
       <p class="meta" id="night-meta"></p>

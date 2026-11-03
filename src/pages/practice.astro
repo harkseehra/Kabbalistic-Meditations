@@ -162,8 +162,8 @@ const rangeOf = (l) => `${MONTHS[l.start[0] - 1]} ${l.start[1]} – ${MONTHS[l.e
       {LETTERS.map((l) => (
         <tr>
           <td class="hebrew">{l.glyph} {l.pointed} — {l.name}</td>
-          <td><img class="sign-icon" src={SIGN_ICONS[l.sign]} alt="" />{l.sign}<div class="dim small">{rangeOf(l)}</div></td>
-          <td><img class="organ-icon" src={ORGAN_ICONS[l.organ]} alt="" />{l.organ}</td>
+          <td><span class="sign-icon" style={`--icon-src: url(${SIGN_ICONS[l.sign]})`} aria-hidden="true"></span>{l.sign}<div class="dim small">{rangeOf(l)}</div></td>
+          <td><span class="organ-icon" style={`--icon-src: url(${ORGAN_ICONS[l.organ]})`} aria-hidden="true"></span>{l.organ}</td>
           <td>{l.sense}</td>
         </tr>
       ))}
@@ -174,9 +174,9 @@ const rangeOf = (l) => `${MONTHS[l.start[0] - 1]} ${l.start[1]} – ${MONTHS[l.e
     {LETTERS.map((l) => (
       <article class="letter-card">
         <p class="card-letter">{l.glyph} {l.pointed} — {l.name}</p>
-        <p><img class="sign-icon" src={SIGN_ICONS[l.sign]} alt="" />{l.sign}</p>
+        <p><span class="sign-icon" style={`--icon-src: url(${SIGN_ICONS[l.sign]})`} aria-hidden="true"></span>{l.sign}</p>
         <p class="dim small">{rangeOf(l)}</p>
-        <p><img class="organ-icon" src={ORGAN_ICONS[l.organ]} alt="" />{l.organ}</p>
+        <p><span class="organ-icon" style={`--icon-src: url(${ORGAN_ICONS[l.organ]})`} aria-hidden="true"></span>{l.organ}</p>
         <p class="dim">{l.sense}</p>
       </article>
     ))}

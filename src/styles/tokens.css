@@ -24,6 +24,10 @@
      No symmetric ease-in-out anywhere on the site. */
   --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
   --theme-transition: background 0.5s var(--ease-apple), color 0.5s var(--ease-apple), border-color 0.5s var(--ease-apple);
+  /* Icons and Hebrew share one colour per theme: midnight blue by day,
+     gold at night. V2 palette — adjustable. */
+  --icon-color: #191970;
+  --hebrew-color: #191970;
 
   /* Header — flat, in his colours. Blue by day, green by night. */
   --header-bg: #005b96;
@@ -72,6 +76,8 @@
   --accent:     #83ADB5;
   --accent-ink: #172022;
   --paper-glass: rgba(23, 32, 34, 0.82);
+  --icon-color: #FFD700;
+  --hebrew-color: #FFD700;
 
   /* Header — flat green by night. */
   --header-bg: #6fcb9f;

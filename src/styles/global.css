@@ -258,10 +258,10 @@ footer {
   font-family: var(--font-hebrew);
   font-size: 6.5rem;
   line-height: 1.2;
-  color: var(--ink-bright);
+  color: var(--hebrew-color);
 }
 .letter-card .name { font-size: var(--t-xl); }
-.letter-card .pointed { font-family: var(--font-hebrew); color: var(--accent); }
+.letter-card .pointed { font-family: var(--font-hebrew); color: var(--hebrew-color); }
 .letter-card .meta { color: var(--ink-dim); font-size: var(--t-sm); }
 .letter-card p { margin-bottom: 0.5rem; }
 .letter-card p:last-child { margin-bottom: 0; }
@@ -284,7 +284,7 @@ footer {
   font-family: var(--font-hebrew);
   font-size: 4.5rem;
   line-height: 1.3;
-  color: var(--accent);
+  color: var(--hebrew-color);
 }
 .holy-name .name { font-size: var(--t-xl); }
 
@@ -295,6 +295,9 @@ table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: var
 th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--rule); }
 th { color: var(--ink-dim); font-family: var(--font-sans); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; font-size: var(--t-xs); }
 td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
+
+/* Every Hebrew display follows the same theme tone as the icons. */
+td.hebrew, .card-letter, .prayer-hebrew, article bdi { color: var(--hebrew-color); }
 
 /* Page switches: one clean crossfade plus the nav pill morph. The
    crossfade runs on Apple's curve; the pill settles on a tight spring
@@ -402,31 +405,34 @@ td.hebrew { font-family: var(--font-hebrew); font-size: 1.75rem; }
   color: var(--accent-ink);
 }
 
-/* Icons: minimal monochrome line art. Black lines by day; inverted to
-   white at night so they read on the dark cards and table. Decorative —
-   the letter and sign text beside them carries the meaning. */
+/* Icons: one thicker black set, tinted by theme through a mask — midnight
+   blue by day, gold at night. The image supplies only the shape (alpha);
+   the colour comes from --icon-color, so a theme flip recolours instantly
+   with no second image set. Decorative — the letter and sign text beside
+   them carries the meaning. */
+.transit-icon, .sign-icon, .organ-icon {
+  background-color: var(--icon-color);
+  -webkit-mask-image: var(--icon-src);
+  mask-image: var(--icon-src);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
 .transit-icon {
   display: block;
   width: 3rem;
   height: 3rem;
   margin-bottom: 0.75rem;
 }
-.sign-icon {
+.sign-icon, .organ-icon {
+  display: inline-block;
   width: 2rem;
   height: 2rem;
   vertical-align: middle;
   margin-right: 0.5rem;
-}
-.organ-icon {
-  width: 2rem;
-  height: 2rem;
-  vertical-align: middle;
-  margin-right: 0.5rem;
-}
-[data-theme="night"] .transit-icon,
-[data-theme="night"] .sign-icon,
-[data-theme="night"] .organ-icon {
-  filter: invert(1);
 }
 
 /* Twelve-letters and holy-names cards: mobile-only replacements for the
