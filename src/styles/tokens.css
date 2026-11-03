@@ -1,3 +1,14 @@
+/* Wordmark face: Redaction 10 (MCKL, SIL Open Font License), loaded from
+   the font's public repo via CDN, pinned to a commit so the file never
+   moves. Latin only — Hebrew keeps its own face. */
+@font-face {
+  font-family: "Redaction 10";
+  src: url("https://cdn.jsdelivr.net/gh/jeremymickel/Redaction@d6d5404e094773468db8fe07069c8e681949790c/fonts/webfonts/Redaction10-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Moonwhite — day. White body; the colour lives in the header only. */
   --ink:        #111111;
@@ -27,6 +38,7 @@
      Medium 500 base, semibold 600 at night — real weights.
      Sans for headings and top elements (Oswald), serif for text. */
   --font-serif: "Cormorant Garamond", "Libre Baskerville", Georgia, serif;
+  --font-wordmark: "Redaction 10", "Cormorant Garamond", Georgia, serif;
   --font-sans: "Oswald", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
   --font-mono:  "Berkeley Mono", "IBM Plex Mono", "JetBrains Mono",
                 ui-monospace, Menlo, monospace;

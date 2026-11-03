@@ -107,7 +107,7 @@ hr {
 }
 
 #site-header .site-name { justify-self: start; }
-#site-header .site-wordmark { font-size: var(--t-sm); letter-spacing: 0.08em; color: var(--header-ink); }
+#site-header .site-wordmark { font-family: var(--font-wordmark); font-size: var(--t-sm); letter-spacing: 0.08em; color: var(--header-ink); }
 #site-header .site-wordmark .cursor { color: var(--header-ink); }
 #site-header .site-name { background-image: none; }
 #site-header .site-name:hover { background-image: none; color: var(--header-ink); }
