@@ -108,3 +108,40 @@ export function moonLetter(date) {
 export function holyNameOfDay(date) {
   return HOLY_NAMES[date.getDay()];
 }
+
+// Full English month names, same list the Practice page uses for its ranges.
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+];
+
+// The current sun sign's date range, e.g. "October 23 – November 21".
+// Same dates and format as the Practice page's twelve table.
+export function sunRange(letter) {
+  return `${MONTHS[letter.start[0] - 1]} ${letter.start[1]} – ${MONTHS[letter.end[0] - 1]} ${letter.end[1]}`;
+}
+
+// When the moon next changes signs, stepping forward from `date` in
+// one-hour steps (up to four days out), then refined to about five
+// minutes by bisection. The series is good to about a third of a
+// degree, so the DATE is the reliable part — the clock time is not shown.
+export function nextMoonIngress(date) {
+  const start = moonLongitude(date).signIndex;
+  const step = 3600000; // one hour
+  let prev = date.getTime();
+  for (let i = 1; i <= 96; i++) {
+    const t = date.getTime() + i * step;
+    if (moonLongitude(new Date(t)).signIndex !== start) {
+      let lo = prev, hi = t;
+      while (hi - lo > 300000) {
+        const mid = Math.floor((lo + hi) / 2);
+        if (moonLongitude(new Date(mid)).signIndex === start) lo = mid; else hi = mid;
+      }
+      const at = new Date(hi);
+      const sign = SIGNS[moonLongitude(at).signIndex];
+      return { date: at, sign, letter: LETTERS.find((l) => l.sign === sign) };
+    }
+    prev = t;
+  }
+  return null;
+}
