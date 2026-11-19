@@ -217,15 +217,10 @@
       .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
       @media (prefers-color-scheme: dark) { .chip[aria-pressed="true"] { color: #172022; } }
 
-      /* Mother sections */
-      .mother-section { margin-top: var(--space-5); }
-      .mother-section.hidden { display: none; }
-      .mother-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-2) var(--space-3); margin-bottom: var(--space-3); }
-      .mother-sub { color: var(--ink-soft); font-size: var(--text-base); }
-      .mother-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; align-self: center; }
-
       /* Planet card grid */
       .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); align-items: stretch; }
+      .planet-card.hidden { display: none; }
+      .empty-card { color: var(--ink-soft); }
       .planet-card {
         display: flex; flex-direction: column; gap: var(--space-3);
         border-top: 4px solid var(--elem-color, var(--line));
@@ -266,9 +261,6 @@
       .elem-earth { background: var(--earth-bg); color: var(--earth); }
       .elem-air { background: var(--air-bg); color: var(--air); }
       .elem-water { background: var(--water-bg); color: var(--water); }
-      .dot-fire { background: var(--fire); }
-      .dot-air { background: var(--air); }
-      .dot-water { background: var(--water); }
 
       .note { color: var(--ink-soft); font-size: var(--text-sm); }
       .src { border-top: 1px solid var(--line); margin-top: var(--space-6); padding-top: var(--space-4); color: var(--ink-soft); font-size: var(--text-sm); }
@@ -342,7 +334,7 @@
       </div>
 
       <h2>The transit chart</h2>
-      <p>The seven planets, listed under their mothers. Each card shows the planet's double and its day to meditate, its sign as it stands today, and the sign's letter with its body part, its sense, and its element.</p>
+      <p>The seven planets, in the order of the week — Sunday first. Each card shows the planet's double and its day to meditate, its sign as it stands today, and the sign's letter with its body part, its sense, and its mother. The chips filter by mother; they are a filter, not the order.</p>
       <div class="filters" role="group" aria-label="Filter the chart by mother">
         <span>Mother</span>
         <button class="chip" data-filter="all" aria-pressed="true">All</button>
@@ -394,11 +386,6 @@
         ];
         var RULERS = { Aries: 'Mars', Taurus: 'Venus', Gemini: 'Mercury', Cancer: 'Moon', Leo: 'Sun', Virgo: 'Mercury', Libra: 'Venus', Scorpio: 'Mars', Sagittarius: 'Jupiter', Capricorn: 'Saturn', Aquarius: 'Saturn', Pisces: 'Jupiter' };
         var RULED_SIGNS = { Sun: ['Leo'], Moon: ['Cancer'], Mercury: ['Gemini', 'Virgo'], Venus: ['Taurus', 'Libra'], Mars: ['Aries', 'Scorpio'], Jupiter: ['Sagittarius', 'Pisces'], Saturn: ['Capricorn', 'Aquarius'] };
-        var MOTHERS = [
-          { key: 'alef', label: 'Alef', heb: 'א', dot: 'air',   sub: 'Alef — the temperament of air' },
-          { key: 'mem',  label: 'Mem',  heb: 'מ', dot: 'water', sub: 'Mem — the temperament of water, and of earth, which was created from water' },
-          { key: 'shin', label: 'Shin', heb: 'ש', dot: 'fire',  sub: 'Shin — the temperament of fire' }
-        ];
         var CUSPS = [
           [1, 20, 10], [2, 19, 11], [3, 21, 0], [4, 20, 1], [5, 21, 2], [6, 21, 3],
           [7, 23, 4], [8, 23, 5], [9, 23, 6], [10, 23, 7], [11, 22, 8], [12, 22, 9]
@@ -547,58 +534,59 @@
         set('strongest-chain', rulerDay.weekday + ' - Sun - ' + sunDbl.letter + ' - ' + sunSign.name + ' - ' + sunSign.letter);
         set('strongest-note', rulerDay.weekday + ' is the month\u2019s strongest day. The Sun is in ' + sunSign.name + ', ' + sunRuler + '\u2019s sign, so ' + sunRuler + '\u2019s day rules this month. The Sun\u2019s own day, for meditating ' + sunDbl.letter + ' + ' + sunSign.letter + ', is ' + sunDbl.weekday + '.');
 
-        /* ---- Build the transit chart as cards, grouped by element ---- */
+        /* ---- Build the transit chart as cards, in the order of the week — Sunday first ---- */
         function fact(label, valueHtml) {
           return '<div class="fact"><span class="fact-label">' + label + '</span><span class="fact-value">' + valueHtml + '</span></div>';
         }
-        var html = '';
-        MOTHERS.forEach(function (el) {
-          var group = planets.filter(function (p) { return p.sign.mother.toLowerCase() === el.key; });
-          html += '<section class="mother-section" data-mother="' + el.key + '">';
-          html += '<div class="mother-head"><span class="mother-dot dot-' + el.dot + '"></span><h3>' + el.label + ' <span class="heb heb-md">' + el.heb + '</span></h3><span class="mother-sub">' + el.sub + '</span></div>';
-          html += '<div class="cards">';
-          if (group.length === 0) {
-            html += '<div class="planet-card card empty-card mother-' + el.key + '">No planet under ' + el.label + ' today.</div>';
-          } else {
-            group.forEach(function (p) {
-              var atHome = RULED_SIGNS[p.planet].indexOf(p.sign.name) !== -1;
-              var cusp = (p.deg < 1 || p.deg > 29) ? ' <span class="cusp-note">near the cusp</span>' : '';
-              html += '<article class="planet-card card mother-' + el.key + '">';
-              html += '<div class="card-head"><span class="planet-name">' + p.planet + '</span>'
-                + (atHome ? '<span class="athome">At home — doubled</span>' : '')
-                + '</div>';
-              html += '<div class="double-row"><span class="heb heb-big">' + p.dbl.heb + '</span><div class="dbl-meta">'
-                + '<span class="dbl-line">Planet letter — ' + p.dbl.letter + ', the double</span>'
-                + '<span class="dbl-line soft">Gate — ' + p.dbl.gate + '</span>'
-                + '<span class="dbl-line">Meditate ' + p.dbl.weekday + '</span>'
-                + '</div></div>';
-              html += '<div class="card-div"></div>';
-              html += '<div class="sign-row"><span class="sign-name">' + p.sign.name + ' ' + p.deg.toFixed(0) + '°</span>'
-                + '<span class="sign-dates">' + p.sign.dates + '</span>' + cusp + '</div>';
-              html += '<div class="facts">'
-                + fact('Sign letter', p.sign.letter + ' <span class="heb heb-md">' + p.sign.heb + '</span>')
-                + fact('Body part', p.sign.organ)
-                + fact('Sense', p.sign.sense)
-                + fact('Element', '<span class="elem elem-' + p.sign.element + '">' + p.sign.element[0].toUpperCase() + p.sign.element.slice(1) + '</span>')
-                + fact('Mother', p.sign.mother + ' <span class="heb heb-md">' + p.sign.motherHeb + '</span>')
-                + '</div>';
-              if (p.planet === 'Saturn' && p.sign.name === 'Aries') {
-                html += '<div class="reading">Reading — my own experience, not the teaching: speech is deciding life and death in this transit.</div>';
-              }
-              html += '</article>';
-            });
+        var html = '<div class="cards">';
+        planets.forEach(function (p) {
+          var motherKey = p.sign.mother.toLowerCase();
+          var atHome = RULED_SIGNS[p.planet].indexOf(p.sign.name) !== -1;
+          var cusp = (p.deg < 1 || p.deg > 29) ? ' <span class="cusp-note">near the cusp</span>' : '';
+          html += '<article class="planet-card card mother-' + motherKey + '" data-mother="' + motherKey + '">';
+          html += '<div class="card-head"><span class="planet-name">' + p.planet + '</span>'
+            + (atHome ? '<span class="athome">At home — doubled</span>' : '')
+            + '</div>';
+          html += '<div class="double-row"><span class="heb heb-big">' + p.dbl.heb + '</span><div class="dbl-meta">'
+            + '<span class="dbl-line">Planet letter — ' + p.dbl.letter + ', the double</span>'
+            + '<span class="dbl-line soft">Gate — ' + p.dbl.gate + '</span>'
+            + '<span class="dbl-line">Meditate ' + p.dbl.weekday + '</span>'
+            + '</div></div>';
+          html += '<div class="card-div"></div>';
+          html += '<div class="sign-row"><span class="sign-name">' + p.sign.name + ' ' + p.deg.toFixed(0) + '°</span>'
+            + '<span class="sign-dates">' + p.sign.dates + '</span>' + cusp + '</div>';
+          html += '<div class="facts">'
+            + fact('Sign letter', p.sign.letter + ' <span class="heb heb-md">' + p.sign.heb + '</span>')
+            + fact('Body part', p.sign.organ)
+            + fact('Sense', p.sign.sense)
+            + fact('Element', '<span class="elem elem-' + p.sign.element + '">' + p.sign.element[0].toUpperCase() + p.sign.element.slice(1) + '</span>')
+            + fact('Mother', p.sign.mother + ' <span class="heb heb-md">' + p.sign.motherHeb + '</span>')
+            + '</div>';
+          if (p.planet === 'Saturn' && p.sign.name === 'Aries') {
+            html += '<div class="reading">Reading — my own experience, not the teaching: speech is deciding life and death in this transit.</div>';
           }
-          html += '</div></section>';
+          html += '</article>';
         });
+        html += '<div class="planet-card card empty-card" id="chart-empty" hidden></div>';
+        html += '</div>';
         document.getElementById('chart').innerHTML = html;
 
-        /* ---- Element filter ---- */
+        /* ---- Mother filter ---- */
         var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
         function apply(filter) {
-          var sections = Array.prototype.slice.call(document.querySelectorAll('.mother-section'));
-          sections.forEach(function (s) {
-            s.classList.toggle('hidden', filter !== 'all' && s.dataset.mother !== filter);
+          var cards = Array.prototype.slice.call(document.querySelectorAll('#chart .planet-card'));
+          var visible = 0;
+          cards.forEach(function (c) {
+            if (c.id === 'chart-empty') return;
+            var show = filter === 'all' || c.dataset.mother === filter;
+            c.classList.toggle('hidden', !show);
+            if (show) visible++;
           });
+          var empty = document.getElementById('chart-empty');
+          if (empty) {
+            empty.hidden = visible !== 0;
+            if (visible === 0) empty.textContent = 'No planet under ' + filter.charAt(0).toUpperCase() + filter.slice(1) + ' today.';
+          }
         }
         chips.forEach(function (chip) {
           chip.addEventListener('click', function () {
