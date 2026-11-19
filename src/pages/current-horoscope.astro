@@ -128,12 +128,12 @@
       .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
       @media (prefers-color-scheme: dark) { .chip[aria-pressed="true"] { color: #172022; } }
 
-      /* Element sections */
-      .elem-section { margin-top: var(--space-5); }
-      .elem-section.hidden { display: none; }
-      .elem-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-2) var(--space-3); margin-bottom: var(--space-3); }
-      .elem-sub { color: var(--ink-soft); font-size: var(--text-base); }
-      .elem-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; align-self: center; }
+      /* Mother sections */
+      .mother-section { margin-top: var(--space-5); }
+      .mother-section.hidden { display: none; }
+      .mother-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-2) var(--space-3); margin-bottom: var(--space-3); }
+      .mother-sub { color: var(--ink-soft); font-size: var(--text-base); }
+      .mother-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; align-self: center; }
 
       /* Planet card grid */
       .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); align-items: stretch; }
@@ -141,10 +141,9 @@
         display: flex; flex-direction: column; gap: var(--space-3);
         border-top: 4px solid var(--elem-color, var(--line));
       }
-      .planet-card.elem-fire { --elem-color: var(--fire); }
-      .planet-card.elem-earth { --elem-color: var(--earth); }
-      .planet-card.elem-air { --elem-color: var(--air); }
-      .planet-card.elem-water { --elem-color: var(--water); }
+      .planet-card.mother-alef { --elem-color: var(--air); }
+      .planet-card.mother-mem { --elem-color: var(--water); }
+      .planet-card.mother-shin { --elem-color: var(--fire); }
       .card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
       .planet-name { font-family: "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; }
       .athome {
@@ -179,7 +178,6 @@
       .elem-air { background: var(--air-bg); color: var(--air); }
       .elem-water { background: var(--water-bg); color: var(--water); }
       .dot-fire { background: var(--fire); }
-      .dot-earth { background: var(--earth); }
       .dot-air { background: var(--air); }
       .dot-water { background: var(--water); }
 
@@ -247,14 +245,13 @@
       </div>
 
       <h2>The transit chart</h2>
-      <p>The seven planets, listed in their elements. Each card shows the planet's double and its day to meditate, its sign as it stands today, and the sign's letter with its body part, its sense, and its mother.</p>
-      <div class="filters" role="group" aria-label="Filter the chart by element">
-        <span>Element</span>
+      <p>The seven planets, listed under their mothers. Each card shows the planet's double and its day to meditate, its sign as it stands today, and the sign's letter with its body part, its sense, and its element.</p>
+      <div class="filters" role="group" aria-label="Filter the chart by mother">
+        <span>Mother</span>
         <button class="chip" data-filter="all" aria-pressed="true">All</button>
-        <button class="chip" data-filter="fire" aria-pressed="false">Fire</button>
-        <button class="chip" data-filter="earth" aria-pressed="false">Earth</button>
-        <button class="chip" data-filter="air" aria-pressed="false">Air</button>
-        <button class="chip" data-filter="water" aria-pressed="false">Water</button>
+        <button class="chip" data-filter="alef" aria-pressed="false">Alef</button>
+        <button class="chip" data-filter="mem" aria-pressed="false">Mem</button>
+        <button class="chip" data-filter="shin" aria-pressed="false">Shin</button>
       </div>
 
       <div id="chart" aria-live="polite">
@@ -300,11 +297,10 @@
         ];
         var RULERS = { Aries: 'Mars', Taurus: 'Venus', Gemini: 'Mercury', Cancer: 'Moon', Leo: 'Sun', Virgo: 'Mercury', Libra: 'Venus', Scorpio: 'Mars', Sagittarius: 'Jupiter', Capricorn: 'Saturn', Aquarius: 'Saturn', Pisces: 'Jupiter' };
         var RULED_SIGNS = { Sun: ['Leo'], Moon: ['Cancer'], Mercury: ['Gemini', 'Virgo'], Venus: ['Taurus', 'Libra'], Mars: ['Aries', 'Scorpio'], Jupiter: ['Sagittarius', 'Pisces'], Saturn: ['Capricorn', 'Aquarius'] };
-        var ELEMENTS = [
-          { key: 'fire',  label: 'Fire',  mother: 'Shin', motherHeb: 'ש', sub: 'Shin — the temperament of fire' },
-          { key: 'earth', label: 'Earth', mother: 'Mem',  motherHeb: 'מ', sub: 'Mem — the temperament of earth' },
-          { key: 'air',   label: 'Air',   mother: 'Alef', motherHeb: 'א', sub: 'Alef — the temperament of air' },
-          { key: 'water', label: 'Water', mother: 'Mem',  motherHeb: 'מ', sub: 'Mem — the temperament of water' }
+        var MOTHERS = [
+          { key: 'alef', label: 'Alef', heb: 'א', dot: 'air',   sub: 'Alef — the temperament of air' },
+          { key: 'mem',  label: 'Mem',  heb: 'מ', dot: 'water', sub: 'Mem — the temperament of water, and of earth, which was created from water' },
+          { key: 'shin', label: 'Shin', heb: 'ש', dot: 'fire',  sub: 'Shin — the temperament of fire' }
         ];
         var CUSPS = [
           [1, 20, 10], [2, 19, 11], [3, 21, 0], [4, 20, 1], [5, 21, 2], [6, 21, 3],
@@ -429,18 +425,18 @@
           return '<div class="fact"><span class="fact-label">' + label + '</span><span class="fact-value">' + valueHtml + '</span></div>';
         }
         var html = '';
-        ELEMENTS.forEach(function (el) {
-          var group = planets.filter(function (p) { return p.sign.element === el.key; });
-          html += '<section class="elem-section" data-element="' + el.key + '">';
-          html += '<div class="elem-head"><span class="elem-dot dot-' + el.key + '"></span><h3>' + el.label + '</h3><span class="elem-sub">' + el.sub + '</span></div>';
+        MOTHERS.forEach(function (el) {
+          var group = planets.filter(function (p) { return p.sign.mother.toLowerCase() === el.key; });
+          html += '<section class="mother-section" data-mother="' + el.key + '">';
+          html += '<div class="mother-head"><span class="mother-dot dot-' + el.dot + '"></span><h3>' + el.label + ' <span class="heb heb-md">' + el.heb + '</span></h3><span class="mother-sub">' + el.sub + '</span></div>';
           html += '<div class="cards">';
           if (group.length === 0) {
-            html += '<div class="planet-card card empty-card elem-' + el.key + '">No planet in ' + el.label + ' today.</div>';
+            html += '<div class="planet-card card empty-card mother-' + el.key + '">No planet under ' + el.label + ' today.</div>';
           } else {
             group.forEach(function (p) {
               var atHome = RULED_SIGNS[p.planet].indexOf(p.sign.name) !== -1;
               var cusp = (p.deg < 1 || p.deg > 29) ? ' <span class="cusp-note">near the cusp</span>' : '';
-              html += '<article class="planet-card card elem-' + el.key + '">';
+              html += '<article class="planet-card card mother-' + el.key + '">';
               html += '<div class="card-head"><span class="planet-name">' + p.planet + '</span>'
                 + (atHome ? '<span class="athome">At home — doubled</span>' : '')
                 + '</div>';
@@ -455,7 +451,7 @@
                 + fact('Sign letter', p.sign.letter + ' <span class="heb heb-md">' + p.sign.heb + '</span>')
                 + fact('Body part', p.sign.organ)
                 + fact('Sense', p.sign.sense)
-                + fact('Element', '<span class="elem elem-' + el.key + '">' + el.label + '</span>')
+                + fact('Element', '<span class="elem elem-' + p.sign.element + '">' + p.sign.element[0].toUpperCase() + p.sign.element.slice(1) + '</span>')
                 + fact('Mother', p.sign.mother + ' <span class="heb heb-md">' + p.sign.motherHeb + '</span>')
                 + '</div>';
               if (p.planet === 'Saturn' && p.sign.name === 'Aries') {
@@ -471,9 +467,9 @@
         /* ---- Element filter ---- */
         var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
         function apply(filter) {
-          var sections = Array.prototype.slice.call(document.querySelectorAll('.elem-section'));
+          var sections = Array.prototype.slice.call(document.querySelectorAll('.mother-section'));
           sections.forEach(function (s) {
-            s.classList.toggle('hidden', filter !== 'all' && s.dataset.element !== filter);
+            s.classList.toggle('hidden', filter !== 'all' && s.dataset.mother !== filter);
           });
         }
         chips.forEach(function (chip) {
