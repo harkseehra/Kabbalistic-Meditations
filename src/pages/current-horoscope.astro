@@ -289,7 +289,7 @@
     <main class="wrap">
 
       <h1>Current Horoscope</h1>
-      <p class="lede">The seven planets as they stand right now — each one in its sign, with its letters, its body part, its sense, and its temperament. The Sun drives the month. The sign the Sun stands in gives the month's strongest day. Each planet's two letters are meditated on its own day.</p>
+      <p class="lede">The seven planets as they stand right now — each one in its sign, with its letters, its body part, its sense, and its temperament. The Sun drives the month. The Sun's own day is the month's strongest day — the day for meditating the Sun's letters. Each planet's two letters are meditated on its own day.</p>
 
       <p>Every planet stacks in layers. Its own letter is one of the seven doubles of Sefer Yetzirah, chapter 4 — the letter made king over that planet in the world, over one day in the year, and over one gate in the soul. Its sign carries one of the twelve simple letters of chapter 5, and that letter is king over a stretch of dates in the year, a body part in the person, and a sense — a faculty — in the soul. The element of the sign gives the temperament, the mother it answers to. When a planet stands in a sign it rules, it is at home, and its influence is doubled.</p>
 
@@ -384,7 +384,6 @@
           { weekday: 'Friday',    letter: 'Resh',  heb: 'ר', planet: 'Mercury', gate: 'Left nostril',  holy: 'Shaddai',      holyHeb: 'שַׁדַּי' },
           { weekday: 'Saturday',  letter: 'Tav',   heb: 'ת', planet: 'Moon',    gate: 'Mouth',         holy: 'Adonai',       holyHeb: 'אֲדֹנָי' }
         ];
-        var RULERS = { Aries: 'Mars', Taurus: 'Venus', Gemini: 'Mercury', Cancer: 'Moon', Leo: 'Sun', Virgo: 'Mercury', Libra: 'Venus', Scorpio: 'Mars', Sagittarius: 'Jupiter', Capricorn: 'Saturn', Aquarius: 'Saturn', Pisces: 'Jupiter' };
         var RULED_SIGNS = { Sun: ['Leo'], Moon: ['Cancer'], Mercury: ['Gemini', 'Virgo'], Venus: ['Taurus', 'Libra'], Mars: ['Aries', 'Scorpio'], Jupiter: ['Sagittarius', 'Pisces'], Saturn: ['Capricorn', 'Aquarius'] };
         var CUSPS = [
           [1, 20, 10], [2, 19, 11], [3, 21, 0], [4, 20, 1], [5, 21, 2], [6, 21, 3],
@@ -526,13 +525,10 @@
 
         /* ---- This month's strongest day ---- */
         var sunSign = SIGNS[Math.floor(sunLon / 30) % 12];
-        var sunRuler = RULERS[sunSign.name];
-        var rulerDay = null;
-        for (var i = 0; i < DAYS.length; i++) if (DAYS[i].planet === sunRuler) rulerDay = DAYS[i];
         var sunDbl = null;
         for (var j = 0; j < DAYS.length; j++) if (DAYS[j].planet === 'Sun') sunDbl = DAYS[j];
-        set('strongest-chain', rulerDay.weekday + ' - Sun - ' + sunDbl.letter + ' - ' + sunSign.name + ' - ' + sunSign.letter);
-        set('strongest-note', rulerDay.weekday + ' is the month\u2019s strongest day. The Sun is in ' + sunSign.name + ', ' + sunRuler + '\u2019s sign, so ' + sunRuler + '\u2019s day rules this month. The Sun\u2019s own day, for meditating ' + sunDbl.letter + ' + ' + sunSign.letter + ', is ' + sunDbl.weekday + '.');
+        set('strongest-chain', sunDbl.weekday + ' - Sun - ' + sunDbl.letter + ' - ' + sunSign.name + ' - ' + sunSign.letter);
+        set('strongest-note', sunDbl.weekday + ' is the month\u2019s strongest day — the Sun\u2019s own day, for meditating ' + sunDbl.letter + ' + ' + sunSign.letter + '. The Sun is in ' + sunSign.name + ' this month.');
 
         /* ---- Build the transit chart as cards, in the order of the week — Sunday first ---- */
         function fact(label, valueHtml) {
