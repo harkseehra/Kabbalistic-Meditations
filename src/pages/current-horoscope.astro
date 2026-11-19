@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Current Horoscope</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IM+Fell+English:ital@0;1&family=Frank+Ruhl+Libre:wght@400;500&display=swap" rel="stylesheet" />
+    <style is:global>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2.25rem; }
+      * { box-sizing: border-box; }
+      :root {
+        color-scheme: light dark;
+        --bg: #f7f5f0;
+        --surface: #ffffff;
+        --surface-2: #efede6;
+        --ink: #1c1e26;
+        --ink-soft: #4a4d59;
+        --line: #d8d4c8;
+        --accent: #191970;
+        --accent-soft: #e3e4f2;
+        --heb: #191970;
+        --fire: #b34a1f; --fire-bg: #fbe9df;
+        --earth: #6d5a2e; --earth-bg: #f1ead3;
+        --air: #3e6b7a; --air-bg: #e0eef2;
+        --water: #2c4f9e; --water-bg: #e0e8fa;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #172022;
+          --surface: #1f2c2e;
+          --surface-2: #243335;
+          --ink: #ece9df;
+          --ink-soft: #b9beb9;
+          --line: #3a4a4c;
+          --accent: #83adb5;
+          --accent-soft: #26383b;
+          --heb: #e8c766;
+          --fire: #eda27c; --fire-bg: #3a2a22;
+          --earth: #d9c48a; --earth-bg: #37321f;
+          --air: #9fd3e0; --air-bg: #22383d;
+          --water: #a9c2f5; --water-bg: #232f47;
+        }
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "IM Fell English", Georgia, serif;
+        font-size: 1.06rem;
+        line-height: 1.65;
+      }
+      .wrap { max-width: 1060px; margin: 0 auto; padding: 2rem 1.1rem 3.5rem; }
+      h1, h2, h3, .oswald { font-family: "Oswald", "Arial Narrow", sans-serif; }
+      h1 { font-size: 2rem; font-weight: 600; letter-spacing: .01em; line-height: 1.2; margin: 0 0 .4rem; }
+      h2 { font-size: 1.25rem; font-weight: 600; margin: 2.4rem 0 .7rem; }
+      p { margin: 0 0 1rem; max-width: 44rem; }
+      .lede { color: var(--ink-soft); font-size: 1.12rem; }
+      .heb { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-weight: 500; }
+      .heb-big { font-size: 1.9rem; line-height: 1; }
+      .heb-md { font-size: 1.45rem; line-height: 1; }
+
+      /* Site nav */
+      .sitenav { display: flex; flex-wrap: wrap; gap: 1.1rem; margin-bottom: 1.6rem; }
+      .sitenav a {
+        font-family: "Oswald", sans-serif; font-size: .92rem; letter-spacing: .08em; text-transform: uppercase;
+        color: var(--ink-soft); text-decoration: none;
+      }
+      .sitenav a.current { color: var(--accent); }
+      .backlink { font-family: "Oswald", sans-serif; font-size: .92rem; letter-spacing: .03em; color: var(--accent); text-decoration: none; display: inline-block; margin-bottom: 1rem; }
+
+      /* Week strip */
+      .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: .5rem; margin: 1.2rem 0 .4rem; }
+      .day {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+        padding: .6rem .4rem .5rem; text-align: center;
+      }
+      .day .dname { font-family: "Oswald", sans-serif; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); display: block; }
+      .day .pname { display: block; font-size: .98rem; margin-top: .15rem; }
+      .day .gate { display: block; font-size: .86rem; color: var(--ink-soft); margin-top: .1rem; }
+      .day .heb-big { display: block; margin-top: .3rem; }
+      @media (max-width: 640px) { .week { grid-template-columns: repeat(4, 1fr); } }
+
+      /* Today */
+      .today-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; margin: 1rem 0 .6rem; }
+      @media (max-width: 640px) { .today-grid { grid-template-columns: repeat(2, 1fr); } }
+
+      /* Strongest day panel */
+      .strongest {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+        padding: 1rem 1.1rem; margin: 1rem 0 .6rem;
+      }
+      .strongest .chain { font-family: "Oswald", sans-serif; font-size: 1.22rem; font-weight: 600; letter-spacing: .02em; margin: 0 0 .3rem; }
+      .strongest p { margin-bottom: .3rem; }
+      .strongest p:last-child { margin-bottom: 0; }
+
+      /* Three mothers */
+      .mothers { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 1rem 0 .6rem; }
+      @media (max-width: 640px) { .mothers { grid-template-columns: 1fr; } }
+
+      /* Filters */
+      .filters { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.4rem 0 1rem; align-items: center; }
+      .filters span { font-family: "Oswald", sans-serif; font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin-right: .2rem; }
+      .chip {
+        font-family: "Oswald", sans-serif; font-size: .92rem; letter-spacing: .03em;
+        padding: .45rem .95rem; border-radius: 999px; cursor: pointer;
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+        min-height: 2.5rem;
+      }
+      .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+      @media (prefers-color-scheme: dark) { .chip[aria-pressed="true"] { color: #172022; } }
+
+      /* Table */
+      .table-scroll { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); }
+      table { width: 100%; border-collapse: collapse; }
+      thead th {
+        font-family: "Oswald", sans-serif; font-weight: 500; font-size: .82rem; letter-spacing: .09em; text-transform: uppercase;
+        text-align: left; color: var(--ink-soft); background: var(--surface-2);
+        padding: .7rem .9rem; border-bottom: 1px solid var(--line);
+      }
+      tr.elem-row td {
+        background: var(--surface-2); padding: .7rem .9rem; border-top: 2px solid var(--line);
+        font-family: "Oswald", sans-serif; font-size: 1.05rem; font-weight: 600; letter-spacing: .02em;
+      }
+      tr.elem-row:first-child td { border-top: none; }
+      tr.elem-row .elem-sub { font-family: "IM Fell English", Georgia, serif; font-size: .95rem; font-weight: 400; color: var(--ink-soft); letter-spacing: 0; }
+      tr.planet-row td {
+        background: var(--accent-soft); padding: .85rem .9rem; border-top: 2px solid var(--line);
+      }
+      tr.planet-row:first-child td { border-top: none; }
+      .planet-name { font-family: "Oswald", sans-serif; font-size: 1.22rem; font-weight: 600; letter-spacing: .02em; }
+      .planet-day { color: var(--ink-soft); font-size: .98rem; }
+      .planet-letter-cell { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; }
+      .planet-letter-cell .lname { font-size: 1.05rem; }
+      .planet-gate { color: var(--ink-soft); font-size: .98rem; }
+      .athome {
+        font-family: "Oswald", sans-serif; font-size: .82rem; letter-spacing: .07em; text-transform: uppercase;
+        padding: .28rem .7rem; border-radius: 999px; white-space: nowrap;
+        background: var(--accent); color: #fff;
+      }
+      @media (prefers-color-scheme: dark) { .athome { color: #172022; } }
+      tr.sign-row td { padding: .75rem .9rem; border-top: 1px solid var(--line); vertical-align: middle; }
+      tr.sign-row td:first-child { padding-left: 2.2rem; }
+      .sign-name { font-size: 1.1rem; }
+      .sign-letter-cell { display: flex; align-items: center; gap: .6rem; }
+      .elem {
+        display: inline-block; font-family: "Oswald", sans-serif; font-size: .82rem; letter-spacing: .07em; text-transform: uppercase;
+        padding: .28rem .7rem; border-radius: 999px; white-space: nowrap;
+      }
+      .elem-fire { background: var(--fire-bg); color: var(--fire); }
+      .elem-earth { background: var(--earth-bg); color: var(--earth); }
+      .elem-air { background: var(--air-bg); color: var(--air); }
+      .elem-water { background: var(--water-bg); color: var(--water); }
+      tr.reading-row td, tr.empty-row td {
+        padding: .7rem .9rem .8rem 2.2rem; border-top: 1px solid var(--line);
+        color: var(--ink-soft); font-size: .98rem; font-style: italic;
+      }
+      tr.hidden-row { display: none; }
+      .dimmed { opacity: .35; }
+
+      .note { color: var(--ink-soft); font-size: .98rem; }
+      .src { border-top: 1px solid var(--line); margin-top: 2.6rem; padding-top: 1.1rem; color: var(--ink-soft); font-size: .95rem; }
+      .src p { margin-bottom: .5rem; }
+
+      /* Mobile: table becomes stacked blocks */
+      @media (max-width: 680px) {
+        table, thead, tbody, tr, td { display: block; width: 100%; }
+        thead { display: none; }
+        tr.elem-row td { border-top: 2px solid var(--line); }
+        tr.planet-row td { border-top: 2px solid var(--line); }
+        tr.sign-row { border-top: 1px solid var(--line); padding: .7rem .9rem .8rem 1.4rem; }
+        tr.sign-row td { border-top: none; padding: .12rem 0; }
+        tr.sign-row td:first-child { padding-left: 0; }
+        tr.sign-row td::before {
+          content: attr(data-label); display: inline-block; min-width: 6.2rem;
+          font-family: "Oswald", sans-serif; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft);
+        }
+        tr.sign-row td.cell-sign::before { content: ""; min-width: 0; }
+        .sign-name { font-size: 1.2rem; }
+        tr.reading-row td, tr.empty-row td { padding-left: 1.4rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <nav class="sitenav" aria-label="Site">
+        <a href="../">Today</a>
+        <a href="../current-horoscope/" class="current" aria-current="page">Horoscope</a>
+        <a href="../practice/">Practice</a>
+        <a href="../prayer/">Prayer</a>
+        <a href="../blog/">Blog</a>
+      </nav>
+
+      <h1>Current Horoscope</h1>
+      <p class="lede">The seven planets as they stand right now — each one in its sign, with its letters, its body part, its sense, and its temperament. The Sun drives the month. The sign the Sun stands in gives the month's strongest day. Each planet's two letters are meditated on its own day.</p>
+
+      <p>Every planet stacks in layers. Its own letter is one of the seven doubles of Sefer Yetzirah, chapter 4 — the letter made king over that planet in the world, over one day in the year, and over one gate in the soul. Its sign carries one of the twelve simple letters of chapter 5, and that letter is king over a stretch of dates in the year, a body part in the person, and a sense — a faculty — in the soul. The element of the sign gives the temperament, the mother it answers to. When a planet stands in a sign it rules, it is at home, and its influence is doubled.</p>
+
+      <h2>Today</h2>
+      <p id="today-date" class="note">Today's values, worked out from the date on your device.</p>
+      <div class="today-grid" aria-label="Today's horoscopic values">
+        <div class="day">
+          <span class="dname">Day letter</span>
+          <span class="heb heb-big" id="today-day-heb">—</span>
+          <span class="pname" id="today-day-name">—</span>
+          <span class="gate" id="today-day-sub">—</span>
+        </div>
+        <div class="day">
+          <span class="dname">Sun letter</span>
+          <span class="heb heb-big" id="today-sun-heb">—</span>
+          <span class="pname" id="today-sun-name">—</span>
+          <span class="gate" id="today-sun-sub">—</span>
+        </div>
+        <div class="day">
+          <span class="dname">Moon letter</span>
+          <span class="heb heb-big" id="today-moon-heb">—</span>
+          <span class="pname" id="today-moon-name">—</span>
+          <span class="gate" id="today-moon-sub">—</span>
+        </div>
+        <div class="day">
+          <span class="dname">Holy name of the day</span>
+          <span class="heb heb-big" id="today-holy-heb">—</span>
+          <span class="pname" id="today-holy-name">—</span>
+          <span class="gate" id="today-holy-sub">—</span>
+        </div>
+      </div>
+      <p class="note">The day letter follows the weekday, Sunday first, as in chapter 4. The sun letter is the letter of the sign the sun is in today. The moon letter is the letter of the sign the moon is in, worked out from the moon's position right now — close to a sign's edge, it can fall on either side. The holy name belongs to the weekday.</p>
+
+      <h2>This month's strongest day</h2>
+      <div class="strongest" id="strongest-panel" aria-label="This month's strongest day">
+        <p class="chain" id="strongest-chain">—</p>
+        <p id="strongest-note">—</p>
+      </div>
+
+      <h2>The transit chart</h2>
+      <p>The seven planets, listed in their elements. Each planet shows its double and its day to meditate, its sign as it stands today, and the sign's letter with its body part, its sense, and its mother.</p>
+      <div class="filters" role="group" aria-label="Filter the chart by element">
+        <span>Element</span>
+        <button class="chip" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" data-filter="fire" aria-pressed="false">Fire</button>
+        <button class="chip" data-filter="earth" aria-pressed="false">Earth</button>
+        <button class="chip" data-filter="air" aria-pressed="false">Air</button>
+        <button class="chip" data-filter="water" aria-pressed="false">Water</button>
+      </div>
+
+      <div class="table-scroll">
+        <table id="transit-table">
+          <thead>
+            <tr>
+              <th scope="col">Sign</th>
+              <th scope="col">Dates</th>
+              <th scope="col">Sign letter</th>
+              <th scope="col">Body part</th>
+              <th scope="col">Sense</th>
+              <th scope="col">Element</th>
+              <th scope="col">Mother</th>
+            </tr>
+          </thead>
+          <tbody id="transit-body">
+          </tbody>
+        </table>
+      </div>
+
+      <h2>The three mothers</h2>
+      <p>Above the doubles and the simples stand the three mothers of chapter 3 — Alef, Mem, and Shin. Each mother is a temperament, and every sign's element places it under one of them. An air sign belongs to Alef. A water sign belongs to Mem. A fire sign belongs to Shin. And an earth sign belongs to Mem as well, because in chapter 3 the earth was created from water — so earth carries Mem's temperament, the water underneath it.</p>
+      <p>So the element is not only a nature — it is a belonging. Read a sign's element and you know its mother: Gemini, Libra, and Aquarius under Alef; Cancer, Scorpio, and Pisces under Mem, with Taurus, Virgo, and Capricorn beside them; Aries, Leo, and Sagittarius under Shin.</p>
+
+      <p class="note" style="margin-top:1rem;">The body parts are named here in plain words. In the language of the text itself: the first stomach, under Ayin and Capricorn, is the rumen; the stomach, under Tzadi and Aquarius, is the abomasum, the true stomach; the gizzard, under Qof and Pisces, is the craw, the grinding chamber; and the bile, under Samekh and Sagittarius, is the gall.</p>
+
+      <div class="src">
+        <p><strong>Sources.</strong> All letter assignments follow Sefer Yetzirah on Sefaria — the Warsaw 1884 Hebrew text, in the Sefaria Community Translation. The three mothers and their temperaments: chapter 3 — Alef air, trunk in the soul; Mem water, belly in the soul; Shin fire, head in the soul; and the earth created from water, which is why the earth signs belong to Mem. Planet letters, days, and gates in the soul: chapter 4 — each double made king over a planet in the world, a day in the year, and a gate in the soul, the week beginning on Sunday. Sign letters, body parts, and senses: chapter 5. The dates shown for each sign are the conventional English calendar ranges of the signs, standing in place of the Hebrew months named in the text. Sign rulerships: the traditional assignments — Saturn over Capricorn and Aquarius, Jupiter over Sagittarius and Pisces, Mars over Aries and Scorpio, the Sun over Leo, Venus over Taurus and Libra, Mercury over Gemini and Virgo, the Moon over Cancer. Elements: the classical four, three signs each.</p>
+        <p>Positions are worked out live in the browser from the date on your device. The Sun and the Moon follow the site's own reckoning; the five wandering planets — Mercury, Venus, Mars, Jupiter, Saturn — are placed by a low-precision planetary calculation, good to a few minutes of arc. That is enough to place the sign, except within about a degree of a cusp, where either side is possible.</p>
+      </div>
+    </main>
+    <script>
+      (function () {
+        /* ---- Data: Sefer Yetzirah on Sefaria, Warsaw 1884 ---- */
+        var SIGNS = [
+          { name: 'Aries',       letter: 'He',     heb: 'ה', dates: 'Mar 21 – Apr 19', organ: 'Right hand',    sense: 'Seeing',        element: 'fire',  mother: 'Shin', motherHeb: 'ש' },
+          { name: 'Taurus',      letter: 'Vav',    heb: 'ו', dates: 'Apr 20 – May 20', organ: 'Left hand',     sense: 'Hearing',       element: 'earth', mother: 'Mem',  motherHeb: 'מ' },
+          { name: 'Gemini',      letter: 'Zayin',  heb: 'ז', dates: 'May 21 – Jun 20', organ: 'Right leg',     sense: 'Smelling',      element: 'air',   mother: 'Alef', motherHeb: 'א' },
+          { name: 'Cancer',      letter: 'Chet',   heb: 'ח', dates: 'Jun 21 – Jul 22', organ: 'Left leg',      sense: 'Talking',       element: 'water', mother: 'Mem',  motherHeb: 'מ' },
+          { name: 'Leo',         letter: 'Tet',    heb: 'ט', dates: 'Jul 23 – Aug 22', organ: 'Right kidney',  sense: 'Eating',        element: 'fire',  mother: 'Shin', motherHeb: 'ש' },
+          { name: 'Virgo',       letter: 'Yod',    heb: 'י', dates: 'Aug 23 – Sep 22', organ: 'Left kidney',   sense: 'Sex',           element: 'earth', mother: 'Mem',  motherHeb: 'מ' },
+          { name: 'Libra',       letter: 'Lamed',  heb: 'ל', dates: 'Sep 23 – Oct 22', organ: 'Liver',         sense: 'Work',          element: 'air',   mother: 'Alef', motherHeb: 'א' },
+          { name: 'Scorpio',     letter: 'Nun',    heb: 'נ', dates: 'Oct 23 – Nov 21', organ: 'Spleen',        sense: 'Movement',      element: 'water', mother: 'Mem',  motherHeb: 'מ' },
+          { name: 'Sagittarius', letter: 'Samekh', heb: 'ס', dates: 'Nov 22 – Dec 21', organ: 'Bile',          sense: 'Excitement',    element: 'fire',  mother: 'Shin', motherHeb: 'ש' },
+          { name: 'Capricorn',   letter: 'Ayin',   heb: 'ע', dates: 'Dec 22 – Jan 19', organ: 'First stomach', sense: 'Play',          element: 'earth', mother: 'Mem',  motherHeb: 'מ' },
+          { name: 'Aquarius',    letter: 'Tzadi',  heb: 'צ', dates: 'Jan 20 – Feb 18', organ: 'Stomach',       sense: 'Contemplation', element: 'air',   mother: 'Alef', motherHeb: 'א' },
+          { name: 'Pisces',      letter: 'Qof',    heb: 'ק', dates: 'Feb 19 – Mar 20', organ: 'Gizzard',       sense: 'Sleep',         element: 'water', mother: 'Mem',  motherHeb: 'מ' }
+        ];
+        // Index by Date.getDay(): 0 = Sunday ... 6 = Saturday (Sefer Yetzirah, Sunday first)
+        var DAYS = [
+          { weekday: 'Sunday',    letter: 'Bet',   heb: 'ב', planet: 'Saturn',  gate: 'Right eye',     holy: 'El',           holyHeb: 'אֵל' },
+          { weekday: 'Monday',    letter: 'Gimel', heb: 'ג', planet: 'Jupiter', gate: 'Left eye',      holy: 'Elohim',       holyHeb: 'אֱלֹהִים' },
+          { weekday: 'Tuesday',   letter: 'Dalet', heb: 'ד', planet: 'Mars',    gate: 'Right ear',     holy: 'YHWH',         holyHeb: 'יְהוָה' },
+          { weekday: 'Wednesday', letter: 'Kaf',   heb: 'כ', planet: 'Sun',     gate: 'Left ear',      holy: 'YHWH Tzevaot', holyHeb: 'יְהוָה צְבָאוֹת' },
+          { weekday: 'Thursday',  letter: 'Pe',    heb: 'פ', planet: 'Venus',   gate: 'Right nostril', holy: 'Elohim Tzevaot', holyHeb: 'אֱלֹהִים צְבָאוֹת' },
+          { weekday: 'Friday',    letter: 'Resh',  heb: 'ר', planet: 'Mercury', gate: 'Left nostril',  holy: 'Shaddai',      holyHeb: 'שַׁדַּי' },
+          { weekday: 'Saturday',  letter: 'Tav',   heb: 'ת', planet: 'Moon',    gate: 'Mouth',         holy: 'Adonai',       holyHeb: 'אֲדֹנָי' }
+        ];
+        var RULERS = { Aries: 'Mars', Taurus: 'Venus', Gemini: 'Mercury', Cancer: 'Moon', Leo: 'Sun', Virgo: 'Mercury', Libra: 'Venus', Scorpio: 'Mars', Sagittarius: 'Jupiter', Capricorn: 'Saturn', Aquarius: 'Saturn', Pisces: 'Jupiter' };
+        var RULED_SIGNS = { Sun: ['Leo'], Moon: ['Cancer'], Mercury: ['Gemini', 'Virgo'], Venus: ['Taurus', 'Libra'], Mars: ['Aries', 'Scorpio'], Jupiter: ['Sagittarius', 'Pisces'], Saturn: ['Capricorn', 'Aquarius'] };
+        var ELEMENTS = [
+          { key: 'fire',  label: 'Fire',  mother: 'Shin', motherHeb: 'ש', sub: 'Shin — the temperament of fire' },
+          { key: 'earth', label: 'Earth', mother: 'Mem',  motherHeb: 'מ', sub: 'Mem — the temperament of earth' },
+          { key: 'air',   label: 'Air',   mother: 'Alef', motherHeb: 'א', sub: 'Alef — the temperament of air' },
+          { key: 'water', label: 'Water', mother: 'Mem',  motherHeb: 'מ', sub: 'Mem — the temperament of water' }
+        ];
+        var CUSPS = [
+          [1, 20, 10], [2, 19, 11], [3, 21, 0], [4, 20, 1], [5, 21, 2], [6, 21, 3],
+          [7, 23, 4], [8, 23, 5], [9, 23, 6], [10, 23, 7], [11, 22, 8], [12, 22, 9]
+        ];
+        function sunSignIndex(date) {
+          var m = date.getMonth() + 1, d = date.getDate(), idx = 9; // Capricorn before Jan 20
+          for (var i = 0; i < CUSPS.length; i++) {
+            if (m > CUSPS[i][0] || (m === CUSPS[i][0] && d >= CUSPS[i][1])) idx = CUSPS[i][2];
+          }
+          return idx;
+        }
+        function moonLon(now) {
+          var d = now.getTime() / 86400000 - 10957.5; // days since J2000.0
+          var rad = Math.PI / 180;
+          var L = 218.3165 + 13.17639648 * d;
+          var M = 134.9634 + 13.06499295 * d;
+          var F = 93.2721 + 13.22935024 * d;
+          var D = 297.8502 + 12.19074912 * d;
+          var Ms = 357.5291 + 0.98560028 * d;
+          var lon = L
+            + 6.2888 * Math.sin(M * rad)
+            + 1.2740 * Math.sin((2 * D - M) * rad)
+            + 0.6580 * Math.sin(2 * D * rad)
+            + 0.2136 * Math.sin(2 * M * rad)
+            - 0.1855 * Math.sin(Ms * rad)
+            - 0.1143 * Math.sin(2 * F * rad);
+          return ((lon % 360) + 360) % 360;
+        }
+
+        /* ---- Ephemeris: low-precision planetary positions (Schlyter) ---- */
+        var ORBIT = {
+          Mercury: { a: [0.38709927, 0.00000037], e: [0.20563593, 0.00001906], i: [-7.00497902, -0.00594749], L: [252.25032350, 149472.67411175], lp: [77.45779628, 0.16047689], om: [48.33076593, -0.12534081] },
+          Venus:   { a: [0.72333566, 0.00000390], e: [0.00677672, -0.00004107], i: [3.39467605, -0.00078890], L: [181.97909950, 58517.81538729], lp: [131.60246718, 0.00268329], om: [76.67984255, -0.27769418] },
+          Earth:   { a: [1.00000261, 0.00000562], e: [0.01671123, -0.00004392], i: [-0.00001531, -0.01294668], L: [100.46457166, 35999.37244981], lp: [102.93768193, 0.32327364], om: [0.0, 0.0] },
+          Mars:    { a: [1.52371034, 0.00001847], e: [0.09339410, 0.00007882], i: [1.84969142, -0.00813131], L: [-4.55343205, 19140.30268499], lp: [-23.94362959, 0.44441088], om: [49.55953891, -0.29257343] },
+          Jupiter: { a: [5.20288700, -0.00011607], e: [0.04838624, -0.00013253], i: [1.30439695, -0.00183714], L: [34.39644051, 3034.74612775], lp: [14.72847983, 0.21252668], om: [100.47390909, 0.20469106] },
+          Saturn:  { a: [9.53667594, -0.00125060], e: [0.05386179, -0.00050991], i: [2.48599187, 0.00193609], L: [49.95424423, 1222.49362201], lp: [92.59887831, -0.41897216], om: [113.66242448, -0.28867794] }
+        };
+        var RAD = Math.PI / 180, DEG = 180 / Math.PI;
+        function norm360(x) { return ((x % 360) + 360) % 360; }
+        function helio(el, T) {
+          var a = el.a[0] + el.a[1] * T, e = el.e[0] + el.e[1] * T, i = (el.i[0] + el.i[1] * T) * RAD;
+          var L = norm360(el.L[0] + el.L[1] * T), lp = norm360(el.lp[0] + el.lp[1] * T), om = norm360(el.om[0] + el.om[1] * T);
+          var w = (lp - om) * RAD, M = norm360(L - lp), Mr = M * RAD;
+          var E = M + DEG * e * Math.sin(Mr) * (1 + e * Math.cos(Mr));
+          for (var k = 0; k < 10; k++) {
+            var Er = E * RAD;
+            E = E - (E - DEG * e * Math.sin(Er) - M) / (1 - e * Math.cos(Er));
+          }
+          var Er2 = E * RAD;
+          var xv = a * (Math.cos(Er2) - e), yv = a * Math.sqrt(1 - e * e) * Math.sin(Er2);
+          var cw = Math.cos(w), sw = Math.sin(w), co = Math.cos(om * RAD), so = Math.sin(om * RAD), ci = Math.cos(i), si = Math.sin(i);
+          var xh = (cw * co - sw * so * ci) * xv + (-sw * co - cw * so * ci) * yv;
+          var yh = (cw * so + sw * co * ci) * xv + (-sw * so + cw * co * ci) * yv;
+          var zh = (sw * si) * xv + (cw * si) * yv;
+          return { x: xh, y: yh, z: zh, lon: norm360(Math.atan2(yh, xh) * DEG) };
+        }
+        function geoLon(planet, T, earth) {
+          var h = helio(ORBIT[planet], T);
+          return norm360(Math.atan2(h.y - earth.y, h.x - earth.x) * DEG);
+        }
+        function dayNumber(y, m, d, ut) {
+          return 367 * y - Math.floor(7 * (y + Math.floor((m + 9) / 12)) / 4) + Math.floor(275 * m / 9) + d - 730530 + ut / 24;
+        }
+
+        /* ---- Work out today ---- */
+        function set(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
+        var now = new Date();
+        var d = dayNumber(now.getUTCFullYear(), now.getUTCMonth() + 1, now.getUTCDate(), now.getUTCHours() + now.getUTCMinutes() / 60);
+        var T = d / 36525;
+        var earth = helio(ORBIT.Earth, T);
+        var sunLon = norm360(earth.lon + 180);
+        var moonLonVal = moonLon(now);
+        var day = DAYS[now.getDay()];
+        var sun = SIGNS[sunSignIndex(now)];
+        var moon = SIGNS[Math.floor(moonLonVal / 30) % 12];
+
+        set('today-date', now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + ' — the day letter, the sun letter, the moon letter, and the holy name of the day.');
+        set('today-day-heb', day.heb);
+        set('today-day-name', day.letter);
+        set('today-day-sub', day.weekday + ' — ' + day.planet);
+        set('today-sun-heb', sun.heb);
+        set('today-sun-name', sun.letter);
+        set('today-sun-sub', 'Sun in ' + sun.name);
+        set('today-moon-heb', moon.heb);
+        set('today-moon-name', moon.letter);
+        set('today-moon-sub', 'Moon in ' + moon.name);
+        set('today-holy-heb', day.holyHeb);
+        set('today-holy-name', day.holy);
+        set('today-holy-sub', day.weekday);
+
+        /* ---- The seven planets as they stand ---- */
+        function planetEntry(planet, lon) {
+          var dbl = null;
+          for (var i = 0; i < DAYS.length; i++) if (DAYS[i].planet === planet) dbl = DAYS[i];
+          var signIdx = Math.floor(lon / 30) % 12;
+          return { planet: planet, dbl: dbl, sign: SIGNS[signIdx], deg: lon % 30 };
+        }
+        var planets = [
+          planetEntry('Saturn', geoLon('Saturn', T, earth)),
+          planetEntry('Jupiter', geoLon('Jupiter', T, earth)),
+          planetEntry('Mars', geoLon('Mars', T, earth)),
+          planetEntry('Sun', sunLon),
+          planetEntry('Venus', geoLon('Venus', T, earth)),
+          planetEntry('Mercury', geoLon('Mercury', T, earth)),
+          planetEntry('Moon', moonLonVal)
+        ];
+
+        /* ---- This month's strongest day ---- */
+        var sunSign = SIGNS[Math.floor(sunLon / 30) % 12];
+        var sunRuler = RULERS[sunSign.name];
+        var rulerDay = null;
+        for (var i = 0; i < DAYS.length; i++) if (DAYS[i].planet === sunRuler) rulerDay = DAYS[i];
+        var sunDbl = null;
+        for (var j = 0; j < DAYS.length; j++) if (DAYS[j].planet === 'Sun') sunDbl = DAYS[j];
+        set('strongest-chain', rulerDay.weekday + ' - Sun - ' + sunDbl.letter + ' - ' + sunSign.name + ' - ' + sunSign.letter);
+        set('strongest-note', rulerDay.weekday + ' is the month\u2019s strongest day. The Sun is in ' + sunSign.name + ', ' + sunRuler + '\u2019s sign, so ' + sunRuler + '\u2019s day rules this month. The Sun\u2019s own day, for meditating ' + sunDbl.letter + ' + ' + sunSign.letter + ', is ' + sunDbl.weekday + '.');
+
+        /* ---- Build the transit chart, grouped by element ---- */
+        function esc(s) { return s; }
+        var html = '';
+        ELEMENTS.forEach(function (el) {
+          var group = planets.filter(function (p) { return p.sign.element === el.key; });
+          html += '<tr class="elem-row" data-element="' + el.key + '"><td colspan="7">' + el.label + ' &nbsp;<span class="elem-sub">' + el.sub + '</span></td></tr>';
+          if (group.length === 0) {
+            html += '<tr class="empty-row" data-element="' + el.key + '"><td colspan="7">No planet in ' + el.label + ' today.</td></tr>';
+            return;
+          }
+          group.forEach(function (p) {
+            var atHome = RULED_SIGNS[p.planet].indexOf(p.sign.name) !== -1;
+            var cusp = (p.deg < 1 || p.deg > 29) ? ' <span class="planet-gate">near the cusp</span>' : '';
+            html += '<tr class="planet-row" data-element="' + el.key + '">'
+              + '<td colspan="4"><span class="planet-name">' + p.planet + '</span> &nbsp;<span class="planet-day">— meditate ' + p.dbl.weekday + '</span>'
+              + (atHome ? ' <span class="athome">At home — doubled</span>' : '')
+              + '</td>'
+              + '<td colspan="3"><span class="planet-letter-cell"><span class="lname">Planet letter — ' + p.dbl.letter + ', the double</span><span class="heb heb-big">' + p.dbl.heb + '</span><span class="planet-gate">Gate — ' + p.dbl.gate + '</span></span></td>'
+              + '</tr>';
+            html += '<tr class="sign-row" data-element="' + el.key + '">'
+              + '<td class="cell-sign"><span class="sign-name">' + p.sign.name + ' ' + p.deg.toFixed(0) + '°</span>' + cusp + '</td>'
+              + '<td data-label="Dates">' + p.sign.dates + '</td>'
+              + '<td data-label="Letter"><span class="sign-letter-cell">' + p.sign.letter + ' <span class="heb heb-md">' + p.sign.heb + '</span></span></td>'
+              + '<td data-label="Body part">' + p.sign.organ + '</td>'
+              + '<td data-label="Sense">' + p.sign.sense + '</td>'
+              + '<td data-label="Element"><span class="elem elem-' + el.key + '">' + el.label + '</span></td>'
+              + '<td data-label="Mother"><span class="sign-letter-cell">' + p.sign.mother + ' <span class="heb heb-md">' + p.sign.motherHeb + '</span></span></td>'
+              + '</tr>';
+            if (p.planet === 'Saturn' && p.sign.name === 'Aries') {
+              html += '<tr class="reading-row" data-element="' + el.key + '"><td colspan="7">Reading — my own experience, not the teaching: speech is deciding life and death in this transit.</td></tr>';
+            }
+          });
+        });
+        document.getElementById('transit-body').innerHTML = html;
+
+        /* ---- Element filter ---- */
+        var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+        function apply(filter) {
+          var rows = Array.prototype.slice.call(document.querySelectorAll('#transit-table tbody tr'));
+          rows.forEach(function (r) {
+            r.classList.toggle('hidden-row', filter !== 'all' && r.dataset.element !== filter);
+          });
+        }
+        chips.forEach(function (chip) {
+          chip.addEventListener('click', function () {
+            chips.forEach(function (c) { c.setAttribute('aria-pressed', 'false'); });
+            chip.setAttribute('aria-pressed', 'true');
+            apply(chip.dataset.filter);
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
