@@ -14,6 +14,22 @@
       * { box-sizing: border-box; }
       :root {
         color-scheme: light dark;
+        /* Type scale — Major Third (1.25) on a 1.24rem base. Five sizes only, used everywhere. */
+        --text-sm: 1rem;
+        --text-base: 1.24rem;
+        --text-lg: 1.55rem;
+        --text-xl: 1.94rem;
+        --text-2xl: 2.42rem;
+        /* Spacing — 8-point scale. Every gap on the page is one of these. */
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 16px;
+        --space-4: 24px;
+        --space-5: 32px;
+        --space-6: 48px;
+        --space-7: 64px;
+        /* Radius — cards 16px, chips pill. */
+        --radius-card: 16px;
         --bg: #f7f5f0;
         --surface: #ffffff;
         --surface-2: #efede6;
@@ -50,60 +66,58 @@
         background: var(--bg);
         color: var(--ink);
         font-family: "IM Fell English", Georgia, serif;
-        font-size: 1.06rem;
-        line-height: 1.65;
+        font-size: var(--text-base);
+        line-height: 1.6;
       }
-      .wrap { max-width: 1060px; margin: 0 auto; padding: 2rem 1.1rem 3.5rem; }
+      .wrap { max-width: 1060px; margin: 0 auto; padding: var(--space-7) var(--space-6) var(--space-7); }
       h1, h2, h3, .oswald { font-family: "Oswald", "Arial Narrow", sans-serif; }
-      h1 { font-size: 2rem; font-weight: 600; letter-spacing: .01em; line-height: 1.2; margin: 0 0 .4rem; }
-      h2 { font-size: 1.25rem; font-weight: 600; margin: 2.4rem 0 .7rem; }
-      p { margin: 0 0 1rem; max-width: 44rem; }
-      .lede { color: var(--ink-soft); font-size: 1.12rem; }
+      h1 { font-size: var(--text-2xl); font-weight: 600; letter-spacing: .01em; line-height: 1.15; margin: 0 0 var(--space-2); }
+      h2 { font-size: var(--text-xl); font-weight: 600; line-height: 1.2; margin: var(--space-6) 0 var(--space-3); }
+      h3 { font-size: var(--text-lg); font-weight: 600; line-height: 1.2; margin: 0; }
+      p { margin: 0 0 var(--space-3); max-width: 44rem; }
+      .lede { color: var(--ink-soft); font-size: var(--text-lg); line-height: 1.55; }
       .heb { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-weight: 500; }
-      .heb-big { font-size: 1.9rem; line-height: 1; }
-      .heb-md { font-size: 1.45rem; line-height: 1; }
+      .heb-big { font-size: 2.2rem; line-height: 1; }
+      .heb-md { font-size: 1.7rem; line-height: 1; }
 
       /* Site nav */
-      .sitenav { display: flex; flex-wrap: wrap; gap: 1.1rem; margin-bottom: 1.6rem; }
+      .sitenav { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-5); }
       .sitenav a {
         font-family: "Oswald", sans-serif; font-size: .92rem; letter-spacing: .08em; text-transform: uppercase;
         color: var(--ink-soft); text-decoration: none;
       }
       .sitenav a.current { color: var(--accent); }
-      .backlink { font-family: "Oswald", sans-serif; font-size: .92rem; letter-spacing: .03em; color: var(--accent); text-decoration: none; display: inline-block; margin-bottom: 1rem; }
 
-      /* Week strip */
-      .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: .5rem; margin: 1.2rem 0 .4rem; }
-      .day {
-        background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-        padding: .6rem .4rem .5rem; text-align: center;
+      /* Shared card surface — one treatment for every card on the page */
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-card);
+        padding: var(--space-4);
       }
-      .day .dname { font-family: "Oswald", sans-serif; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); display: block; }
-      .day .pname { display: block; font-size: .98rem; margin-top: .15rem; }
-      .day .gate { display: block; font-size: .86rem; color: var(--ink-soft); margin-top: .1rem; }
-      .day .heb-big { display: block; margin-top: .3rem; }
-      @media (max-width: 640px) { .week { grid-template-columns: repeat(4, 1fr); } }
 
       /* Today */
-      .today-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; margin: 1rem 0 .6rem; }
+      .today-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-2); }
+      .day { text-align: center; }
+      .day .dname { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); display: block; }
+      .day .pname { display: block; font-size: var(--text-base); margin-top: var(--space-2); }
+      .day .gate { display: block; font-size: var(--text-sm); color: var(--ink-soft); margin-top: var(--space-1); }
+      .day .heb-big { display: block; margin-top: var(--space-2); }
       @media (max-width: 640px) { .today-grid { grid-template-columns: repeat(2, 1fr); } }
 
       /* Strongest day panel */
-      .strongest {
-        background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
-        padding: 1rem 1.1rem; margin: 1rem 0 .6rem;
-      }
-      .strongest .chain { font-family: "Oswald", sans-serif; font-size: 1.22rem; font-weight: 600; letter-spacing: .02em; margin: 0 0 .3rem; }
-      .strongest p { margin-bottom: .3rem; }
+      .strongest { margin: var(--space-3) 0 var(--space-2); }
+      .strongest .chain { font-family: "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; margin: 0 0 var(--space-2); }
+      .strongest p { margin-bottom: var(--space-2); }
       .strongest p:last-child { margin-bottom: 0; }
 
       /* Three mothers */
-      .mothers { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 1rem 0 .6rem; }
+      .mothers { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-2); }
       @media (max-width: 640px) { .mothers { grid-template-columns: 1fr; } }
 
       /* Filters */
-      .filters { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.4rem 0 1rem; align-items: center; }
-      .filters span { font-family: "Oswald", sans-serif; font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin-right: .2rem; }
+      .filters { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) 0 var(--space-3); align-items: center; }
+      .filters span { font-family: "Oswald", sans-serif; font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin-right: var(--space-1); }
       .chip {
         font-family: "Oswald", sans-serif; font-size: .92rem; letter-spacing: .03em;
         padding: .45rem .95rem; border-radius: 999px; cursor: pointer;
@@ -113,39 +127,48 @@
       .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
       @media (prefers-color-scheme: dark) { .chip[aria-pressed="true"] { color: #172022; } }
 
-      /* Table */
-      .table-scroll { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); }
-      table { width: 100%; border-collapse: collapse; }
-      thead th {
-        font-family: "Oswald", sans-serif; font-weight: 500; font-size: .82rem; letter-spacing: .09em; text-transform: uppercase;
-        text-align: left; color: var(--ink-soft); background: var(--surface-2);
-        padding: .7rem .9rem; border-bottom: 1px solid var(--line);
+      /* Element sections */
+      .elem-section { margin-top: var(--space-5); }
+      .elem-section.hidden { display: none; }
+      .elem-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-2) var(--space-3); margin-bottom: var(--space-3); }
+      .elem-sub { color: var(--ink-soft); font-size: var(--text-base); }
+      .elem-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; align-self: center; }
+
+      /* Planet card grid */
+      .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); align-items: stretch; }
+      .planet-card {
+        display: flex; flex-direction: column; gap: var(--space-3);
+        border-top: 4px solid var(--elem-color, var(--line));
       }
-      tr.elem-row td {
-        background: var(--surface-2); padding: .7rem .9rem; border-top: 2px solid var(--line);
-        font-family: "Oswald", sans-serif; font-size: 1.05rem; font-weight: 600; letter-spacing: .02em;
-      }
-      tr.elem-row:first-child td { border-top: none; }
-      tr.elem-row .elem-sub { font-family: "IM Fell English", Georgia, serif; font-size: .95rem; font-weight: 400; color: var(--ink-soft); letter-spacing: 0; }
-      tr.planet-row td {
-        background: var(--accent-soft); padding: .85rem .9rem; border-top: 2px solid var(--line);
-      }
-      tr.planet-row:first-child td { border-top: none; }
-      .planet-name { font-family: "Oswald", sans-serif; font-size: 1.22rem; font-weight: 600; letter-spacing: .02em; }
-      .planet-day { color: var(--ink-soft); font-size: .98rem; }
-      .planet-letter-cell { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; }
-      .planet-letter-cell .lname { font-size: 1.05rem; }
-      .planet-gate { color: var(--ink-soft); font-size: .98rem; }
+      .planet-card.elem-fire { --elem-color: var(--fire); }
+      .planet-card.elem-earth { --elem-color: var(--earth); }
+      .planet-card.elem-air { --elem-color: var(--air); }
+      .planet-card.elem-water { --elem-color: var(--water); }
+      .card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
+      .planet-name { font-family: "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; }
       .athome {
         font-family: "Oswald", sans-serif; font-size: .82rem; letter-spacing: .07em; text-transform: uppercase;
         padding: .28rem .7rem; border-radius: 999px; white-space: nowrap;
         background: var(--accent); color: #fff;
       }
       @media (prefers-color-scheme: dark) { .athome { color: #172022; } }
-      tr.sign-row td { padding: .75rem .9rem; border-top: 1px solid var(--line); vertical-align: middle; }
-      tr.sign-row td:first-child { padding-left: 2.2rem; }
-      .sign-name { font-size: 1.1rem; }
-      .sign-letter-cell { display: flex; align-items: center; gap: .6rem; }
+      .double-row { display: flex; align-items: center; gap: var(--space-3); }
+      .dbl-meta { display: flex; flex-direction: column; gap: var(--space-1); }
+      .dbl-line { font-size: var(--text-base); }
+      .dbl-line.soft { color: var(--ink-soft); font-size: var(--text-sm); }
+      .card-div { height: 1px; background: var(--line); }
+      .sign-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-2) var(--space-3); }
+      .sign-name { font-size: var(--text-lg); font-weight: 600; }
+      .sign-dates { color: var(--ink-soft); font-size: var(--text-sm); }
+      .cusp-note { color: var(--ink-soft); font-size: var(--text-sm); font-style: italic; }
+      .facts { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+      .fact { display: flex; flex-direction: column; gap: var(--space-1); }
+      .fact-label { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+      .fact-value { font-size: var(--text-base); display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+      .reading { border-top: 1px solid var(--line); padding-top: var(--space-2); color: var(--ink-soft); font-style: italic; font-size: var(--text-base); }
+      .empty-card { color: var(--ink-soft); font-style: italic; border-top-color: var(--line); }
+
+      /* Element pills */
       .elem {
         display: inline-block; font-family: "Oswald", sans-serif; font-size: .82rem; letter-spacing: .07em; text-transform: uppercase;
         padding: .28rem .7rem; border-radius: 999px; white-space: nowrap;
@@ -154,33 +177,20 @@
       .elem-earth { background: var(--earth-bg); color: var(--earth); }
       .elem-air { background: var(--air-bg); color: var(--air); }
       .elem-water { background: var(--water-bg); color: var(--water); }
-      tr.reading-row td, tr.empty-row td {
-        padding: .7rem .9rem .8rem 2.2rem; border-top: 1px solid var(--line);
-        color: var(--ink-soft); font-size: .98rem; font-style: italic;
-      }
-      tr.hidden-row { display: none; }
-      .dimmed { opacity: .35; }
+      .dot-fire { background: var(--fire); }
+      .dot-earth { background: var(--earth); }
+      .dot-air { background: var(--air); }
+      .dot-water { background: var(--water); }
 
-      .note { color: var(--ink-soft); font-size: .98rem; }
-      .src { border-top: 1px solid var(--line); margin-top: 2.6rem; padding-top: 1.1rem; color: var(--ink-soft); font-size: .95rem; }
-      .src p { margin-bottom: .5rem; }
+      .note { color: var(--ink-soft); font-size: var(--text-sm); }
+      .src { border-top: 1px solid var(--line); margin-top: var(--space-6); padding-top: var(--space-4); color: var(--ink-soft); font-size: var(--text-sm); }
+      .src p { margin-bottom: var(--space-2); }
 
-      /* Mobile: table becomes stacked blocks */
+      /* Mobile: single column, tighter card padding, same scale */
       @media (max-width: 680px) {
-        table, thead, tbody, tr, td { display: block; width: 100%; }
-        thead { display: none; }
-        tr.elem-row td { border-top: 2px solid var(--line); }
-        tr.planet-row td { border-top: 2px solid var(--line); }
-        tr.sign-row { border-top: 1px solid var(--line); padding: .7rem .9rem .8rem 1.4rem; }
-        tr.sign-row td { border-top: none; padding: .12rem 0; }
-        tr.sign-row td:first-child { padding-left: 0; }
-        tr.sign-row td::before {
-          content: attr(data-label); display: inline-block; min-width: 6.2rem;
-          font-family: "Oswald", sans-serif; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft);
-        }
-        tr.sign-row td.cell-sign::before { content: ""; min-width: 0; }
-        .sign-name { font-size: 1.2rem; }
-        tr.reading-row td, tr.empty-row td { padding-left: 1.4rem; }
+        .wrap { padding: var(--space-5) var(--space-4) var(--space-6); }
+        .cards { grid-template-columns: 1fr; gap: var(--space-3); }
+        .card { padding: 20px; }
       }
     </style>
   </head>
@@ -202,25 +212,25 @@
       <h2>Today</h2>
       <p id="today-date" class="note">Today's values, worked out from the date on your device.</p>
       <div class="today-grid" aria-label="Today's horoscopic values">
-        <div class="day">
+        <div class="day card">
           <span class="dname">Day letter</span>
           <span class="heb heb-big" id="today-day-heb">—</span>
           <span class="pname" id="today-day-name">—</span>
           <span class="gate" id="today-day-sub">—</span>
         </div>
-        <div class="day">
+        <div class="day card">
           <span class="dname">Sun letter</span>
           <span class="heb heb-big" id="today-sun-heb">—</span>
           <span class="pname" id="today-sun-name">—</span>
           <span class="gate" id="today-sun-sub">—</span>
         </div>
-        <div class="day">
+        <div class="day card">
           <span class="dname">Moon letter</span>
           <span class="heb heb-big" id="today-moon-heb">—</span>
           <span class="pname" id="today-moon-name">—</span>
           <span class="gate" id="today-moon-sub">—</span>
         </div>
-        <div class="day">
+        <div class="day card">
           <span class="dname">Holy name of the day</span>
           <span class="heb heb-big" id="today-holy-heb">—</span>
           <span class="pname" id="today-holy-name">—</span>
@@ -230,13 +240,13 @@
       <p class="note">The day letter follows the weekday, Sunday first, as in chapter 4. The sun letter is the letter of the sign the sun is in today. The moon letter is the letter of the sign the moon is in, worked out from the moon's position right now — close to a sign's edge, it can fall on either side. The holy name belongs to the weekday.</p>
 
       <h2>This month's strongest day</h2>
-      <div class="strongest" id="strongest-panel" aria-label="This month's strongest day">
+      <div class="strongest card" id="strongest-panel" aria-label="This month's strongest day">
         <p class="chain" id="strongest-chain">—</p>
         <p id="strongest-note">—</p>
       </div>
 
       <h2>The transit chart</h2>
-      <p>The seven planets, listed in their elements. Each planet shows its double and its day to meditate, its sign as it stands today, and the sign's letter with its body part, its sense, and its mother.</p>
+      <p>The seven planets, listed in their elements. Each card shows the planet's double and its day to meditate, its sign as it stands today, and the sign's letter with its body part, its sense, and its mother.</p>
       <div class="filters" role="group" aria-label="Filter the chart by element">
         <span>Element</span>
         <button class="chip" data-filter="all" aria-pressed="true">All</button>
@@ -246,22 +256,7 @@
         <button class="chip" data-filter="water" aria-pressed="false">Water</button>
       </div>
 
-      <div class="table-scroll">
-        <table id="transit-table">
-          <thead>
-            <tr>
-              <th scope="col">Sign</th>
-              <th scope="col">Dates</th>
-              <th scope="col">Sign letter</th>
-              <th scope="col">Body part</th>
-              <th scope="col">Sense</th>
-              <th scope="col">Element</th>
-              <th scope="col">Mother</th>
-            </tr>
-          </thead>
-          <tbody id="transit-body">
-          </tbody>
-        </table>
+      <div id="chart" aria-live="polite">
       </div>
 
       <h2>The three mothers</h2>
@@ -428,47 +423,56 @@
         set('strongest-chain', rulerDay.weekday + ' - Sun - ' + sunDbl.letter + ' - ' + sunSign.name + ' - ' + sunSign.letter);
         set('strongest-note', rulerDay.weekday + ' is the month\u2019s strongest day. The Sun is in ' + sunSign.name + ', ' + sunRuler + '\u2019s sign, so ' + sunRuler + '\u2019s day rules this month. The Sun\u2019s own day, for meditating ' + sunDbl.letter + ' + ' + sunSign.letter + ', is ' + sunDbl.weekday + '.');
 
-        /* ---- Build the transit chart, grouped by element ---- */
-        function esc(s) { return s; }
+        /* ---- Build the transit chart as cards, grouped by element ---- */
+        function fact(label, valueHtml) {
+          return '<div class="fact"><span class="fact-label">' + label + '</span><span class="fact-value">' + valueHtml + '</span></div>';
+        }
         var html = '';
         ELEMENTS.forEach(function (el) {
           var group = planets.filter(function (p) { return p.sign.element === el.key; });
-          html += '<tr class="elem-row" data-element="' + el.key + '"><td colspan="7">' + el.label + ' &nbsp;<span class="elem-sub">' + el.sub + '</span></td></tr>';
+          html += '<section class="elem-section" data-element="' + el.key + '">';
+          html += '<div class="elem-head"><span class="elem-dot dot-' + el.key + '"></span><h3>' + el.label + '</h3><span class="elem-sub">' + el.sub + '</span></div>';
+          html += '<div class="cards">';
           if (group.length === 0) {
-            html += '<tr class="empty-row" data-element="' + el.key + '"><td colspan="7">No planet in ' + el.label + ' today.</td></tr>';
-            return;
+            html += '<div class="planet-card card empty-card elem-' + el.key + '">No planet in ' + el.label + ' today.</div>';
+          } else {
+            group.forEach(function (p) {
+              var atHome = RULED_SIGNS[p.planet].indexOf(p.sign.name) !== -1;
+              var cusp = (p.deg < 1 || p.deg > 29) ? ' <span class="cusp-note">near the cusp</span>' : '';
+              html += '<article class="planet-card card elem-' + el.key + '">';
+              html += '<div class="card-head"><span class="planet-name">' + p.planet + '</span>'
+                + (atHome ? '<span class="athome">At home — doubled</span>' : '')
+                + '</div>';
+              html += '<div class="double-row"><span class="heb heb-big">' + p.dbl.heb + '</span><div class="dbl-meta">'
+                + '<span class="dbl-line">Planet letter — ' + p.dbl.letter + ', the double</span>'
+                + '<span class="dbl-line soft">Gate — ' + p.dbl.gate + ' · Meditate ' + p.dbl.weekday + '</span>'
+                + '</div></div>';
+              html += '<div class="card-div"></div>';
+              html += '<div class="sign-row"><span class="sign-name">' + p.sign.name + ' ' + p.deg.toFixed(0) + '°</span>'
+                + '<span class="sign-dates">' + p.sign.dates + '</span>' + cusp + '</div>';
+              html += '<div class="facts">'
+                + fact('Sign letter', p.sign.letter + ' <span class="heb heb-md">' + p.sign.heb + '</span>')
+                + fact('Body part', p.sign.organ)
+                + fact('Sense', p.sign.sense)
+                + fact('Element', '<span class="elem elem-' + el.key + '">' + el.label + '</span>')
+                + fact('Mother', p.sign.mother + ' <span class="heb heb-md">' + p.sign.motherHeb + '</span>')
+                + '</div>';
+              if (p.planet === 'Saturn' && p.sign.name === 'Aries') {
+                html += '<div class="reading">Reading — my own experience, not the teaching: speech is deciding life and death in this transit.</div>';
+              }
+              html += '</article>';
+            });
           }
-          group.forEach(function (p) {
-            var atHome = RULED_SIGNS[p.planet].indexOf(p.sign.name) !== -1;
-            var cusp = (p.deg < 1 || p.deg > 29) ? ' <span class="planet-gate">near the cusp</span>' : '';
-            html += '<tr class="planet-row" data-element="' + el.key + '">'
-              + '<td colspan="4"><span class="planet-name">' + p.planet + '</span> &nbsp;<span class="planet-day">— meditate ' + p.dbl.weekday + '</span>'
-              + (atHome ? ' <span class="athome">At home — doubled</span>' : '')
-              + '</td>'
-              + '<td colspan="3"><span class="planet-letter-cell"><span class="lname">Planet letter — ' + p.dbl.letter + ', the double</span><span class="heb heb-big">' + p.dbl.heb + '</span><span class="planet-gate">Gate — ' + p.dbl.gate + '</span></span></td>'
-              + '</tr>';
-            html += '<tr class="sign-row" data-element="' + el.key + '">'
-              + '<td class="cell-sign"><span class="sign-name">' + p.sign.name + ' ' + p.deg.toFixed(0) + '°</span>' + cusp + '</td>'
-              + '<td data-label="Dates">' + p.sign.dates + '</td>'
-              + '<td data-label="Letter"><span class="sign-letter-cell">' + p.sign.letter + ' <span class="heb heb-md">' + p.sign.heb + '</span></span></td>'
-              + '<td data-label="Body part">' + p.sign.organ + '</td>'
-              + '<td data-label="Sense">' + p.sign.sense + '</td>'
-              + '<td data-label="Element"><span class="elem elem-' + el.key + '">' + el.label + '</span></td>'
-              + '<td data-label="Mother"><span class="sign-letter-cell">' + p.sign.mother + ' <span class="heb heb-md">' + p.sign.motherHeb + '</span></span></td>'
-              + '</tr>';
-            if (p.planet === 'Saturn' && p.sign.name === 'Aries') {
-              html += '<tr class="reading-row" data-element="' + el.key + '"><td colspan="7">Reading — my own experience, not the teaching: speech is deciding life and death in this transit.</td></tr>';
-            }
-          });
+          html += '</div></section>';
         });
-        document.getElementById('transit-body').innerHTML = html;
+        document.getElementById('chart').innerHTML = html;
 
         /* ---- Element filter ---- */
         var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
         function apply(filter) {
-          var rows = Array.prototype.slice.call(document.querySelectorAll('#transit-table tbody tr'));
-          rows.forEach(function (r) {
-            r.classList.toggle('hidden-row', filter !== 'all' && r.dataset.element !== filter);
+          var sections = Array.prototype.slice.call(document.querySelectorAll('.elem-section'));
+          sections.forEach(function (s) {
+            s.classList.toggle('hidden', filter !== 'all' && s.dataset.element !== filter);
           });
         }
         chips.forEach(function (chip) {
