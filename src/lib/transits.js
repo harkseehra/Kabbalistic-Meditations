@@ -1,21 +1,21 @@
-// Letter, sign, and organ correspondences follow Sefer Yetzirah, chapter 5,
-// as used on the 32 Paths page. The one-line notes are plain-language
+// Letter, sign, and organ correspondences follow Sefer Yetzirah, chapters 4 and 5,
+// as printed in the Warsaw 1884 edition on Sefaria (Sefaria Community Translation). The one-line notes are plain-language
 // descriptions, not quoted teaching.
 
 // The twelve elemental letters, in zodiac order.
 export const LETTERS = [
-  { glyph: 'ה', name: 'He',    pointed: 'הֵא',   translit: 'HEH',     sign: 'Aries',       start: [3, 21],  end: [4, 19],  organ: 'right hand',  sense: 'speech',   note: 'What you say, and what you make with your hands.' },
-  { glyph: 'ו', name: 'Vav',   pointed: 'וָו',   translit: 'VAHV',    sign: 'Taurus',      start: [4, 20],  end: [5, 20],  organ: 'right kidney', sense: 'thought',  note: 'The quiet thinking underneath everything else.' },
-  { glyph: 'ז', name: 'Zayin', pointed: 'זַיִן', translit: 'ZAH-yin', sign: 'Gemini',      start: [5, 21],  end: [6, 20],  organ: 'right foot',   sense: 'walking',  note: 'Where you actually go, not where you plan to go.' },
-  { glyph: 'ח', name: 'Chet',  pointed: 'חֵית', translit: 'KHET',    sign: 'Cancer',      start: [6, 21],  end: [7, 22],  organ: 'left hand',   sense: 'sight',    note: 'What you see, and what seeing does to you.' },
-  { glyph: 'ט', name: 'Tet',   pointed: 'טֵית', translit: 'TET',     sign: 'Leo',         start: [7, 23],  end: [8, 22],  organ: 'left kidney',  sense: 'hearing',  note: 'What you hear when nobody is talking.' },
-  { glyph: 'י', name: 'Yud',   pointed: 'יוֹד',  translit: 'YOD',     sign: 'Virgo',       start: [8, 23],  end: [9, 22],  organ: 'left foot',    sense: 'action',   note: 'The step you take, not the step you think about.' },
-  { glyph: 'ל', name: 'Lamed', pointed: 'לָמֶד', translit: 'LAH-med', sign: 'Libra',       start: [9, 23],  end: [10, 22], organ: 'gallbladder',  sense: 'desire',   note: 'What you want, plain and simple.' },
-  { glyph: 'נ', name: 'Nun',   pointed: 'נוּן',  translit: 'NOON',    sign: 'Scorpio',     start: [10, 23], end: [11, 21], organ: 'intestines',   sense: 'smell',    note: 'What you sense before you understand it.' },
-  { glyph: 'ס', name: 'Samekh', pointed: 'סָמֶךְ', translit: 'SAH-mekh', sign: 'Sagittarius', start: [11, 22], end: [12, 21], organ: 'spleen',      sense: 'sleep',    note: 'Rest, and what restores you.' },
-  { glyph: 'ע', name: 'Ayin',  pointed: 'עַיִן', translit: 'AH-yin',  sign: 'Capricorn',   start: [12, 22], end: [1, 19],  organ: 'liver',       sense: 'anger',    note: 'Heat in the body, and what it burns.' },
-  { glyph: 'צ', name: 'Tzadi', pointed: 'צָדִי', translit: 'TSAH-dee', sign: 'Aquarius',    start: [1, 20],  end: [2, 18],  organ: 'stomach',     sense: 'taste',    note: 'What you take in, and what you keep.' },
-  { glyph: 'ק', name: 'Kuf',   pointed: 'קוֹף',  translit: 'KOF',     sign: 'Pisces',      start: [2, 19],  end: [3, 20],  organ: 'pancreas',    sense: 'laughter', note: 'The release after the tension.' },
+  { glyph: 'ה', name: 'He', pointed: 'הֵא', translit: 'HEH', sign: 'Aries', start: [3, 21], end: [4, 19], organ: 'right hand', sense: 'seeing', note: 'What you see, and what it shows you.', element: 'fire', mother: 'Shin', planet: 'Mars' },
+  { glyph: 'ו', name: 'Vav', pointed: 'וָו', translit: 'VAHV', sign: 'Taurus', start: [4, 20], end: [5, 20], organ: 'left hand', sense: 'hearing', note: 'What you hear underneath the noise.', element: 'earth', mother: 'Mem', planet: 'Venus' },
+  { glyph: 'ז', name: 'Zayin', pointed: 'זַיִן', translit: 'ZAH-yin', sign: 'Gemini', start: [5, 21], end: [6, 20], organ: 'right leg', sense: 'smelling', note: 'What you catch on the air before you see it.', element: 'air', mother: 'Alef', planet: 'Mercury' },
+  { glyph: 'ח', name: 'Chet', pointed: 'חֵית', translit: 'KHET', sign: 'Cancer', start: [6, 21], end: [7, 22], organ: 'left leg', sense: 'talking', note: 'What you say, and what it makes real.', element: 'water', mother: 'Mem', planet: 'Moon' },
+  { glyph: 'ט', name: 'Tet', pointed: 'טֵית', translit: 'TET', sign: 'Leo', start: [7, 23], end: [8, 22], organ: 'right kidney', sense: 'eating', note: 'What you take in, and what it becomes in you.', element: 'fire', mother: 'Shin', planet: 'Sun' },
+  { glyph: 'י', name: 'Yud', pointed: 'יוֹד', translit: 'YOD', sign: 'Virgo', start: [8, 23], end: [9, 22], organ: 'left kidney', sense: 'sex', note: 'What joins two, and what it makes.', element: 'earth', mother: 'Mem', planet: 'Mercury' },
+  { glyph: 'ל', name: 'Lamed', pointed: 'לָמֶד', translit: 'LAH-med', sign: 'Libra', start: [9, 23], end: [10, 22], organ: 'liver', sense: 'work', note: 'What you do with your hands, and what it builds.', element: 'air', mother: 'Alef', planet: 'Venus' },
+  { glyph: 'נ', name: 'Nun', pointed: 'נוּן', translit: 'NOON', sign: 'Scorpio', start: [10, 23], end: [11, 21], organ: 'spleen', sense: 'movement', note: 'Where you actually go, not where you plan to go.', element: 'water', mother: 'Mem', planet: 'Mars' },
+  { glyph: 'ס', name: 'Samekh', pointed: 'סָמֶךְ', translit: 'SAH-mekh', sign: 'Sagittarius', start: [11, 22], end: [12, 21], organ: 'bile', sense: 'excitement', note: 'The stirring, and what it moves in you.', element: 'fire', mother: 'Shin', planet: 'Jupiter' },
+  { glyph: 'ע', name: 'Ayin', pointed: 'עַיִן', translit: 'AH-yin', sign: 'Capricorn', start: [12, 22], end: [1, 19], organ: 'first stomach', sense: 'play', note: 'The lightness that comes when the weight lifts.', element: 'earth', mother: 'Mem', planet: 'Saturn' },
+  { glyph: 'צ', name: 'Tzadi', pointed: 'צָדִי', translit: 'TSAH-dee', sign: 'Aquarius', start: [1, 20], end: [2, 18], organ: 'stomach', sense: 'contemplation', note: 'The quiet thinking underneath everything else.', element: 'air', mother: 'Alef', planet: 'Saturn' },
+  { glyph: 'ק', name: 'Kuf', pointed: 'קוֹף', translit: 'KOF', sign: 'Pisces', start: [2, 19], end: [3, 20], organ: 'gizzard', sense: 'sleep', note: 'Rest, and what restores you.', element: 'water', mother: 'Mem', planet: 'Jupiter' },
 ];
 
 // The three mother letters, in order, per Sefer Yetzirah chapter 3
@@ -26,16 +26,16 @@ export const MOTHERS = [
   { glyph: 'ש', name: 'Shin', pointed: 'שִׁין', element: 'fire', place: 'head' },
 ];
 
-// The seven double letters, in weekday order Saturday to Friday,
-// per Sefer Yetzirah chapter 4: each carries a planet and a day.
+// The seven double letters, in weekday order Sunday to Saturday,
+// per Sefer Yetzirah chapter 4 (Warsaw 1884 on Sefaria): each carries a planet, a day, and a gate.
 export const DOUBLES = [
-  { glyph: 'ב', name: 'Bet', pointed: 'בֵּית', day: 'Saturday', planet: 'Saturn' },
-  { glyph: 'ג', name: 'Gimel', pointed: 'גִּימֶל', day: 'Sunday', planet: 'Jupiter' },
-  { glyph: 'ד', name: 'Dalet', pointed: 'דָּלֶת', day: 'Monday', planet: 'Mars' },
-  { glyph: 'כ', name: 'Kaf', pointed: 'כַּף', day: 'Tuesday', planet: 'Sun' },
-  { glyph: 'פ', name: 'Peh', pointed: 'פֵּא', day: 'Wednesday', planet: 'Venus' },
-  { glyph: 'ר', name: 'Resh', pointed: 'רֵישׁ', day: 'Thursday', planet: 'Mercury' },
-  { glyph: 'ת', name: 'Tav', pointed: 'תָּו', day: 'Friday', planet: 'Moon' },
+  { glyph: 'ב', name: 'Bet', pointed: 'בֵּית', day: 'Sunday', planet: 'Saturn', gate: 'right eye' },
+  { glyph: 'ג', name: 'Gimel', pointed: 'גִּימֶל', day: 'Monday', planet: 'Jupiter', gate: 'left eye' },
+  { glyph: 'ד', name: 'Dalet', pointed: 'דָּלֶת', day: 'Tuesday', planet: 'Mars', gate: 'right ear' },
+  { glyph: 'כ', name: 'Kaf', pointed: 'כַּף', day: 'Wednesday', planet: 'Sun', gate: 'left ear' },
+  { glyph: 'פ', name: 'Peh', pointed: 'פֵּא', day: 'Thursday', planet: 'Venus', gate: 'right nostril' },
+  { glyph: 'ר', name: 'Resh', pointed: 'רֵישׁ', day: 'Friday', planet: 'Mercury', gate: 'left nostril' },
+  { glyph: 'ת', name: 'Tav', pointed: 'תָּו', day: 'Saturday', planet: 'Moon', gate: 'mouth' },
 ];
 
 // Day names, in order, with the holy name of the day and its sefirah.

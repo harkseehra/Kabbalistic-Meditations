@@ -170,6 +170,11 @@ const rangeOf = (l) => `${MONTHS[l.start[0] - 1]} ${l.start[1]} – ${MONTHS[l.e
     </tbody>
   </table>
 
+  <p class="dim small">
+    The organs use plain words here — first stomach is the rumen, bile is the gall,
+    stomach is the abomasum, gizzard is the craw (Sefer Yetzirah, chapter 5).
+  </p>
+
   <div class="letters-cards">
     {LETTERS.map((l) => (
       <article class="letter-card">
@@ -181,6 +186,12 @@ const rangeOf = (l) => `${MONTHS[l.start[0] - 1]} ${l.start[1]} – ${MONTHS[l.e
       </article>
     ))}
   </div>
+
+  <p>
+    A full overview of the planets, days, signs, and letters — with today's values —
+    lives on its own page:
+    <a href={`${import.meta.env.BASE_URL}practice/sandbox-pandora-detailed-overview/`}>Sandbox Pandora Detailed Overview</a>.
+  </p>
 
   <h2>The holy names of the week</h2>
 
