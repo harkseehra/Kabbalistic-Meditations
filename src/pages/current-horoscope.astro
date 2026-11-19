@@ -8,7 +8,7 @@
     <title>Current Horoscope</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IM+Fell+English:ital@0;1&family=Frank+Ruhl+Libre:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IM+Fell+English:ital@0;1&family=Frank+Ruhl+Libre:wght@400;500&family=Redaction+10&display=swap" rel="stylesheet" />
     <style is:global>
       button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2.25rem; }
       * { box-sizing: border-box; }
@@ -111,7 +111,7 @@
         color: var(--header-ink);
       }
       #site-header .site-name { justify-self: start; text-decoration: none; }
-      #site-header .site-wordmark { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: 0.08em; color: var(--header-ink); }
+      #site-header .site-wordmark { font-family: "Redaction 10", "IM Fell English", serif; font-size: var(--text-sm); letter-spacing: 0.08em; color: var(--header-ink); }
       #site-header nav { display: flex; gap: 0.6rem; justify-self: end; }
       #site-header nav a {
         font-family: "Oswald", sans-serif;
@@ -180,7 +180,7 @@
       .day { text-align: center; }
       .day .dname { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); display: block; }
       .day .pname { display: block; font-size: var(--text-base); margin-top: var(--space-2); }
-      .day .gate { display: block; font-size: var(--text-sm); color: var(--ink-soft); margin-top: var(--space-1); }
+      .day .gate { display: block; font-size: var(--text-base); color: var(--ink-soft); margin-top: var(--space-1); }
       .day .heb-big { display: block; margin-top: var(--space-2); }
       @media (max-width: 640px) { .today-grid { grid-template-columns: repeat(2, 1fr); } }
 
@@ -189,6 +189,17 @@
       .strongest .chain { font-family: "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; margin: 0 0 var(--space-2); }
       .strongest p { margin-bottom: var(--space-2); }
       .strongest p:last-child { margin-bottom: 0; }
+
+      /* Today's letters — the day's two letters, in the main page's card scheme */
+      .today-letters-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-2); align-items: stretch; }
+      .letter-verse-card { display: flex; flex-direction: column; gap: var(--space-2); }
+      .lv-label { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+      .lv-name { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-size: var(--text-lg); font-weight: 500; }
+      .lv-english { font-size: var(--text-base); }
+      .lv-div { height: 1px; background: var(--line); }
+      .lv-verse { font-size: var(--text-base); font-style: italic; }
+      .lv-src { font-size: var(--text-sm); color: var(--ink-soft); }
+      @media (max-width: 680px) { .today-letters-grid { grid-template-columns: 1fr; } }
 
       /* Three mothers */
       .mothers { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-2); }
@@ -319,6 +330,10 @@
         </div>
       </div>
       <p class="note">The day letter follows the weekday, Sunday first, as in chapter 4. The sun letter is the letter of the sign the sun is in today. The moon letter is the letter of the sign the moon is in, worked out from the moon's position right now — close to a sign's edge, it can fall on either side. The holy name belongs to the weekday.</p>
+
+      <h2>Today's letters</h2>
+      <p id="todays-letters-intro">—</p>
+      <div class="today-letters-grid" id="todays-letters" aria-live="polite"></div>
 
       <h2>This month's strongest day</h2>
       <div class="strongest card" id="strongest-panel" aria-label="This month's strongest day">
@@ -492,6 +507,36 @@
           planetEntry('Moon', moonLonVal)
         ];
 
+        /* ---- Today's letters: the day's double, and the simple of the sign the day's planet stands in.
+           The pointed names and the verses are the prayer section's own — Genesis 1, act by act. ---- */
+        var POINTED = { Alef: 'אָלֶף', Bet: 'בֵּית', Gimel: 'גִּימֶל', Dalet: 'דָּלֶת', He: 'הֵא', Vav: 'וָו', Zayin: 'זַיִן', Chet: 'חֵית', Tet: 'טֵית', Yod: 'יוּד', Kaf: 'כַּף', Lamed: 'לָמֶד', Mem: 'מֵם', Nun: 'נוּן', Samekh: 'סָמֶךְ', Ayin: 'עַיִן', Pe: 'פֵּא', Tzadi: 'צַדִּי', Qof: 'קוּף', Resh: 'רֵישׁ', Shin: 'שִׁין', Tav: 'תָּו' };
+        var VERSES = {
+          Alef: 'God made the firmament', Bet: 'God saw the light that it was good', Gimel: 'God saw that it was good', Dalet: 'God saw that it was good',
+          He: 'The spirit of God hovered', Vav: 'God divided between the light and darkness', Zayin: 'God called the light day', Chet: 'God called the firmament heaven',
+          Tet: 'God called the dry land earth', Yod: 'God placed them in the firmament', Kaf: 'God saw that it was good', Lamed: 'God created great whales',
+          Mem: 'God made two luminaries', Nun: 'God blessed them, be fruitful and multiply', Samekh: 'God created man', Ayin: 'In the form of God He created him',
+          Pe: 'God saw that it was good', Tzadi: 'God blessed them', Qof: 'God said, behold I have given you', Resh: 'God saw that it was good',
+          Shin: 'God made the beasts of the field', Tav: 'God saw all that He had made'
+        };
+        function letterCard(label, letterName, heb, verse) {
+          return '<article class="letter-verse-card card">'
+            + '<span class="lv-label">' + label + '</span>'
+            + '<span class="heb heb-big">' + heb + '</span>'
+            + '<span class="lv-name">' + POINTED[letterName] + '</span>'
+            + '<span class="lv-english">' + letterName + '</span>'
+            + '<div class="lv-div"></div>'
+            + '<span class="lv-verse">' + verse + '</span>'
+            + '<span class="lv-src">From the prayer — Genesis 1</span>'
+            + '</article>';
+        }
+        var dayPlanetEntry = null;
+        for (var k = 0; k < planets.length; k++) if (planets[k].planet === day.planet) dayPlanetEntry = planets[k];
+        var daySign = dayPlanetEntry.sign;
+        set('todays-letters-intro', day.letter + ', ' + day.weekday + '\u2019s letter, and ' + daySign.letter + ', the letter of ' + daySign.name + ', where ' + day.planet + ' stands today.');
+        document.getElementById('todays-letters').innerHTML =
+          letterCard('Day letter — ' + day.weekday, day.letter, day.heb, VERSES[day.letter])
+          + letterCard(day.planet + ' in ' + daySign.name, daySign.letter, daySign.heb, VERSES[daySign.letter]);
+
         /* ---- This month's strongest day ---- */
         var sunSign = SIGNS[Math.floor(sunLon / 30) % 12];
         var sunRuler = RULERS[sunSign.name];
@@ -524,7 +569,8 @@
                 + '</div>';
               html += '<div class="double-row"><span class="heb heb-big">' + p.dbl.heb + '</span><div class="dbl-meta">'
                 + '<span class="dbl-line">Planet letter — ' + p.dbl.letter + ', the double</span>'
-                + '<span class="dbl-line soft">Gate — ' + p.dbl.gate + ' · Meditate ' + p.dbl.weekday + '</span>'
+                + '<span class="dbl-line soft">Gate — ' + p.dbl.gate + '</span>'
+                + '<span class="dbl-line">Meditate ' + p.dbl.weekday + '</span>'
                 + '</div></div>';
               html += '<div class="card-div"></div>';
               html += '<div class="sign-row"><span class="sign-name">' + p.sign.name + ' ' + p.deg.toFixed(0) + '°</span>'
