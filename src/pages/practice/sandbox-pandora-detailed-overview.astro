@@ -1,176 +1,523 @@
----
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { LETTERS, DOUBLES, sunLetter, moonLetter, holyNameOfDay, sunRange, nextMoonIngress } from '../../lib/transits.js';
-import { SIGN_ICONS } from '../../lib/icons-signs.js';
-import { ORGAN_ICONS } from '../../lib/icons-organs.js';
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Sandbox Pandora Detailed Overview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IM+Fell+English:ital@0;1&family=Frank+Ruhl+Libre:wght@400;500&display=swap" rel="stylesheet" />
+    <style is:global>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2.25rem; }
+      * { box-sizing: border-box; }
+      :root {
+        color-scheme: light dark;
+        --bg: #f7f5f0;
+        --surface: #ffffff;
+        --surface-2: #efede6;
+        --ink: #1c1e26;
+        --ink-soft: #4a4d59;
+        --line: #d8d4c8;
+        --accent: #191970;
+        --accent-soft: #e3e4f2;
+        --heb: #191970;
+        --fire: #b34a1f; --fire-bg: #fbe9df;
+        --earth: #6d5a2e; --earth-bg: #f1ead3;
+        --air: #3e6b7a; --air-bg: #e0eef2;
+        --water: #2c4f9e; --water-bg: #e0e8fa;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #172022;
+          --surface: #1f2c2e;
+          --surface-2: #243335;
+          --ink: #ece9df;
+          --ink-soft: #b9beb9;
+          --line: #3a4a4c;
+          --accent: #83adb5;
+          --accent-soft: #26383b;
+          --heb: #e8c766;
+          --fire: #eda27c; --fire-bg: #3a2a22;
+          --earth: #d9c48a; --earth-bg: #37321f;
+          --air: #9fd3e0; --air-bg: #22383d;
+          --water: #a9c2f5; --water-bg: #232f47;
+        }
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "IM Fell English", Georgia, serif;
+        font-size: 1.06rem;
+        line-height: 1.65;
+      }
+      .wrap { max-width: 1060px; margin: 0 auto; padding: 2rem 1.1rem 3.5rem; }
+      h1, h2, h3, .oswald { font-family: "Oswald", "Arial Narrow", sans-serif; }
+      h1 { font-size: 2rem; font-weight: 600; letter-spacing: .01em; line-height: 1.2; margin: 0 0 .4rem; }
+      h2 { font-size: 1.25rem; font-weight: 600; margin: 2.4rem 0 .7rem; }
+      p { margin: 0 0 1rem; max-width: 44rem; }
+      .lede { color: var(--ink-soft); font-size: 1.12rem; }
+      .heb { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-weight: 500; }
+      .heb-big { font-size: 1.9rem; line-height: 1; }
+      .heb-md { font-size: 1.45rem; line-height: 1; }
+      .backlink { font-family: "Oswald", sans-serif; font-size: .92rem; letter-spacing: .03em; color: var(--accent); text-decoration: none; display: inline-block; margin-bottom: 1rem; }
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const rangeOf = (l) => `${MONTHS[l.start[0] - 1]} ${l.start[1]} – ${MONTHS[l.end[0] - 1]} ${l.end[1]}`;
-const MOTHER_GLYPH = { Alef: 'א', Mem: 'מ', Shin: 'ש' };
----
+      /* Week strip */
+      .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: .5rem; margin: 1.2rem 0 .4rem; }
+      .day {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+        padding: .6rem .4rem .5rem; text-align: center;
+      }
+      .day .dname { font-family: "Oswald", sans-serif; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); display: block; }
+      .day .pname { display: block; font-size: .98rem; margin-top: .15rem; }
+      .day .gate { display: block; font-size: .86rem; color: var(--ink-soft); margin-top: .1rem; }
+      .day .heb-big { display: block; margin-top: .3rem; }
+      @media (max-width: 640px) { .week { grid-template-columns: repeat(4, 1fr); } }
 
-<BaseLayout title="Sandbox Pandora Detailed Overview">
-  <h1>Sandbox Pandora Detailed Overview</h1>
+      /* Today */
+      .today-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; margin: 1rem 0 .6rem; }
+      @media (max-width: 640px) { .today-grid { grid-template-columns: repeat(2, 1fr); } }
 
-  <p>
-    The whole system on one page. Each planet carries its double letter and its day.
-    Under it, the signs it rules — each with its simple letter, its dates, its organ,
-    its sense, its element, and the mother letter it belongs to.
-  </p>
-  <p class="dim small">
-    The correspondences come from Sefer Yetzirah — chapter 3 for the mothers, chapter 4
-    for the doubles, chapter 5 for the simples — as printed in the Warsaw 1884 edition
-    on Sefaria (Sefaria Community Translation). The signs a planet rules are the
-    traditional rulerships; the elements are the classical four.
-  </p>
+      /* Three mothers */
+      .mothers { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 1rem 0 .6rem; }
+      @media (max-width: 640px) { .mothers { grid-template-columns: 1fr; } }
 
-  <h2>Today</h2>
-  <p class="dim" id="today-line">Loading today's values…</p>
-  <noscript><p>Today's values need JavaScript — the sun and moon positions are computed in your browser, live.</p></noscript>
+      /* Filters */
+      .filters { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.4rem 0 1rem; align-items: center; }
+      .filters span { font-family: "Oswald", sans-serif; font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin-right: .2rem; }
+      .chip {
+        font-family: "Oswald", sans-serif; font-size: .92rem; letter-spacing: .03em;
+        padding: .45rem .95rem; border-radius: 999px; cursor: pointer;
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+        min-height: 2.5rem;
+      }
+      .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+      @media (prefers-color-scheme: dark) { .chip[aria-pressed="true"] { color: #172022; } }
 
-  <div class="transit-grid">
-    <section class="letter-card" id="today-day-card">
-      <p class="label">Day letter</p>
-      <p class="glyph" id="today-day-glyph">–</p>
-      <p class="name"><span id="today-day-name">…</span> <span class="pointed" id="today-day-pointed"></span></p>
-      <p class="meta" id="today-day-meta"></p>
-    </section>
+      /* Table */
+      .table-scroll { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); }
+      table { width: 100%; border-collapse: collapse; }
+      thead th {
+        font-family: "Oswald", sans-serif; font-weight: 500; font-size: .82rem; letter-spacing: .09em; text-transform: uppercase;
+        text-align: left; color: var(--ink-soft); background: var(--surface-2);
+        padding: .7rem .9rem; border-bottom: 1px solid var(--line);
+      }
+      tr.planet-row td {
+        background: var(--accent-soft); padding: .85rem .9rem; border-top: 2px solid var(--line);
+      }
+      tr.planet-row:first-child td { border-top: none; }
+      .planet-name { font-family: "Oswald", sans-serif; font-size: 1.22rem; font-weight: 600; letter-spacing: .02em; }
+      .planet-day { color: var(--ink-soft); font-size: .98rem; }
+      .planet-letter-cell { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; }
+      .planet-letter-cell .lname { font-size: 1.05rem; }
+      .planet-gate { color: var(--ink-soft); font-size: .98rem; }
+      tr.sign-row td { padding: .75rem .9rem; border-top: 1px solid var(--line); vertical-align: middle; }
+      tr.sign-row td:first-child { padding-left: 2.2rem; }
+      .sign-name { font-size: 1.1rem; }
+      .sign-letter-cell { display: flex; align-items: center; gap: .6rem; }
+      .elem {
+        display: inline-block; font-family: "Oswald", sans-serif; font-size: .82rem; letter-spacing: .07em; text-transform: uppercase;
+        padding: .28rem .7rem; border-radius: 999px; white-space: nowrap;
+      }
+      .elem-fire { background: var(--fire-bg); color: var(--fire); }
+      .elem-earth { background: var(--earth-bg); color: var(--earth); }
+      .elem-air { background: var(--air-bg); color: var(--air); }
+      .elem-water { background: var(--water-bg); color: var(--water); }
+      tr.hidden-row { display: none; }
+      .dimmed { opacity: .35; }
 
-    <section class="letter-card" id="today-sun-card">
-      <p class="label">Sun letter</p>
-      <p class="glyph" id="today-sun-glyph">–</p>
-      <p class="name"><span id="today-sun-name">…</span> <span class="pointed" id="today-sun-pointed"></span></p>
-      <p class="meta" id="today-sun-meta"></p>
-      <p id="today-sun-note"></p>
-    </section>
+      .note { color: var(--ink-soft); font-size: .98rem; }
+      .src { border-top: 1px solid var(--line); margin-top: 2.6rem; padding-top: 1.1rem; color: var(--ink-soft); font-size: .95rem; }
+      .src p { margin-bottom: .5rem; }
 
-    <section class="letter-card" id="today-moon-card">
-      <p class="label">Moon letter</p>
-      <p class="glyph" id="today-moon-glyph">–</p>
-      <p class="name"><span id="today-moon-name">…</span> <span class="pointed" id="today-moon-pointed"></span></p>
-      <p class="meta" id="today-moon-meta"></p>
-      <p id="today-moon-note"></p>
-      <p class="dim small" id="today-moon-next"></p>
-    </section>
-  </div>
+      /* Mobile: table becomes stacked blocks */
+      @media (max-width: 680px) {
+        table, thead, tbody, tr, td { display: block; width: 100%; }
+        thead { display: none; }
+        tr.planet-row td { border-top: 2px solid var(--line); }
+        tr.sign-row { border-top: 1px solid var(--line); padding: .7rem .9rem .8rem 1.4rem; }
+        tr.sign-row td { border-top: none; padding: .12rem 0; }
+        tr.sign-row td:first-child { padding-left: 0; }
+        tr.sign-row td::before {
+          content: attr(data-label); display: inline-block; min-width: 6.2rem;
+          font-family: "Oswald", sans-serif; font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft);
+        }
+        tr.sign-row td.cell-sign::before { content: ""; min-width: 0; }
+        .sign-name { font-size: 1.2rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <a class="backlink" href="../">&larr; Back to practice</a>
+      <h1>Sandbox Pandora Detailed Overview</h1>
+      <p class="lede">The structure, plain and in order — planet first, then its day, its letter, and its gate in the soul, its signs beneath it, and each sign with its own letter, its dates, its body part, its sense, its element, and the mother letter its element belongs to.</p>
 
-  <section class="holy-name">
-    <p class="label dim small">THE DAY'S HOLY NAME</p>
-    <p class="glyph" id="today-holy-glyph">–</p>
-    <p class="name"><span id="today-holy-name">…</span> <span class="dim" id="today-holy-sefirah"></span></p>
-    <p class="dim small">Pronounced mentally, in the mind and heart — not spoken aloud with the mouth.</p>
-  </section>
+      <p>Read it top down. The planet is the parent. Its letter is one of the seven doubles of Sefer Yetzirah, chapter 4 — the letter made king over that planet in the world, over one day in the year, and over one gate in the soul. Under the planet sit its signs, the signs it rules. Each sign carries one of the twelve simple letters of chapter 5, and that letter is king over a stretch of dates in the year, a body part in the person, and a sense — a faculty — in the soul.</p>
 
-  <p class="dim small" id="overview-cusp-note" hidden>
-    The moon is within a degree of a sign boundary tonight, so the night letter may turn
-    as the night goes on. Check again later if it matters to your practice.
-  </p>
+      <p>So every planet stacks in layers. Take the Sun. Its own letter is Kaf, the double. Its day is Wednesday, when the day's letter is also Kaf, and the Sun is doubled. Its gate in the soul is the left ear. Its sign is Leo, and Leo's letter is Tet, the simple — king over the dates Jul 23 – Aug 22, the right kidney, and eating. One planet, its layers each in its place.</p>
 
-  <h2>The three mothers</h2>
-
-  <p>
-    Three mothers, and three temperaments. Alef is air, and its place is the trunk.
-    Mem is water, and its place is the belly. Shin is fire, and its place is the head.
-    Every sign belongs to one mother: air signs to Alef, water signs to Mem, fire signs
-    to Shin — and earth signs to Mem as well, because in chapter 3 the earth was
-    created from water.
-  </p>
-
-  <h2>The seven planets and their signs</h2>
-
-  {DOUBLES.map((d) => (
-    <section>
-      <h3>{d.planet} — {d.glyph} {d.pointed} {d.name} · {d.day} · {d.gate}</h3>
-
-      <table class="letters-table">
-        <thead>
-          <tr><th>Letter</th><th>Sign</th><th>Organ</th><th>Sense</th><th>Element</th><th>Mother</th></tr>
-        </thead>
-        <tbody>
-          {LETTERS.filter((l) => l.planet === d.planet).map((l) => (
-            <tr>
-              <td class="hebrew">{l.glyph} {l.pointed} — {l.name}</td>
-              <td><span class="sign-icon" style={`--icon-src: url(${SIGN_ICONS[l.sign]})`} aria-hidden="true"></span>{l.sign}<div class="dim small">{rangeOf(l)}</div></td>
-              <td><span class="organ-icon" style={`--icon-src: url(${ORGAN_ICONS[l.organ]})`} aria-hidden="true"></span>{l.organ}</td>
-              <td>{l.sense}</td>
-              <td>{l.element}</td>
-              <td class="hebrew">{MOTHER_GLYPH[l.mother]} — {l.mother}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <div class="letters-cards">
-        {LETTERS.filter((l) => l.planet === d.planet).map((l) => (
-          <article class="letter-card">
-            <p class="card-letter">{l.glyph} {l.pointed} — {l.name}</p>
-            <p><span class="sign-icon" style={`--icon-src: url(${SIGN_ICONS[l.sign]})`} aria-hidden="true"></span>{l.sign}</p>
-            <p class="dim small">{rangeOf(l)}</p>
-            <p><span class="organ-icon" style={`--icon-src: url(${ORGAN_ICONS[l.organ]})`} aria-hidden="true"></span>{l.organ}</p>
-            <p class="dim">{l.sense} · {l.element} · {l.mother}</p>
-          </article>
-        ))}
+      <h2>Today</h2>
+      <p id="today-date" class="note">Today's values, worked out from the date on your device.</p>
+      <div class="today-grid" aria-label="Today's horoscopic values">
+        <div class="day">
+          <span class="dname">Day letter</span>
+          <span class="heb heb-big" id="today-day-heb">—</span>
+          <span class="pname" id="today-day-name">—</span>
+          <span class="gate" id="today-day-sub">—</span>
+        </div>
+        <div class="day">
+          <span class="dname">Sun letter</span>
+          <span class="heb heb-big" id="today-sun-heb">—</span>
+          <span class="pname" id="today-sun-name">—</span>
+          <span class="gate" id="today-sun-sub">—</span>
+        </div>
+        <div class="day">
+          <span class="dname">Moon letter</span>
+          <span class="heb heb-big" id="today-moon-heb">—</span>
+          <span class="pname" id="today-moon-name">—</span>
+          <span class="gate" id="today-moon-sub">—</span>
+        </div>
+        <div class="day">
+          <span class="dname">Holy name of the day</span>
+          <span class="heb heb-big" id="today-holy-heb">—</span>
+          <span class="pname" id="today-holy-name">—</span>
+          <span class="gate" id="today-holy-sub">—</span>
+        </div>
       </div>
-    </section>
-  ))}
+      <p class="note">The day letter follows the weekday, Sunday first, as in chapter 4. The sun letter is the letter of the sign the sun is in today. The moon letter is the letter of the sign the moon is in, worked out from the moon's position right now — close to a sign's edge, it can fall on either side. The holy name belongs to the weekday.</p>
 
-  <p class="dim small">
-    The organs use plain words here — first stomach is the rumen, bile is the gall,
-    stomach is the abomasum, gizzard is the craw (Sefer Yetzirah, chapter 5).
-  </p>
+      <h2>The seven days — Sefer Yetzirah order</h2>
+      <p>The week in this system begins on Sunday, and runs straight down the order of the doubles — Bet, Gimel, Dalet, Kaf, Pe, Resh, Tav. The day carries the influence of the planet whose letter rules it, and each double also rules a gate in the soul.</p>
+      <div class="week" aria-label="The seven days in Sefer Yetzirah order">
+        <div class="day"><span class="dname">Sunday</span><span class="pname">Saturn</span><span class="gate">Right eye</span><span class="heb heb-big">ב</span></div>
+        <div class="day"><span class="dname">Monday</span><span class="pname">Jupiter</span><span class="gate">Left eye</span><span class="heb heb-big">ג</span></div>
+        <div class="day"><span class="dname">Tuesday</span><span class="pname">Mars</span><span class="gate">Right ear</span><span class="heb heb-big">ד</span></div>
+        <div class="day"><span class="dname">Wednesday</span><span class="pname">Sun</span><span class="gate">Left ear</span><span class="heb heb-big">כ</span></div>
+        <div class="day"><span class="dname">Thursday</span><span class="pname">Venus</span><span class="gate">Right nostril</span><span class="heb heb-big">פ</span></div>
+        <div class="day"><span class="dname">Friday</span><span class="pname">Mercury</span><span class="gate">Left nostril</span><span class="heb heb-big">ר</span></div>
+        <div class="day"><span class="dname">Saturday</span><span class="pname">Moon</span><span class="gate">Mouth</span><span class="heb heb-big">ת</span></div>
+      </div>
 
-  <script>
-    import { sunLetter, moonLetter, holyNameOfDay, sunRange, nextMoonIngress, DOUBLES } from '../../lib/transits.js';
+      <h2>The table</h2>
+      <div class="filters" role="group" aria-label="Filter signs by element">
+        <span>Element</span>
+        <button class="chip" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" data-filter="fire" aria-pressed="false">Fire</button>
+        <button class="chip" data-filter="earth" aria-pressed="false">Earth</button>
+        <button class="chip" data-filter="air" aria-pressed="false">Air</button>
+        <button class="chip" data-filter="water" aria-pressed="false">Water</button>
+      </div>
 
-    function renderOverviewToday() {
-      const now = new Date();
-      const dayName = now.toLocaleDateString(undefined, { weekday: 'long' });
-      const dayDouble = DOUBLES.find((d) => d.day === dayName);
-      const sun = sunLetter(now);
-      const night = moonLetter(now);
-      const holy = holyNameOfDay(now);
+      <div class="table-scroll">
+        <table id="main-table">
+          <thead>
+            <tr>
+              <th scope="col">Sign</th>
+              <th scope="col">Dates</th>
+              <th scope="col">Sign letter</th>
+              <th scope="col">Body part</th>
+              <th scope="col">Sense</th>
+              <th scope="col">Element</th>
+              <th scope="col">Mother</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Saturn -->
+            <tr class="planet-row" data-planet="saturn">
+              <td colspan="4"><span class="planet-name">Saturn</span> &nbsp;<span class="planet-day">— day: Sunday</span></td>
+              <td colspan="3"><span class="planet-letter-cell"><span class="lname">Planet letter — Bet, the double</span><span class="heb heb-big">ב</span><span class="planet-gate">Gate — right eye</span></span></td>
+            </tr>
+            <tr class="sign-row" data-element="earth">
+              <td class="cell-sign"><span class="sign-name">Capricorn</span></td>
+              <td data-label="Dates">Dec 22 – Jan 19</td>
+              <td data-label="Letter"><span class="sign-letter-cell">Ayin <span class="heb heb-md">ע</span></span></td>
+              <td data-label="Body part">First stomach</td>
+              <td data-label="Sense">Play</td>
+              <td data-label="Element"><span class="elem elem-earth">Earth</span></td>
+              <td data-label="Mother"><span class="sign-letter-cell">Mem <span class="heb heb-md">מ</span></span></td>
+            </tr>
+            <tr class="sign-row" data-element="air">
+              <td class="cell-sign"><span class="sign-name">Aquarius</span></td>
+              <td data-label="Dates">Jan 20 – Feb 18</td>
+              <td data-label="Letter"><span class="sign-letter-cell">Tzadi <span class="heb heb-md">צ</span></span></td>
+              <td data-label="Body part">Stomach</td>
+              <td data-label="Sense">Contemplation</td>
+              <td data-label="Element"><span class="elem elem-air">Air</span></td>
+              <td data-label="Mother"><span class="sign-letter-cell">Alef <span class="heb heb-md">א</span></span></td>
+            </tr>
 
-      const dateLine = now.toLocaleDateString(undefined, {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-      });
-      document.getElementById('today-line').textContent =
-        `${dateLine} · Sun in ${sun.sign} · Moon in ${night.letter.sign}`;
+            <!-- Jupiter -->
+            <tr class="planet-row" data-planet="jupiter">
+              <td colspan="4"><span class="planet-name">Jupiter</span> &nbsp;<span class="planet-day">— day: Monday</span></td>
+              <td colspan="3"><span class="planet-letter-cell"><span class="lname">Planet letter — Gimel, the double</span><span class="heb heb-big">ג</span><span class="planet-gate">Gate — left eye</span></span></td>
+            </tr>
+            <tr class="sign-row" data-element="fire">
+              <td class="cell-sign"><span class="sign-name">Sagittarius</span></td>
+              <td data-label="Dates">Nov 22 – Dec 21</td>
+              <td data-label="Letter"><span class="sign-letter-cell">Samekh <span class="heb heb-md">ס</span></span></td>
+              <td data-label="Body part">Bile</td>
+              <td data-label="Sense">Excitement</td>
+              <td data-label="Element"><span class="elem elem-fire">Fire</span></td>
+              <td data-label="Mother"><span class="sign-letter-cell">Shin <span class="heb heb-md">ש</span></span></td>
+            </tr>
+            <tr class="sign-row" data-element="water">
+              <td class="cell-sign"><span class="sign-name">Pisces</span></td>
+              <td data-label="Dates">Feb 19 – Mar 20</td>
+              <td data-label="Letter"><span class="sign-letter-cell">Qof <span class="heb heb-md">ק</span></span></td>
+              <td data-label="Body part">Gizzard</td>
+              <td data-label="Sense">Sleep</td>
+              <td data-label="Element"><span class="elem elem-water">Water</span></td>
+              <td data-label="Mother"><span class="sign-letter-cell">Mem <span class="heb heb-md">מ</span></span></td>
+            </tr>
 
-      if (dayDouble) {
-        document.getElementById('today-day-glyph').textContent = dayDouble.glyph;
-        document.getElementById('today-day-name').textContent = dayDouble.name;
-        document.getElementById('today-day-pointed').textContent = dayDouble.pointed;
-        document.getElementById('today-day-meta').textContent =
-          `${dayDouble.planet} · ${dayDouble.day} · ${dayDouble.gate}`;
-      }
+            <!-- Mars -->
+            <tr class="planet-row" data-planet="mars">
+              <td colspan="4"><span class="planet-name">Mars</span> &nbsp;<span class="planet-day">— day: Tuesday</span></td>
+              <td colspan="3"><span class="planet-letter-cell"><span class="lname">Planet letter — Dalet, the double</span><span class="heb heb-big">ד</span><span class="planet-gate">Gate — right ear</span></span></td>
+            </tr>
+            <tr class="sign-row" data-element="fire">
+              <td class="cell-sign"><span class="sign-name">Aries</span></td>
+              <td data-label="Dates">Mar 21 – Apr 19</td>
+              <td data-label="Letter"><span class="sign-letter-cell">He <span class="heb heb-md">ה</span></span></td>
+              <td data-label="Body part">Right hand</td>
+              <td data-label="Sense">Seeing</td>
+              <td data-label="Element"><span class="elem elem-fire">Fire</span></td>
+              <td data-label="Mother"><span class="sign-letter-cell">Shin <span class="heb heb-md">ש</span></span></td>
+            </tr>
+            <tr class="sign-row" data-element="water">
+              <td class="cell-sign"><span class="sign-name">Scorpio</span></td>
+              <td data-label="Dates">Oct 23 – Nov 21</td>
+              <td data-label="Letter"><span class="sign-letter-cell">Nun <span class="heb heb-md">נ</span></span></td>
+              <td data-label="Body part">Spleen</td>
+              <td data-label="Sense">Movement</td>
+              <td data-label="Element"><span class="elem elem-water">Water</span></td>
+              <td data-label="Mother"><span class="sign-letter-cell">Mem <span class="heb heb-md">מ</span></span></td>
+            </tr>
 
-      const set = (prefix, letter, meta) => {
-        document.getElementById(`${prefix}-glyph`).textContent = letter.glyph;
-        document.getElementById(`${prefix}-name`).textContent = letter.name;
-        document.getElementById(`${prefix}-pointed`).textContent = letter.pointed;
-        document.getElementById(`${prefix}-meta`).textContent = meta;
-        document.getElementById(`${prefix}-note`).textContent =
-          `${letter.organ}, ${letter.sense}. ${letter.note}`;
-      };
-      set('today-sun', sun, `${sun.sign} · ${sun.translit} · ${sunRange(sun)}`);
-      set('today-moon', night.letter, `${night.letter.sign} · ${night.letter.translit}`);
+            <!-- Sun -->
+            <tr class="planet-row" data-planet="sun">
+              <td colspan="4"><span class="planet-name">Sun</span> &nbsp;<span class="planet-day">— day: Wednesday</span></td>
+              <td colspan="3"><span class="planet-letter-cell"><span class="lname">Planet letter — Kaf, the double</span><span class="heb heb-big">כ</span><span class="planet-gate">Gate — left ear</span></span></td>
+            </tr>
+            <tr class="sign-row" data-element="fire">
+              <td class="cell-sign"><span class="sign-name">Leo</span></td>
+              <td data-label="Dates">Jul 23 – Aug 22</td>
+              <td data-label="Letter"><span class="sign-letter-cell">Tet <span class="heb heb-md">ט</span></span></td>
+              <td data-label="Body part">Right kidney</td>
+              <td data-label="Sense">Eating</td>
+              <td data-label="Element"><span class="elem elem-fire">Fire</span></td>
+              <td data-label="Mother"><span class="sign-letter-cell">Shin <span class="heb heb-md">ש</span></span></td>
+            </tr>
 
-      const next = nextMoonIngress(now);
-      if (next) {
-        const d = next.date.toLocaleDateString(undefined, { day: 'numeric', month: 'long' });
-        document.getElementById('today-moon-next').textContent =
-          `Moon enters ${next.sign} — ${next.letter.name}, ${d}`;
-      }
+            <!-- Venus -->
+            <tr class="planet-row" data-planet="venus">
+              <td colspan="4"><span class="planet-name">Venus</span> &nbsp;<span class="planet-day">— day: Thursday</span></td>
+              <td colspan="3"><span class="planet-letter-cell"><span class="lname">Planet letter — Pe, the double</span><span class="heb heb-big">פ</span><span class="planet-gate">Gate — right nostril</span></span></td>
+            </tr>
+            <tr class="sign-row" data-element="earth">
+              <td class="cell-sign"><span class="sign-name">Taurus</span></td>
+              <td data-label="Dates">Apr 20 – May 20</td>
+              <td data-label="Letter"><span class="sign-letter-cell">Vav <span class="heb heb-md">ו</span></span></td>
+              <td data-label="Body part">Left hand</td>
+              <td data-label="Sense">Hearing</td>
+              <td data-label="Element"><span class="elem elem-earth">Earth</span></td>
+              <td data-label="Mother"><span class="sign-letter-cell">Mem <span class="heb heb-md">מ</span></span></td>
+            </tr>
+            <tr class="sign-row" data-element="air">
+              <td class="cell-sign"><span class="sign-name">Libra</span></td>
+              <td data-label="Dates">Sep 23 – Oct 22</td>
+              <td data-label="Letter"><span class="sign-letter-cell">Lamed <span class="heb heb-md">ל</span></span></td>
+              <td data-label="Body part">Liver</td>
+              <td data-label="Sense">Work</td>
+              <td data-label="Element"><span class="elem elem-air">Air</span></td>
+              <td data-label="Mother"><span class="sign-letter-cell">Alef <span class="heb heb-md">א</span></span></td>
+            </tr>
 
-      document.getElementById('today-holy-glyph').textContent = holy.pointed;
-      document.getElementById('today-holy-name').textContent = holy.name;
-      document.getElementById('today-holy-sefirah').textContent = `· ${holy.sefirah}`;
+            <!-- Mercury -->
+            <tr class="planet-row" data-planet="mercury">
+              <td colspan="4"><span class="planet-name">Mercury</span> &nbsp;<span class="planet-day">— day: Friday</span></td>
+              <td colspan="3"><span class="planet-letter-cell"><span class="lname">Planet letter — Resh, the double</span><span class="heb heb-big">ר</span><span class="planet-gate">Gate — left nostril</span></span></td>
+            </tr>
+            <tr class="sign-row" data-element="air">
+              <td class="cell-sign"><span class="sign-name">Gemini</span></td>
+              <td data-label="Dates">May 21 – Jun 20</td>
+              <td data-label="Letter"><span class="sign-letter-cell">Zayin <span class="heb heb-md">ז</span></span></td>
+              <td data-label="Body part">Right leg</td>
+              <td data-label="Sense">Smelling</td>
+              <td data-label="Element"><span class="elem elem-air">Air</span></td>
+              <td data-label="Mother"><span class="sign-letter-cell">Alef <span class="heb heb-md">א</span></span></td>
+            </tr>
+            <tr class="sign-row" data-element="earth">
+              <td class="cell-sign"><span class="sign-name">Virgo</span></td>
+              <td data-label="Dates">Aug 23 – Sep 22</td>
+              <td data-label="Letter"><span class="sign-letter-cell">Yod <span class="heb heb-md">י</span></span></td>
+              <td data-label="Body part">Left kidney</td>
+              <td data-label="Sense">Sex</td>
+              <td data-label="Element"><span class="elem elem-earth">Earth</span></td>
+              <td data-label="Mother"><span class="sign-letter-cell">Mem <span class="heb heb-md">מ</span></span></td>
+            </tr>
 
-      if (night.nearCusp) {
-        document.getElementById('overview-cusp-note').hidden = false;
-      }
-    }
-    renderOverviewToday();
-    document.addEventListener('astro:page-load', renderOverviewToday);
-  </script>
-</BaseLayout>
+            <!-- Moon -->
+            <tr class="planet-row" data-planet="moon">
+              <td colspan="4"><span class="planet-name">Moon</span> &nbsp;<span class="planet-day">— day: Saturday</span></td>
+              <td colspan="3"><span class="planet-letter-cell"><span class="lname">Planet letter — Tav, the double</span><span class="heb heb-big">ת</span><span class="planet-gate">Gate — mouth</span></span></td>
+            </tr>
+            <tr class="sign-row" data-element="water">
+              <td class="cell-sign"><span class="sign-name">Cancer</span></td>
+              <td data-label="Dates">Jun 21 – Jul 22</td>
+              <td data-label="Letter"><span class="sign-letter-cell">Chet <span class="heb heb-md">ח</span></span></td>
+              <td data-label="Body part">Left leg</td>
+              <td data-label="Sense">Talking</td>
+              <td data-label="Element"><span class="elem elem-water">Water</span></td>
+              <td data-label="Mother"><span class="sign-letter-cell">Mem <span class="heb heb-md">מ</span></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>The three mothers</h2>
+      <p>Above the doubles and the simples stand the three mothers of chapter 3 — Alef, Mem, and Shin. Each mother is a temperament, and every sign's element places it under one of them. An air sign belongs to Alef. A water sign belongs to Mem. A fire sign belongs to Shin. And an earth sign belongs to Mem as well, because in chapter 3 the earth was created from water — so earth carries Mem's temperament, the water underneath it.</p>
+      <div class="mothers" aria-label="The three mother letters">
+        <div class="day">
+          <span class="dname">Alef — Air</span>
+          <span class="heb heb-big">א</span>
+          <span class="gate">Trunk in the soul</span>
+        </div>
+        <div class="day">
+          <span class="dname">Mem — Water</span>
+          <span class="heb heb-big">מ</span>
+          <span class="gate">Belly in the soul</span>
+        </div>
+        <div class="day">
+          <span class="dname">Shin — Fire</span>
+          <span class="heb heb-big">ש</span>
+          <span class="gate">Head in the soul</span>
+        </div>
+      </div>
+      <p>So the element is not only a nature — it is a belonging. Read a sign's element and you know its mother: Gemini, Libra, and Aquarius under Alef; Cancer, Scorpio, and Pisces under Mem, with Taurus, Virgo, and Capricorn beside them; Aries, Leo, and Sagittarius under Shin.</p>
+
+      <p class="note" style="margin-top:1rem;">The body parts are named here in plain words. In the language of the text itself: the first stomach, under Ayin and Capricorn, is the rumen; the stomach, under Tzadi and Aquarius, is the abomasum, the true stomach; the gizzard, under Qof and Pisces, is the craw, the grinding chamber; and the bile, under Samekh and Sagittarius, is the gall.</p>
+
+      <h2>How the layers sit together</h2>
+      <p>Four kinds of letter, four kinds of rule. The mothers stand above all — three letters, each a temperament: Alef air, Mem water, Shin fire, and every sign belongs to one of them through its element, earth signs to Mem because the earth was created from water. The doubles rule the planets and the days — seven letters turning through the week, each also ruling a gate in the soul: the eyes, the ears, the nostrils, and the mouth. The simples rule the signs — twelve letters, one to a sign, each with its dates, its body part, and its sense. The element belongs to the sign itself: three signs to each of the four — fire, earth, air, and water.</p>
+      <p>So when you look at any one sign, you can read the whole stack at once. Its element tells you its nature, and its mother tells you its temperament — which of the three mothers it answers to. Its letter tells you its dates, its body part, and its sense. And its parent planet — with that planet's own double letter and its Sefer Yetzirah day — tells you whose house it sits in, and on which day of the week that house is doubled.</p>
+
+      <div class="src">
+        <p><strong>Sources.</strong> All letter assignments follow Sefer Yetzirah on Sefaria — the Warsaw 1884 Hebrew text, in the Sefaria Community Translation. The three mothers and their temperaments: chapter 3 — Alef air, trunk in the soul; Mem water, belly in the soul; Shin fire, head in the soul; and the earth created from water, which is why the earth signs belong to Mem. Planet letters, days, and gates in the soul: chapter 4 — each double made king over a planet in the world, a day in the year, and a gate in the soul, the week beginning on Sunday. Sign letters, body parts, and senses: chapter 5. The dates shown for each sign are the conventional English calendar ranges of the signs, standing in place of the Hebrew months named in the text. Sign rulerships: the traditional assignments — Saturn over Capricorn and Aquarius, Jupiter over Sagittarius and Pisces, Mars over Aries and Scorpio, the Sun over Leo, Venus over Taurus and Libra, Mercury over Gemini and Virgo, the Moon over Cancer. Elements: the classical four, three signs each.</p>
+      </div>
+    </main>
+
+    <script>
+      (function () {
+        var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+        var rows = Array.prototype.slice.call(document.querySelectorAll('#main-table tbody tr'));
+        function apply(filter) {
+          var currentPlanet = null, planetHasVisible = {};
+          rows.forEach(function (r) {
+            if (r.classList.contains('planet-row')) { currentPlanet = r; planetHasVisible[r.dataset.planet] = false; r._planet = r.dataset.planet; }
+            else { r._planet = currentPlanet ? currentPlanet.dataset.planet : null; }
+          });
+          rows.forEach(function (r) {
+            if (r.classList.contains('sign-row')) {
+              var show = filter === 'all' || r.dataset.element === filter;
+              r.classList.toggle('hidden-row', !show);
+              if (show) planetHasVisible[r._planet] = true;
+            }
+          });
+          rows.forEach(function (r) {
+            if (r.classList.contains('planet-row')) {
+              r.classList.toggle('dimmed', filter !== 'all' && !planetHasVisible[r.dataset.planet]);
+            }
+          });
+        }
+        chips.forEach(function (chip) {
+          chip.addEventListener('click', function () {
+            chips.forEach(function (c) { c.setAttribute('aria-pressed', 'false'); });
+            chip.setAttribute('aria-pressed', 'true');
+            apply(chip.dataset.filter);
+          });
+        });
+      })();
+    </script>
+
+    <script>
+      (function () {
+        var SIGNS = [
+          { name: 'Aries',       letter: 'He',     heb: 'ה' },
+          { name: 'Taurus',      letter: 'Vav',    heb: 'ו' },
+          { name: 'Gemini',      letter: 'Zayin',  heb: 'ז' },
+          { name: 'Cancer',      letter: 'Chet',   heb: 'ח' },
+          { name: 'Leo',         letter: 'Tet',    heb: 'ט' },
+          { name: 'Virgo',       letter: 'Yod',    heb: 'י' },
+          { name: 'Libra',       letter: 'Lamed',  heb: 'ל' },
+          { name: 'Scorpio',     letter: 'Nun',    heb: 'נ' },
+          { name: 'Sagittarius', letter: 'Samekh', heb: 'ס' },
+          { name: 'Capricorn',   letter: 'Ayin',   heb: 'ע' },
+          { name: 'Aquarius',    letter: 'Tzadi',  heb: 'צ' },
+          { name: 'Pisces',      letter: 'Qof',    heb: 'ק' }
+        ];
+        // Index by Date.getDay(): 0 = Sunday ... 6 = Saturday (Sefer Yetzirah, Sunday first)
+        var DAYS = [
+          { weekday: 'Sunday',    letter: 'Bet',   heb: 'ב', planet: 'Saturn',  holy: 'El',              holyHeb: 'אֵל' },
+          { weekday: 'Monday',    letter: 'Gimel', heb: 'ג', planet: 'Jupiter', holy: 'Elohim',          holyHeb: 'אֱלֹהִים' },
+          { weekday: 'Tuesday',   letter: 'Dalet', heb: 'ד', planet: 'Mars',    holy: 'YHWH',            holyHeb: 'יְהוָה' },
+          { weekday: 'Wednesday', letter: 'Kaf',   heb: 'כ', planet: 'Sun',     holy: 'YHWH Tzevaot',    holyHeb: 'יְהוָה צְבָאוֹת' },
+          { weekday: 'Thursday',  letter: 'Pe',    heb: 'פ', planet: 'Venus',   holy: 'Elohim Tzevaot',  holyHeb: 'אֱלֹהִים צְבָאוֹת' },
+          { weekday: 'Friday',    letter: 'Resh',  heb: 'ר', planet: 'Mercury', holy: 'Shaddai',         holyHeb: 'שַׁדַּי' },
+          { weekday: 'Saturday',  letter: 'Tav',   heb: 'ת', planet: 'Moon',    holy: 'Adonai',          holyHeb: 'אֲדֹנָי' }
+        ];
+        // Sign start dates [month, day, sign index into SIGNS], in calendar order
+        var CUSPS = [
+          [1, 20, 10], [2, 19, 11], [3, 21, 0], [4, 20, 1], [5, 21, 2], [6, 21, 3],
+          [7, 23, 4], [8, 23, 5], [9, 23, 6], [10, 23, 7], [11, 22, 8], [12, 22, 9]
+        ];
+        function sunSignIndex(date) {
+          var m = date.getMonth() + 1, d = date.getDate(), idx = 9; // Capricorn before Jan 20
+          for (var i = 0; i < CUSPS.length; i++) {
+            if (m > CUSPS[i][0] || (m === CUSPS[i][0] && d >= CUSPS[i][1])) idx = CUSPS[i][2];
+          }
+          return idx;
+        }
+        function moonSignIndex(now) {
+          var d = now.getTime() / 86400000 - 10957.5; // days since J2000.0
+          var rad = Math.PI / 180;
+          var L = 218.3165 + 13.17639648 * d;  // mean longitude
+          var M = 134.9634 + 13.06499295 * d;  // mean anomaly
+          var F = 93.2721 + 13.22935024 * d;   // mean distance from ascending node
+          var D = 297.8502 + 12.19074912 * d;  // mean elongation
+          var Ms = 357.5291 + 0.98560028 * d;  // sun's mean anomaly
+          var lon = L
+            + 6.2888 * Math.sin(M * rad)
+            + 1.2740 * Math.sin((2 * D - M) * rad)
+            + 0.6580 * Math.sin(2 * D * rad)
+            + 0.2136 * Math.sin(2 * M * rad)
+            - 0.1855 * Math.sin(Ms * rad)
+            - 0.1143 * Math.sin(2 * F * rad);
+          lon = ((lon % 360) + 360) % 360;
+          return Math.floor(lon / 30) % 12;
+        }
+        function set(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
+        var now = new Date();
+        var day = DAYS[now.getDay()];
+        var sun = SIGNS[sunSignIndex(now)];
+        var moon = SIGNS[moonSignIndex(now)];
+        set('today-date', now.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) + ' — the day letter, the sun letter, the moon letter, and the holy name of the day.');
+        set('today-day-heb', day.heb);
+        set('today-day-name', day.letter);
+        set('today-day-sub', day.weekday + ' — ' + day.planet);
+        set('today-sun-heb', sun.heb);
+        set('today-sun-name', sun.letter);
+        set('today-sun-sub', 'Sun in ' + sun.name);
+        set('today-moon-heb', moon.heb);
+        set('today-moon-name', moon.letter);
+        set('today-moon-sub', 'Moon in ' + moon.name);
+        set('today-holy-heb', day.holyHeb);
+        set('today-holy-name', day.holy);
+        set('today-holy-sub', day.weekday);
+      })();
+    </script>
+  </body>
+</html>
