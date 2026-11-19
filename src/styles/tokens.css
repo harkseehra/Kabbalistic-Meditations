@@ -49,17 +49,30 @@
                 ui-monospace, Menlo, monospace;
   --font-hebrew: "Frank Ruhl Libre", "Noto Serif Hebrew", "Taamey Frank CLM", "David Libre", serif;
 
-  /* Scale */
+  /* Scale — one Major Third (1.25) scale, base 1.35rem. Seven steps;
+     every text size on the site is one of these, so body text reads
+     the same size on every page. The artifact pages use the same base. */
   --measure: 40rem;
   --leading: 1.75;
   --leading-tight: 1.25;
-  --t-xs:   0.9rem;
-  --t-sm:   1.05rem;
+  --t-xs:   0.86rem;
+  --t-sm:   1.08rem;
   --t-base: 1.35rem;
-  --t-lg:   1.5rem;
-  --t-xl:   1.95rem;
-  --t-2xl:  2.7rem;
-  --t-3xl:  3.6rem;
+  --t-lg:   1.69rem;
+  --t-xl:   2.11rem;
+  --t-2xl:  2.64rem;
+  --t-3xl:  3.3rem;
+  /* Spacing — 8-point scale. Every gap on the site is one of these. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --space-6: 48px;
+  --space-7: 64px;
+  /* Radius — 10px for buttons and chips, 16px for cards and panels. */
+  --radius-sm: 10px;
+  --radius-card: 16px;
 }
 
 [data-theme="night"] {

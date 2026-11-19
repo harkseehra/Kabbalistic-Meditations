@@ -14,12 +14,13 @@
       * { box-sizing: border-box; }
       :root {
         color-scheme: light dark;
-        /* Type scale — Major Third (1.25) on a 1.24rem base. Five sizes only, used everywhere. */
-        --text-sm: 1rem;
-        --text-base: 1.24rem;
-        --text-lg: 1.55rem;
-        --text-xl: 1.94rem;
-        --text-2xl: 2.42rem;
+        /* Type scale — Major Third (1.25), base 1.35rem. Five sizes only, used everywhere. */
+        --text-xs: 0.86rem;
+        --text-sm: 1.08rem;
+        --text-base: 1.35rem;
+        --text-lg: 1.69rem;
+        --text-xl: 2.11rem;
+        --text-2xl: 2.64rem;
         /* Spacing — 8-point scale. Every gap on the page is one of these. */
         --space-1: 4px;
         --space-2: 8px;
@@ -77,13 +78,13 @@
       p { margin: 0 0 var(--space-3); max-width: 44rem; }
       .lede { color: var(--ink-soft); font-size: var(--text-lg); line-height: 1.55; }
       .heb { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-weight: 500; }
-      .heb-big { font-size: 2.2rem; line-height: 1; }
-      .heb-md { font-size: 1.7rem; line-height: 1; }
+      .heb-big { font-size: var(--text-2xl); line-height: 1; }
+      .heb-md { font-size: var(--text-lg); line-height: 1; }
 
       /* Site nav */
       .sitenav { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-5); }
       .sitenav a {
-        font-family: "Oswald", sans-serif; font-size: .92rem; letter-spacing: .08em; text-transform: uppercase;
+        font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase;
         color: var(--ink-soft); text-decoration: none;
       }
       .sitenav a.current { color: var(--accent); }
@@ -117,10 +118,10 @@
 
       /* Filters */
       .filters { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) 0 var(--space-3); align-items: center; }
-      .filters span { font-family: "Oswald", sans-serif; font-size: .85rem; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin-right: var(--space-1); }
+      .filters span { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin-right: var(--space-1); }
       .chip {
-        font-family: "Oswald", sans-serif; font-size: .92rem; letter-spacing: .03em;
-        padding: .45rem .95rem; border-radius: 999px; cursor: pointer;
+        font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .03em;
+        padding: var(--space-2) var(--space-3); border-radius: 999px; cursor: pointer;
         border: 1px solid var(--line); background: var(--surface); color: var(--ink);
         min-height: 2.5rem;
       }
@@ -147,8 +148,8 @@
       .card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
       .planet-name { font-family: "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; }
       .athome {
-        font-family: "Oswald", sans-serif; font-size: .82rem; letter-spacing: .07em; text-transform: uppercase;
-        padding: .28rem .7rem; border-radius: 999px; white-space: nowrap;
+        font-family: "Oswald", sans-serif; font-size: var(--text-xs); letter-spacing: .07em; text-transform: uppercase;
+        padding: var(--space-1) 0.75rem; border-radius: 999px; white-space: nowrap;
         background: var(--accent); color: #fff;
       }
       @media (prefers-color-scheme: dark) { .athome { color: #172022; } }
@@ -170,8 +171,8 @@
 
       /* Element pills */
       .elem {
-        display: inline-block; font-family: "Oswald", sans-serif; font-size: .82rem; letter-spacing: .07em; text-transform: uppercase;
-        padding: .28rem .7rem; border-radius: 999px; white-space: nowrap;
+        display: inline-block; font-family: "Oswald", sans-serif; font-size: var(--text-xs); letter-spacing: .07em; text-transform: uppercase;
+        padding: var(--space-1) 0.75rem; border-radius: 999px; white-space: nowrap;
       }
       .elem-fire { background: var(--fire-bg); color: var(--fire); }
       .elem-earth { background: var(--earth-bg); color: var(--earth); }
