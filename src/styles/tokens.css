@@ -51,6 +51,12 @@
                 ui-monospace, Menlo, monospace;
   --font-hebrew: "Frank Ruhl Libre", "Noto Serif Hebrew", "Taamey Frank CLM", "David Libre", serif;
 
+  /* Body text spacing — readability. French Canon is a tight display
+     face; a little tracking and word space opens it up. Headings and
+     Hebrew keep their own spacing. */
+  --letter-spacing-body: 0.02em;
+  --word-spacing-body: 0.1em;
+
   /* Scale — one Major Third (1.25) scale, base 1.35rem. Seven steps;
      every text size on the site is one of these, so body text reads
      the same size on every page. The artifact pages use the same base. */

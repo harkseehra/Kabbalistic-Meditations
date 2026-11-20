@@ -102,16 +102,18 @@
         font-family: "IM Fell French Canon", Georgia, serif;
         font-size: 1rem;
         line-height: 1.6;
+        letter-spacing: 0.02em;
+        word-spacing: 0.1em;
         transition: background 0.5s var(--ease-out), color 0.5s var(--ease-out), border-color 0.5s var(--ease-out);
       }
       .wrap { max-width: 1060px; margin: 0 auto; padding: var(--space-7) var(--space-6) var(--space-7); }
-      h1, h2, h3 { font-family: "Teko", "Oswald", "Arial Narrow", sans-serif; }
+      h1, h2, h3 { font-family: "Teko", "Oswald", "Arial Narrow", sans-serif; letter-spacing: .01em; word-spacing: normal; }
       h1 { font-size: var(--text-2xl); font-weight: 600; letter-spacing: .01em; line-height: 1.15; margin: 0 0 var(--space-2); }
       h2 { font-size: var(--text-xl); font-weight: 600; line-height: 1.2; margin: var(--space-6) 0 var(--space-3); }
       h3 { font-size: var(--text-lg); font-weight: 600; line-height: 1.2; margin: 0; }
       p { margin: 0 0 var(--space-3); max-width: 31rem; }
       .lede { color: var(--ink-soft); font-size: var(--text-lg); line-height: 1.55; }
-      .heb { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-weight: 500; }
+      .heb { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-weight: 500; letter-spacing: 0; word-spacing: normal; }
       .heb-big { font-size: var(--text-2xl); line-height: 1; }
       .heb-md { font-size: var(--text-lg); line-height: 1; }
 
@@ -258,7 +260,7 @@
       .today-letters-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-2); align-items: stretch; }
       .letter-verse-card { display: flex; flex-direction: column; gap: var(--space-2); }
       .lv-label { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
-      .lv-name { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-size: var(--text-lg); font-weight: 500; }
+      .lv-name { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-size: var(--text-lg); font-weight: 500; letter-spacing: 0; word-spacing: normal; }
       .lv-english { font-size: 1rem; }
       .lv-div { height: 1px; background: var(--line); }
       .lv-verse { font-size: 1rem; font-style: italic; }
