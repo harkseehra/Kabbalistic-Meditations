@@ -82,7 +82,10 @@
      blue ink, cards and rules are tints of it, and the accent is a light
      royal blue. Text is a cool off-white, not near-white: near-white on
      dark glows and blurs (halation), which is what made it unreadable.
-     Body text 14.6:1, dim text 9.2:1, accent 7.7:1 on the background. */
+     Body text 14.6:1, dim text 9.2:1, accent 7.7:1 on the background.
+     Hebrew letters are the exception: they are large display glyphs, so
+     they take a near-white blue-white (#F5F7FF, 17.0:1) for maximum
+     legibility; body text stays off-white. */
   --ink:        #E3E6F0;
   --ink-dim:    #AEB8D6;
   --ink-bright: #ffffff;
@@ -93,7 +96,7 @@
   --accent-ink: #0D1330;
   --paper-glass: rgba(13, 19, 48, 0.82);
   --icon-color: #AEBFFF;
-  --hebrew-color: #AEBFFF;
+  --hebrew-color: #F5F7FF;
 
   /* Header — flat royal blue by night. */
   --header-bg: #1E40AF;
