@@ -21,16 +21,18 @@
       * { box-sizing: border-box; }
       :root {
         color-scheme: light dark;
-        /* Type scale — Major Third (1.25), base 1.35rem. These tokens match
+        /* Type scale — Material Design 3 role ratios against the 21.6px
+           body: headline large 2.0x, headline medium 1.75x, headline
+           small 1.5x, title large 1.375x. These tokens match
            src/styles/tokens.css exactly; the html root is 1.35rem so 1rem
            here is the base size on this page, same as BaseLayout pages. */
         --text-xs: 0.86rem;
         --text-sm: 1.08rem;
         --text-base: 1.35rem;
-        --text-lg: 1.69rem;
-        --text-xl: 2.11rem;
-        --text-2xl: 2.64rem;
-        --text-3xl: 3.3rem;
+        --text-lg: 1.375rem;
+        --text-xl: 1.5rem;
+        --text-2xl: 1.75rem;
+        --text-3xl: 2.0rem;
         /* Spacing — 8-point scale. Every gap on the page is one of these. */
         --space-1: 4px;
         --space-2: 8px;
@@ -215,15 +217,19 @@
       [data-theme="night"] #theme-toggle .icon-moon { display: block; }
       @media (hover: none) {
         #theme-toggle:hover { transform: none; }
+        .day:hover { transform: none; }
       }
       @media (prefers-reduced-motion: reduce) {
         #theme-toggle { animation: none; }
+        .day { animation: none; }
+        *, *::before, *::after { transition-duration: 0.001ms !important; }
       }
 
-      .wrap { max-width: 1060px; margin: 0 auto; padding: var(--space-7) var(--space-6) var(--space-7); }
+      .wrap { max-width: 1200px; margin: 0 auto; padding: var(--space-7) var(--space-6) var(--space-7); }
       h1, h2, h3 { font-family: "Teko", "Oswald", "Arial Narrow", sans-serif; letter-spacing: .01em; word-spacing: normal; }
-      h1 { font-size: var(--text-2xl); font-weight: 600; letter-spacing: .01em; line-height: 1.2; margin: 0 0 var(--space-2); }
-      h2 { font-size: var(--text-xl); font-weight: 600; margin: var(--space-6) 0 var(--space-3); }
+      h1 { font-size: var(--text-3xl); font-weight: 600; letter-spacing: .01em; line-height: 1.2; margin: 0 0 var(--space-2); }
+      h2 { font-size: var(--text-2xl); font-weight: 600; margin: var(--space-6) 0 var(--space-3); }
+      h3 { font-size: var(--text-xl); font-weight: 600; line-height: 1.2; margin: var(--space-5) 0 var(--space-2); }
       p { margin: 0 0 var(--space-3); max-width: 31rem; }
       .lede { color: var(--ink-soft); font-size: var(--text-lg); }
       .heb { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-weight: 500; letter-spacing: 0; word-spacing: normal; }
@@ -235,7 +241,28 @@
       .day {
         background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-card);
         padding: var(--space-4); text-align: center;
+        /* Card lift: MD3 medium2 (300ms) on the site's one ease-out. */
+        transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out), background-color 300ms var(--ease-out), border-color 300ms var(--ease-out);
       }
+      .day:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.20);
+      }
+
+      /* Card entrance — staggered fade-up on page load (MD3
+         emphasized-decelerate, medium4 400ms; 60ms stagger). Fill is
+         backwards, so the hover lift still works once the entrance ends. */
+      @keyframes card-in {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .day { animation: card-in 400ms var(--ease-out) backwards; }
+      .week > :nth-child(2), .today-grid > :nth-child(2), .mothers > :nth-child(2) { animation-delay: 60ms; }
+      .week > :nth-child(3), .today-grid > :nth-child(3), .mothers > :nth-child(3) { animation-delay: 120ms; }
+      .week > :nth-child(4), .today-grid > :nth-child(4) { animation-delay: 180ms; }
+      .week > :nth-child(5) { animation-delay: 240ms; }
+      .week > :nth-child(6) { animation-delay: 300ms; }
+      .week > :nth-child(7) { animation-delay: 360ms; }
       .day .dname { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); display: block; }
       .day .pname { display: block; font-size: 1rem; margin-top: var(--space-1); }
       .day .gate { display: block; font-size: var(--text-sm); color: var(--ink-soft); margin-top: var(--space-1); }

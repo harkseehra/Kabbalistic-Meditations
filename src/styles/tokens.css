@@ -57,19 +57,21 @@
   --letter-spacing-body: 0.02em;
   --word-spacing-body: 0.1em;
 
-  /* Scale — one Major Third (1.25) scale, base 1.35rem. Seven steps;
-     every text size on the site is one of these, so body text reads
-     the same size on every page. The artifact pages use the same base. */
+  /* Scale — Material Design 3 role ratios against the 21.6px body:
+     headline large 2.0x, headline medium 1.75x, headline small 1.5x,
+     title large 1.375x. Body text is 1rem (21.6px) and is not a token;
+     --t-base is the html root size only. Every heading and card title
+     on the site is one of these steps. */
   --measure: 40rem;
   --leading: 1.75;
   --leading-tight: 1.25;
   --t-xs:   0.86rem;
   --t-sm:   1.08rem;
   --t-base: 1.35rem;
-  --t-lg:   1.69rem;
-  --t-xl:   2.11rem;
-  --t-2xl:  2.64rem;
-  --t-3xl:  3.3rem;
+  --t-lg:   1.375rem;
+  --t-xl:   1.5rem;
+  --t-2xl:  1.75rem;
+  --t-3xl:  2.0rem;
   /* Spacing — 8-point scale. Every gap on the site is one of these. */
   --space-1: 4px;
   --space-2: 8px;
@@ -113,9 +115,11 @@
   --header-active-ink: #1E40AF;
 }
 
-/* Desktop only: a little more breathing room. Mobile keeps 40rem. */
+/* Desktop only: the wider measure is for grids and tables (MD3 large
+   screens use the width; feed grids go 3-up). Running text stays at a
+   readable measure — see main p in global.css. Mobile keeps 40rem. */
 @media (min-width: 1024px) {
   :root {
-    --measure: 46rem;
+    --measure: 56rem;
   }
 }

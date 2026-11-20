@@ -48,10 +48,11 @@ main {
   margin: 0 auto;
   padding: var(--space-7) var(--space-4);
   width: 100%;
-  /* No entrance animation here: a page switch animates exactly two
-     things — the root crossfade and the nav pill morph. Fewer moving
-     pieces is what makes it smooth. */
 }
+
+/* Running text keeps a readable measure (MD3: body text ≤ ~70ch) — the
+   wider desktop measure is for grids and tables, not for prose. */
+main p { max-width: 31rem; }
 
 /* Night readability: body text runs semibold with slightly wider
    tracking — Cormorant Garamond now carries real 600, so this is a true
@@ -79,12 +80,12 @@ p { margin-bottom: 1.5rem; }
 
 h1, h2, h3 { font-family: var(--font-heading); line-height: var(--leading-tight); margin-bottom: 1rem; letter-spacing: -0.01em; word-spacing: normal; }
 h1 { font-size: var(--t-3xl); font-weight: 700; }
-h2 { font-size: var(--t-xl); font-weight: 600; margin-top: var(--space-6); }
+h2 { font-size: var(--t-2xl); font-weight: 600; margin-top: var(--space-6); }
 /* Headings step down on a narrow screen, so they never read oversized on a phone. */
 @media (max-width: 640px) {
   h1 { font-size: var(--t-2xl); }
 }
-h3 { font-size: var(--t-lg); font-weight: 500; margin-top: 2rem; }
+h3 { font-size: var(--t-xl); font-weight: 500; margin-top: 2rem; }
 
 .dim { color: var(--ink-dim); }
 .small { font-size: var(--t-sm); }
@@ -238,19 +239,18 @@ footer {
   margin: 2rem 0;
 }
 @media (max-width: 640px) { .transit-grid { grid-template-columns: 1fr; } }
-@media (min-width: 1024px) { .transit-grid { gap: var(--space-5); } }
 
 .letter-card {
   border: 1px solid var(--rule);
   border-radius: var(--radius-card);
   background: var(--paper-raised);
-  padding: 1.5rem;
-  /* One clean ease-out on the lift. */
-  transition: transform 350ms var(--ease-out), box-shadow 350ms var(--ease-out), background 350ms var(--ease-out), border-color 350ms var(--ease-out);
+  padding: var(--space-4);
+  /* Card lift: MD3 medium2 (300ms) on the site's one ease-out. */
+  transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out), background 300ms var(--ease-out), border-color 300ms var(--ease-out);
 }
 .letter-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.20);
 }
 .letter-card .label {
   font-size: var(--t-xs);
@@ -260,11 +260,11 @@ footer {
 }
 .letter-card .glyph {
   font-family: var(--font-hebrew);
-  font-size: 6.5rem;
+  font-size: 4rem;
   line-height: 1.2;
   color: var(--hebrew-color);
 }
-.letter-card .name { font-size: var(--t-xl); }
+.letter-card .name { font-size: var(--t-lg); }
 .letter-card .pointed { font-family: var(--font-hebrew); color: var(--hebrew-color); }
 .letter-card .meta { color: var(--ink-dim); font-size: var(--t-sm); }
 .letter-card p { margin-bottom: 0.5rem; }
@@ -273,23 +273,35 @@ footer {
 .holy-name {
   border: 1px solid var(--rule);
   border-radius: var(--radius-card);
-  padding: 1.5rem;
+  padding: var(--space-4);
   text-align: center;
   margin: 2rem 0;
-  /* One clean ease-out on the lift. */
-  transition: transform 350ms var(--ease-out), box-shadow 350ms var(--ease-out), background 350ms var(--ease-out), border-color 350ms var(--ease-out);
+  /* Card lift: MD3 medium2 (300ms) on the site's one ease-out. */
+  transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out), background 300ms var(--ease-out), border-color 300ms var(--ease-out);
 }
 .holy-name:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.20);
 }
 .holy-name .glyph {
   font-family: var(--font-hebrew);
-  font-size: 4.5rem;
+  font-size: 3.5rem;
   line-height: 1.3;
   color: var(--hebrew-color);
 }
-.holy-name .name { font-size: var(--t-xl); }
+.holy-name .name { font-size: var(--t-lg); }
+
+/* Card entrance — staggered fade-up on page load (MD3
+   emphasized-decelerate, medium4 400ms; 60ms stagger). Fill is
+   backwards, so the hover lift still works once the entrance ends. */
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.letter-card, .holy-name {
+  animation: card-in 400ms var(--ease-out) backwards;
+}
+.transit-grid > :nth-child(2) { animation-delay: 60ms; }
 
 .epigraph-block { text-align: center; margin-bottom: 2rem; }
 .epigraph { font-style: italic; color: var(--ink-dim); }
@@ -426,14 +438,14 @@ td.hebrew, .card-letter, .prayer-hebrew, article bdi { color: var(--hebrew-color
 }
 .transit-icon {
   display: block;
-  width: 3rem;
-  height: 3rem;
+  width: 2.25rem;
+  height: 2.25rem;
   margin-bottom: 0.75rem;
 }
 .sign-icon, .organ-icon {
   display: inline-block;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   vertical-align: middle;
   margin-right: 0.5rem;
 }
