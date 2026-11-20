@@ -242,6 +242,9 @@
       .dbl-meta { display: flex; flex-direction: column; gap: var(--space-1); }
       .dbl-line { font-size: var(--text-base); }
       .dbl-line.soft { color: var(--ink-soft); font-size: var(--text-sm); }
+      .week-pair { display: flex; align-items: center; justify-content: space-around; gap: var(--space-3); padding: var(--space-1) 0; }
+      .week-letter { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); text-align: center; flex: 1; }
+      .week-plus { font-size: var(--text-2xl); color: var(--ink-soft); }
       .card-div { height: 1px; background: var(--line); }
       .sign-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-2) var(--space-3); }
       .sign-name { font-size: var(--text-lg); font-weight: 600; }
@@ -328,6 +331,10 @@
       <h2>Today's letters</h2>
       <p id="todays-letters-intro">—</p>
       <div class="today-letters-grid" id="todays-letters" aria-live="polite"></div>
+
+      <h2>This week</h2>
+      <p class="note">Seven days from today. Each day, the day's planet receives the sign it stands in on that day — the day's double plus the simple of that sign, with its organ, its sense, and its mother. The Moon is worked out fresh for each day; the other planets move slowly, so they hold their sign across the week unless one crosses a cusp.</p>
+      <div id="week-chart" aria-live="polite"></div>
 
       <h2>This month's strongest day</h2>
       <div class="strongest card" id="strongest-panel" aria-label="This month's strongest day">
@@ -524,6 +531,57 @@
         document.getElementById('todays-letters').innerHTML =
           letterCard('Day letter — ' + day.weekday, day.letter, day.heb, VERSES[day.letter])
           + letterCard(day.planet + ' in ' + daySign.name, daySign.letter, daySign.heb, VERSES[daySign.letter]);
+
+        /* ---- This week: seven days from today. Each day, the day's planet
+           receives the sign it stands in on that day — the day's double plus
+           the simple of that sign, its organ, its sense, and its mother.
+           The Moon is worked out fresh for each day. ---- */
+        function weekPlanetLon(planet, date) {
+          var noon = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
+          var dd = dayNumber(noon.getUTCFullYear(), noon.getUTCMonth() + 1, noon.getUTCDate(), noon.getUTCHours() + noon.getUTCMinutes() / 60);
+          var TT = dd / 36525;
+          var e = helio(ORBIT.Earth, TT);
+          if (planet === 'Sun') return norm360(e.lon + 180);
+          if (planet === 'Moon') return moonLon(noon);
+          return geoLon(planet, TT, e);
+        }
+        var weekHtml = '<div class="cards">';
+        for (var wi = 0; wi < 7; wi++) {
+          var wdate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + wi);
+          var wday = DAYS[wdate.getDay()];
+          var wlon = weekPlanetLon(wday.planet, wdate);
+          var wsign = SIGNS[Math.floor(wlon / 30) % 12];
+          var wdeg = wlon % 30;
+          var wAtHome = RULED_SIGNS[wday.planet].indexOf(wsign.name) !== -1;
+          var wCusp = (wdeg < 1 || wdeg > 29);
+          var wMother = wsign.mother.toLowerCase();
+          var wDateStr = wdate.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+          weekHtml += '<article class="planet-card card mother-' + wMother + '">';
+          weekHtml += '<div class="card-head"><span class="planet-name">' + wDateStr + (wi === 0 ? ' — Today' : '') + '</span></div>';
+          weekHtml += '<div class="week-pair">'
+            + '<div class="week-letter"><span class="heb heb-big">' + wday.heb + '</span><span class="lv-name">' + POINTED[wday.letter] + '</span><span class="lv-english">' + wday.letter + ' — day letter</span></div>'
+            + '<span class="week-plus">+</span>'
+            + '<div class="week-letter"><span class="heb heb-big">' + wsign.heb + '</span><span class="lv-name">' + POINTED[wsign.letter] + '</span><span class="lv-english">' + wsign.letter + ' — sign letter</span></div>'
+            + '</div>';
+          weekHtml += '<div class="card-div"></div>';
+          weekHtml += '<div class="sign-row"><span class="sign-name">' + wday.planet + ' in ' + wsign.name + ' ' + wdeg.toFixed(0) + '°</span>'
+            + '<span class="sign-dates">' + wsign.dates + '</span>'
+            + (wAtHome ? '<span class="athome">At home — doubled</span>' : '')
+            + (wCusp ? '<span class="cusp-note">near the cusp</span>' : '')
+            + '</div>';
+          weekHtml += '<div class="facts">'
+            + fact('Body part', wsign.organ)
+            + fact('Sense', wsign.sense)
+            + fact('Element', '<span class="elem elem-' + wsign.element + '">' + wsign.element[0].toUpperCase() + wsign.element.slice(1) + '</span>')
+            + fact('Mother', wsign.mother + ' <span class="heb heb-md">' + wsign.motherHeb + '</span>')
+            + fact('Gate', wday.gate)
+            + fact('Holy name', wday.holy + ' <span class="heb heb-md">' + wday.holyHeb + '</span>')
+            + '</div>';
+          weekHtml += '<div class="reading">“' + VERSES[wsign.letter] + '.” — From the prayer, Genesis 1</div>';
+          weekHtml += '</article>';
+        }
+        weekHtml += '</div>';
+        document.getElementById('week-chart').innerHTML = weekHtml;
 
         /* ---- This month's strongest day ---- */
         var sunSign = SIGNS[Math.floor(sunLon / 30) % 12];
