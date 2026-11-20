@@ -8,19 +8,22 @@
     <title>Kabbalistic Pokedox</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IM+Fell+English:ital@0;1&family=Frank+Ruhl+Libre:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IM+Fell+French+Canon:ital@0;1&family=Frank+Ruhl+Libre:wght@400;500&family=Redaction+10&family=Teko:wght@500;600&display=swap" rel="stylesheet" />
     <style is:global>
       button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2.25rem; }
       * { box-sizing: border-box; }
       :root {
         color-scheme: light dark;
-        /* Type scale — Major Third (1.25), base 1.35rem. Five sizes only, used everywhere. */
+        /* Type scale — Major Third (1.25), base 1.35rem. These tokens match
+           src/styles/tokens.css exactly; the html root is 1.35rem so 1rem
+           here is the base size on this page, same as BaseLayout pages. */
         --text-xs: 0.86rem;
         --text-sm: 1.08rem;
         --text-base: 1.35rem;
         --text-lg: 1.69rem;
         --text-xl: 2.11rem;
         --text-2xl: 2.64rem;
+        --text-3xl: 3.3rem;
         /* Spacing — 8-point scale. Every gap on the page is one of these. */
         --space-1: 4px;
         --space-2: 8px;
@@ -29,8 +32,11 @@
         --space-5: 32px;
         --space-6: 48px;
         --space-7: 64px;
-        /* Radius — cards 16px, chips pill. */
+        /* Radius — cards 16px, buttons 10px, matching tokens.css. */
         --radius-card: 16px;
+        --radius-sm: 10px;
+        /* Motion — one clean ease-out everywhere. */
+        --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
         --bg: #f7f5f0;
         --surface: #ffffff;
         --surface-2: #efede6;
@@ -44,6 +50,13 @@
         --earth: #6d5a2e; --earth-bg: #f1ead3;
         --air: #3e6b7a; --air-bg: #e0eef2;
         --water: #2c4f9e; --water-bg: #e0e8fa;
+        /* Header — same flat bar as the rest of the site. */
+        --header-bg: #005b96;
+        --header-ink: #ffffff;
+        --header-btn-bg: rgba(255, 255, 255, 0.12);
+        --header-btn-border: rgba(255, 255, 255, 0.35);
+        --header-active-bg: #ffffff;
+        --header-active-ink: #005b96;
       }
       @media (prefers-color-scheme: dark) {
         :root {
@@ -60,26 +73,104 @@
           --earth: #d9c48a; --earth-bg: #37321f;
           --air: #9fd3e0; --air-bg: #22383d;
           --water: #a9c2f5; --water-bg: #232f47;
+          /* Header — same flat bar as the rest of the site. */
+          --header-bg: #6fcb9f;
+          --header-ink: #101410;
+          --header-btn-bg: rgba(0, 0, 0, 0.1);
+          --header-btn-border: rgba(0, 0, 0, 0.25);
+          --header-active-bg: #101410;
+          --header-active-ink: #6fcb9f;
         }
       }
+      html { font-size: 1.35rem; }
       body {
         margin: 0;
         background: var(--bg);
         color: var(--ink);
-        font-family: "IM Fell English", Georgia, serif;
-        font-size: var(--text-base);
+        font-family: "IM Fell French Canon", Georgia, serif;
+        font-size: 1rem;
         line-height: 1.6;
       }
+      #site-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        padding: 0.5rem 1.5rem;
+        background: var(--header-bg);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+        color: var(--header-ink);
+      }
+      #site-header .site-name { justify-self: start; text-decoration: none; }
+      #site-header .site-wordmark { font-family: "Redaction 10", "Cormorant Garamond", Georgia, serif; font-size: var(--text-sm); letter-spacing: 0.08em; color: var(--header-ink); }
+      #site-header .site-wordmark .cursor { color: var(--header-ink); }
+      #site-header nav { display: flex; gap: 0.6rem; justify-self: end; }
+      #site-header nav a {
+        font-family: "Teko", "Oswald", sans-serif;
+        font-size: var(--text-sm);
+        font-weight: 600;
+        line-height: 1.25;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 0.45rem 1.1rem;
+        border: 1px solid var(--header-btn-border);
+        border-radius: var(--radius-sm);
+        background-color: var(--header-btn-bg);
+        color: var(--header-ink);
+        text-decoration: none;
+        transition: transform 150ms var(--ease-out), border-color 200ms var(--ease-out), background-color 200ms var(--ease-out);
+      }
+      #site-header nav a:hover { border-color: var(--header-ink); transform: translateY(-1px); }
+      #site-header nav a.active {
+        background-color: var(--header-active-bg);
+        border-color: transparent;
+        color: var(--header-active-ink);
+      }
+      #site-header nav a:active { transition-duration: 100ms; transform: scale(0.97); }
+      #site-header nav a:focus-visible { outline: 2px solid var(--header-ink); outline-offset: 2px; }
+      .nav-toggle {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        width: 48px;
+        height: 48px;
+        padding: 0;
+        border: 1px solid var(--header-btn-border);
+        border-radius: var(--radius-sm);
+        background: var(--header-btn-bg);
+        color: var(--header-ink);
+        cursor: pointer;
+        justify-self: end;
+      }
+      .nav-toggle span {
+        display: block;
+        width: 1.25rem;
+        height: 2px;
+        background: currentColor;
+        border-radius: 1px;
+      }
+      @media (max-width: 640px) {
+        #site-header { grid-template-columns: 1fr auto; row-gap: 0.5rem; padding: 0.6rem 1rem; }
+        #site-header .site-wordmark { font-size: var(--text-xs); }
+        .nav-toggle { display: inline-flex; }
+        #site-header nav { display: none; grid-column: 1 / -1; grid-row: 2; flex-direction: column; align-items: flex-end; gap: 0.4rem; justify-content: flex-start; }
+        #site-header.nav-open nav { display: flex; }
+        #site-header nav a { padding: 0.35rem 0.8rem; }
+      }
       .wrap { max-width: 1060px; margin: 0 auto; padding: var(--space-7) var(--space-6) var(--space-7); }
-      h1, h2, h3, .oswald { font-family: "Oswald", "Arial Narrow", sans-serif; }
+      h1, h2, h3 { font-family: "Teko", "Oswald", "Arial Narrow", sans-serif; }
       h1 { font-size: var(--text-2xl); font-weight: 600; letter-spacing: .01em; line-height: 1.2; margin: 0 0 var(--space-2); }
       h2 { font-size: var(--text-xl); font-weight: 600; margin: var(--space-6) 0 var(--space-3); }
-      p { margin: 0 0 var(--space-3); max-width: 44rem; }
+      p { margin: 0 0 var(--space-3); max-width: 31rem; }
       .lede { color: var(--ink-soft); font-size: var(--text-lg); }
       .heb { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-weight: 500; }
       .heb-big { font-size: var(--text-2xl); line-height: 1; }
       .heb-md { font-size: var(--text-lg); line-height: 1; }
-      .backlink { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .03em; color: var(--accent); text-decoration: none; display: inline-block; margin-bottom: var(--space-3); }
 
       /* Week strip */
       .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: var(--space-2); margin: var(--space-3) 0 var(--space-2); }
@@ -88,7 +179,7 @@
         padding: var(--space-4); text-align: center;
       }
       .day .dname { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); display: block; }
-      .day .pname { display: block; font-size: var(--text-base); margin-top: var(--space-1); }
+      .day .pname { display: block; font-size: 1rem; margin-top: var(--space-1); }
       .day .gate { display: block; font-size: var(--text-sm); color: var(--ink-soft); margin-top: var(--space-1); }
       .day .heb-big { display: block; margin-top: var(--space-2); }
       @media (max-width: 640px) { .week { grid-template-columns: repeat(4, 1fr); } }
@@ -109,7 +200,10 @@
         padding: var(--space-2) var(--space-3); border-radius: 999px; cursor: pointer;
         border: 1px solid var(--line); background: var(--surface); color: var(--ink);
         min-height: 2.5rem;
+        transition: transform 150ms var(--ease-out), border-color 200ms var(--ease-out), background-color 200ms var(--ease-out);
       }
+      .chip:hover { border-color: var(--ink); transform: translateY(-1px); }
+      .chip:active { transition-duration: 100ms; transform: scale(0.97); }
       .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
       @media (prefers-color-scheme: dark) { .chip[aria-pressed="true"] { color: #172022; } }
 
@@ -125,14 +219,14 @@
         background: var(--accent-soft); padding: var(--space-3); border-top: 2px solid var(--line);
       }
       tr.planet-row:first-child td { border-top: none; }
-      .planet-name { font-family: "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; }
+      .planet-name { font-family: "Teko", "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; }
       .planet-day { color: var(--ink-soft); font-size: var(--text-sm); }
       .planet-letter-cell { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
-      .planet-letter-cell .lname { font-size: var(--text-base); }
+      .planet-letter-cell .lname { font-size: 1rem; }
       .planet-gate { color: var(--ink-soft); font-size: var(--text-sm); }
       tr.sign-row td { padding: var(--space-2) var(--space-3); border-top: 1px solid var(--line); vertical-align: middle; }
       tr.sign-row td:first-child { padding-left: var(--space-5); }
-      .sign-name { font-size: var(--text-base); }
+      .sign-name { font-size: 1rem; }
       .sign-letter-cell { display: flex; align-items: center; gap: var(--space-2); }
       .elem {
         display: inline-block; font-family: "Oswald", sans-serif; font-size: var(--text-xs); letter-spacing: .07em; text-transform: uppercase;
@@ -162,13 +256,23 @@
           font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft);
         }
         tr.sign-row td.cell-sign::before { content: ""; min-width: 0; }
-        .sign-name { font-size: var(--text-base); }
+        .sign-name { font-size: 1rem; }
       }
     </style>
   </head>
   <body>
+    <header id="site-header">
+      <a class="site-name" href="../../"><span class="site-wordmark">KABBALISTIC MEDITATIONS<span class="cursor">▌</span></span></a>
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav id="site-nav">
+        <a href="../../">today</a>
+        <a href="../../current-horoscope/">horoscope</a>
+        <a href="../" class="active">practice</a>
+        <a href="../../prayer/">prayer</a>
+        <a href="../../blog/">blog</a>
+      </nav>
+    </header>
     <main class="wrap">
-      <a class="backlink" href="../">&larr; Back to practice</a>
       <h1>Kabbalistic Pokedox</h1>
       <p class="lede">The Pokedox — the whole system in one place, for study and practice. The letters, the days, the signs, the body parts, the senses, and the mothers — and the theory of when each day is strongest, and what to practice then.</p>
 
@@ -558,6 +662,23 @@
         set('today-holy-heb', day.holyHeb);
         set('today-holy-name', day.holy);
         set('today-holy-sub', day.weekday);
+      })();
+    </script>
+    <script>
+      (function () {
+        var header = document.getElementById('site-header');
+        var toggle = document.getElementById('nav-toggle');
+        if (!header || !toggle) return;
+        toggle.addEventListener('click', function () {
+          var open = header.classList.toggle('nav-open');
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        header.querySelectorAll('nav a').forEach(function (a) {
+          a.addEventListener('click', function () {
+            header.classList.remove('nav-open');
+            toggle.setAttribute('aria-expanded', 'false');
+          });
+        });
       })();
     </script>
   </body>

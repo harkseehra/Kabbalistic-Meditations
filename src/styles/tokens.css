@@ -21,10 +21,10 @@
   --accent:     #1e6b41;
   --accent-ink: #ffffff;
   --paper-glass: rgba(255, 255, 255, 0.82);
-  /* Motion: Apple's asymmetric curve — fast start, long soft settle.
-     No symmetric ease-in-out anywhere on the site. */
-  --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
-  --theme-transition: background 0.5s var(--ease-apple), color 0.5s var(--ease-apple), border-color 0.5s var(--ease-apple);
+  /* Motion: one clean ease-out everywhere — fast start, long soft
+     settle. No symmetric ease-in-out anywhere on the site. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --theme-transition: background 0.5s var(--ease-out), color 0.5s var(--ease-out), border-color 0.5s var(--ease-out);
   /* Icons and Hebrew share one colour per theme: midnight blue by day,
      gold at night. V2 palette — adjustable. */
   --icon-color: #191970;
@@ -38,12 +38,14 @@
   --header-active-bg: #ffffff;
   --header-active-ink: #005b96;
 
-  /* Type — Cormorant Garamond, the Sigurd-Regular alike: elegant,
-     high-contrast, classic serif with a slightly condensed feel.
-     Medium 500 base, semibold 600 at night — real weights.
-     Sans for headings and top elements (Oswald), serif for text. */
-  --font-serif: "IM Fell English", "Cormorant Garamond", "Libre Baskerville", Georgia, serif;
+  /* Type — body serif is IM Fell French Canon, the font he asked for
+     (not IM Fell English). Cormorant Garamond and Libre Baskerville
+     are fallbacks. Medium 500 base, semibold 600 at night — real weights.
+     Headings in Teko, the GTA 5 subtitle look — condensed, bold, direct.
+     Small uppercase labels stay Oswald, which reads better small. */
+  --font-serif: "IM Fell French Canon", "Cormorant Garamond", "Libre Baskerville", Georgia, serif;
   --font-wordmark: "Redaction 10", "Cormorant Garamond", Georgia, serif;
+  --font-heading: "Teko", "Oswald", "Arial Narrow", sans-serif;
   --font-sans: "Oswald", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
   --font-mono:  "Berkeley Mono", "IBM Plex Mono", "JetBrains Mono",
                 ui-monospace, Menlo, monospace;

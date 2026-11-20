@@ -8,19 +8,22 @@
     <title>Current Horoscope</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IM+Fell+English:ital@0;1&family=Frank+Ruhl+Libre:wght@400;500&family=Redaction+10&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IM+Fell+French+Canon:ital@0;1&family=Frank+Ruhl+Libre:wght@400;500&family=Redaction+10&family=Teko:wght@500;600&display=swap" rel="stylesheet" />
     <style is:global>
       button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2.25rem; }
       * { box-sizing: border-box; }
       :root {
         color-scheme: light dark;
-        /* Type scale — Major Third (1.25), base 1.35rem. Five sizes only, used everywhere. */
+        /* Type scale — Major Third (1.25), base 1.35rem. These tokens match
+           src/styles/tokens.css exactly; the html root is 1.35rem so 1rem
+           here is the base size on this page, same as BaseLayout pages. */
         --text-xs: 0.86rem;
         --text-sm: 1.08rem;
         --text-base: 1.35rem;
         --text-lg: 1.69rem;
         --text-xl: 2.11rem;
         --text-2xl: 2.64rem;
+        --text-3xl: 3.3rem;
         /* Spacing — 8-point scale. Every gap on the page is one of these. */
         --space-1: 4px;
         --space-2: 8px;
@@ -29,8 +32,11 @@
         --space-5: 32px;
         --space-6: 48px;
         --space-7: 64px;
-        /* Radius — cards 16px, chips pill. */
+        /* Radius — cards 16px, buttons 10px, matching tokens.css. */
         --radius-card: 16px;
+        --radius-sm: 10px;
+        /* Motion — one clean ease-out everywhere. */
+        --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
         --bg: #f7f5f0;
         --surface: #ffffff;
         --surface-2: #efede6;
@@ -76,20 +82,21 @@
           --header-active-ink: #6fcb9f;
         }
       }
+      html { font-size: 1.35rem; }
       body {
         margin: 0;
         background: var(--bg);
         color: var(--ink);
-        font-family: "IM Fell English", Georgia, serif;
-        font-size: var(--text-base);
+        font-family: "IM Fell French Canon", Georgia, serif;
+        font-size: 1rem;
         line-height: 1.6;
       }
       .wrap { max-width: 1060px; margin: 0 auto; padding: var(--space-7) var(--space-6) var(--space-7); }
-      h1, h2, h3, .oswald { font-family: "Oswald", "Arial Narrow", sans-serif; }
+      h1, h2, h3 { font-family: "Teko", "Oswald", "Arial Narrow", sans-serif; }
       h1 { font-size: var(--text-2xl); font-weight: 600; letter-spacing: .01em; line-height: 1.15; margin: 0 0 var(--space-2); }
       h2 { font-size: var(--text-xl); font-weight: 600; line-height: 1.2; margin: var(--space-6) 0 var(--space-3); }
       h3 { font-size: var(--text-lg); font-weight: 600; line-height: 1.2; margin: 0; }
-      p { margin: 0 0 var(--space-3); max-width: 44rem; }
+      p { margin: 0 0 var(--space-3); max-width: 31rem; }
       .lede { color: var(--ink-soft); font-size: var(--text-lg); line-height: 1.55; }
       .heb { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-weight: 500; }
       .heb-big { font-size: var(--text-2xl); line-height: 1; }
@@ -115,7 +122,7 @@
       #site-header .site-wordmark .cursor { color: var(--header-ink); }
       #site-header nav { display: flex; gap: 0.6rem; justify-self: end; }
       #site-header nav a {
-        font-family: "Oswald", sans-serif;
+        font-family: "Teko", "Oswald", sans-serif;
         font-size: var(--text-sm);
         font-weight: 600;
         line-height: 1.25;
@@ -127,7 +134,7 @@
         background-color: var(--header-btn-bg);
         color: var(--header-ink);
         text-decoration: none;
-        transition: transform 150ms cubic-bezier(0.32, 0.72, 0, 1), border-color 200ms cubic-bezier(0.32, 0.72, 0, 1), background-color 200ms cubic-bezier(0.32, 0.72, 0, 1);
+        transition: transform 150ms var(--ease-out), border-color 200ms var(--ease-out), background-color 200ms var(--ease-out);
       }
       #site-header nav a:hover { border-color: var(--header-ink); transform: translateY(-1px); }
       #site-header nav a.active {
@@ -181,14 +188,14 @@
       .today-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-2); }
       .day { text-align: center; }
       .day .dname { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); display: block; }
-      .day .pname { display: block; font-size: var(--text-base); margin-top: var(--space-2); }
-      .day .gate { display: block; font-size: var(--text-base); color: var(--ink-soft); margin-top: var(--space-1); }
+      .day .pname { display: block; font-size: 1rem; margin-top: var(--space-2); }
+      .day .gate { display: block; font-size: 1rem; color: var(--ink-soft); margin-top: var(--space-1); }
       .day .heb-big { display: block; margin-top: var(--space-2); }
       @media (max-width: 640px) { .today-grid { grid-template-columns: repeat(2, 1fr); } }
 
       /* Strongest day panel */
       .strongest { margin: var(--space-3) 0 var(--space-2); }
-      .strongest .chain { font-family: "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; margin: 0 0 var(--space-2); }
+      .strongest .chain { font-family: "Teko", "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; margin: 0 0 var(--space-2); }
       .strongest p { margin-bottom: var(--space-2); }
       .strongest p:last-child { margin-bottom: 0; }
 
@@ -197,9 +204,9 @@
       .letter-verse-card { display: flex; flex-direction: column; gap: var(--space-2); }
       .lv-label { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
       .lv-name { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-size: var(--text-lg); font-weight: 500; }
-      .lv-english { font-size: var(--text-base); }
+      .lv-english { font-size: 1rem; }
       .lv-div { height: 1px; background: var(--line); }
-      .lv-verse { font-size: var(--text-base); font-style: italic; }
+      .lv-verse { font-size: 1rem; font-style: italic; }
       .lv-src { font-size: var(--text-sm); color: var(--ink-soft); }
       @media (max-width: 680px) { .today-letters-grid { grid-template-columns: 1fr; } }
 
@@ -215,7 +222,10 @@
         padding: var(--space-2) var(--space-3); border-radius: 999px; cursor: pointer;
         border: 1px solid var(--line); background: var(--surface); color: var(--ink);
         min-height: 2.5rem;
+        transition: transform 150ms var(--ease-out), border-color 200ms var(--ease-out), background-color 200ms var(--ease-out);
       }
+      .chip:hover { border-color: var(--ink); transform: translateY(-1px); }
+      .chip:active { transition-duration: 100ms; transform: scale(0.97); }
       .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
       @media (prefers-color-scheme: dark) { .chip[aria-pressed="true"] { color: #172022; } }
 
@@ -231,7 +241,7 @@
       .planet-card.mother-mem { --elem-color: var(--water); }
       .planet-card.mother-shin { --elem-color: var(--fire); }
       .card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
-      .planet-name { font-family: "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; }
+      .planet-name { font-family: "Teko", "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; }
       .athome {
         font-family: "Oswald", sans-serif; font-size: var(--text-xs); letter-spacing: .07em; text-transform: uppercase;
         padding: var(--space-1) 0.75rem; border-radius: 999px; white-space: nowrap;
@@ -240,7 +250,7 @@
       @media (prefers-color-scheme: dark) { .athome { color: #172022; } }
       .double-row { display: flex; align-items: center; gap: var(--space-3); }
       .dbl-meta { display: flex; flex-direction: column; gap: var(--space-1); }
-      .dbl-line { font-size: var(--text-base); }
+      .dbl-line { font-size: 1rem; }
       .dbl-line.soft { color: var(--ink-soft); font-size: var(--text-sm); }
       .week-pair { display: flex; align-items: center; justify-content: space-around; gap: var(--space-3); padding: var(--space-1) 0; }
       .week-letter { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); text-align: center; flex: 1; }
@@ -253,8 +263,8 @@
       .facts { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
       .fact { display: flex; flex-direction: column; gap: var(--space-1); }
       .fact-label { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
-      .fact-value { font-size: var(--text-base); display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
-      .reading { border-top: 1px solid var(--line); padding-top: var(--space-2); color: var(--ink-soft); font-style: italic; font-size: var(--text-base); }
+      .fact-value { font-size: 1rem; display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+      .reading { border-top: 1px solid var(--line); padding-top: var(--space-2); color: var(--ink-soft); font-style: italic; font-size: 1rem; }
       .empty-card { color: var(--ink-soft); font-style: italic; border-top-color: var(--line); }
 
       /* Element pills */
