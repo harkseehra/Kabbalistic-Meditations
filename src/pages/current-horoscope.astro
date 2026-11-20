@@ -9,6 +9,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IM+Fell+French+Canon:ital@0;1&family=Frank+Ruhl+Libre:wght@400;500&family=Redaction+10&family=Teko:wght@500;600&display=swap" rel="stylesheet" />
+    <!-- Apply saved theme before paint; day is the default, night follows
+         the saved choice or the system preference -->
+    <script is:inline>
+      const saved = localStorage.getItem('theme');
+      const night = saved === 'night' || (saved !== 'day' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (night) document.documentElement.setAttribute('data-theme', 'night');
+    </script>
     <style is:global>
       button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2.25rem; }
       * { box-sizing: border-box; }
@@ -58,29 +65,34 @@
         --header-active-bg: #ffffff;
         --header-active-ink: #005b96;
       }
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg: #172022;
-          --surface: #1f2c2e;
-          --surface-2: #243335;
-          --ink: #ece9df;
-          --ink-soft: #b9beb9;
-          --line: #3a4a4c;
-          --accent: #83adb5;
-          --accent-soft: #26383b;
-          --heb: #e8c766;
+      /* Night — driven by data-theme="night" on <html>, set by the head
+         script from the saved choice or the system preference, and flipped
+         by the floating toggle. A manual choice always wins over the
+         system theme. */
+      :root[data-theme="night"] {
+          /* Royal Ink night — same palette as tokens.css, in this page's
+             variable names. Element hues stay as they are: they are
+             categorical (fire/earth/air/water identity), not theme. */
+          --bg: #0D1330;
+          --surface: #171E42;
+          --surface-2: #1C2450;
+          --ink: #E3E6F0;
+          --ink-soft: #AEB8D6;
+          --line: #2E3A6B;
+          --accent: #8AA5FF;
+          --accent-soft: #1B2452;
+          --heb: #AEBFFF;
           --fire: #eda27c; --fire-bg: #3a2a22;
           --earth: #d9c48a; --earth-bg: #37321f;
           --air: #9fd3e0; --air-bg: #22383d;
           --water: #a9c2f5; --water-bg: #232f47;
-          /* Header — same flat bar as the rest of the site. */
-          --header-bg: #6fcb9f;
-          --header-ink: #101410;
-          --header-btn-bg: rgba(0, 0, 0, 0.1);
-          --header-btn-border: rgba(0, 0, 0, 0.25);
-          --header-active-bg: #101410;
-          --header-active-ink: #6fcb9f;
-        }
+          /* Header — flat royal blue by night. */
+          --header-bg: #1E40AF;
+          --header-ink: #ffffff;
+          --header-btn-bg: rgba(255, 255, 255, 0.12);
+          --header-btn-border: rgba(255, 255, 255, 0.35);
+          --header-active-bg: #ffffff;
+          --header-active-ink: #1E40AF;
       }
       html { font-size: 1.35rem; }
       body {
@@ -90,6 +102,7 @@
         font-family: "IM Fell French Canon", Georgia, serif;
         font-size: 1rem;
         line-height: 1.6;
+        transition: background 0.5s var(--ease-out), color 0.5s var(--ease-out), border-color 0.5s var(--ease-out);
       }
       .wrap { max-width: 1060px; margin: 0 auto; padding: var(--space-7) var(--space-6) var(--space-7); }
       h1, h2, h3 { font-family: "Teko", "Oswald", "Arial Narrow", sans-serif; }
@@ -176,6 +189,48 @@
         #site-header nav a { padding: 0.35rem 0.8rem; }
       }
 
+      /* Theme toggle: a floating button near the right edge of the screen,
+         vertically centred, gently bobbing — detached from the edge, not
+         stuck to it. Same button as the BaseLayout pages. */
+      @keyframes float-y {
+        0%, 100% { translate: 0 calc(-50% - 3px); }
+        50%     { translate: 0 calc(-50% + 3px); }
+      }
+      #theme-toggle {
+        position: fixed;
+        right: 1rem;
+        top: 50%;
+        translate: 0 -50%;
+        animation: float-y 5s ease-in-out infinite;
+        z-index: 20;
+        background-color: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-sm);
+        padding: 0.45rem;
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        color: var(--ink);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+        transition: transform 150ms var(--ease-out), background 200ms var(--ease-out), border-color 200ms var(--ease-out);
+      }
+      #theme-toggle:hover { transform: translateX(-2px); }
+      #theme-toggle:active { transition-duration: 100ms; transform: scale(0.97); }
+      #theme-toggle:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 2px;
+      }
+      #theme-toggle svg { width: 1.26rem; height: 1.26rem; display: block; color: var(--ink); }
+      #theme-toggle .icon-moon { display: none; }
+      [data-theme="night"] #theme-toggle .icon-sun { display: none; }
+      [data-theme="night"] #theme-toggle .icon-moon { display: block; }
+      @media (hover: none) {
+        #theme-toggle:hover { transform: none; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #theme-toggle { animation: none; }
+      }
+
       /* Shared card surface — one treatment for every card on the page */
       .card {
         background: var(--surface);
@@ -227,7 +282,7 @@
       .chip:hover { border-color: var(--ink); transform: translateY(-1px); }
       .chip:active { transition-duration: 100ms; transform: scale(0.97); }
       .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
-      @media (prefers-color-scheme: dark) { .chip[aria-pressed="true"] { color: #172022; } }
+      [data-theme="night"] .chip[aria-pressed="true"] { color: #0D1330; }
 
       /* Planet card grid */
       .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); align-items: stretch; }
@@ -247,7 +302,7 @@
         padding: var(--space-1) 0.75rem; border-radius: 999px; white-space: nowrap;
         background: var(--accent); color: #fff;
       }
-      @media (prefers-color-scheme: dark) { .athome { color: #172022; } }
+      [data-theme="night"] .athome { color: #0D1330; }
       .double-row { display: flex; align-items: center; gap: var(--space-3); }
       .dbl-meta { display: flex; flex-direction: column; gap: var(--space-1); }
       .dbl-line { font-size: 1rem; }
@@ -301,6 +356,11 @@
         <a href="../blog/">blog</a>
       </nav>
     </header>
+    <!-- Day/night switch: a plain side button on the right edge of the screen, vertically centred -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle day and night mode" title="Toggle day and night mode">
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g fill="currentColor"><path d="M11.17 6.06 12.83 6.06 12 2.5Z"/><path d="M15.61 7.21 16.79 8.39 18.72 5.28Z"/><path d="M17.94 11.17 17.94 12.83 21.5 12Z"/><path d="M16.79 15.61 15.61 16.79 18.72 18.72Z"/><path d="M12.83 17.94 11.17 17.94 12 21.5Z"/><path d="M8.39 16.79 7.21 15.61 5.28 18.72Z"/><path d="M6.06 12.83 6.06 11.17 2.5 12Z"/><path d="M7.21 8.39 8.39 7.21 5.28 5.28Z"/></g></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/><path fill="currentColor" d="M18.5 3.5 19.2 5.3 21 6 19.2 6.7 18.5 8.5 17.8 6.7 16 6 17.8 5.3Z"/></svg>
+    </button>
     <main class="wrap">
 
       <h1>Current Horoscope</h1>
@@ -677,6 +737,29 @@
             header.classList.remove('nav-open');
             toggle.setAttribute('aria-expanded', 'false');
           });
+        });
+      })();
+    </script>
+    <script>
+      // Day/night switch: same behaviour as the BaseLayout pages — the
+      // saved choice wins, otherwise the system preference; the toggle
+      // flips it and persists the choice under the same 'theme' key, so
+      // the setting carries across every page.
+      (function () {
+        var root = document.documentElement;
+        var toggle = document.getElementById('theme-toggle');
+        if (!toggle) return;
+        function currentTheme() {
+          return root.getAttribute('data-theme') || 'day';
+        }
+        function applyTheme(theme) {
+          localStorage.setItem('theme', theme);
+          theme === 'night'
+            ? root.setAttribute('data-theme', 'night')
+            : root.removeAttribute('data-theme');
+        }
+        toggle.addEventListener('click', function () {
+          applyTheme(currentTheme() === 'night' ? 'day' : 'night');
         });
       })();
     </script>

@@ -78,30 +78,30 @@
 }
 
 [data-theme="night"] {
-  /* Winternight — night. His colours: background #172022, accent #83ADB5.
-     Cards and rules are tints of the background so everything stays in
-     one quiet family. Text runs at the same size as day. Body text is
-     a softer off-white, not near-white: near-white on dark glows and
-     blurs (halation), which is what made it unreadable. */
-  --ink:        #E0E0E0;
-  --ink-dim:    #b8bfcf;
+  /* Royal Ink — night. A deep royal-blue ink family: the background is
+     blue ink, cards and rules are tints of it, and the accent is a light
+     royal blue. Text is a cool off-white, not near-white: near-white on
+     dark glows and blurs (halation), which is what made it unreadable.
+     Body text 14.6:1, dim text 9.2:1, accent 7.7:1 on the background. */
+  --ink:        #E3E6F0;
+  --ink-dim:    #AEB8D6;
   --ink-bright: #ffffff;
-  --paper:      #172022;
-  --paper-raised: #333b3d;
-  --rule:       #41484a;
-  --accent:     #83ADB5;
-  --accent-ink: #172022;
-  --paper-glass: rgba(23, 32, 34, 0.82);
-  --icon-color: #E8C766;
-  --hebrew-color: #E8C766;
+  --paper:      #0D1330;
+  --paper-raised: #171E42;
+  --rule:       #2E3A6B;
+  --accent:     #8AA5FF;
+  --accent-ink: #0D1330;
+  --paper-glass: rgba(13, 19, 48, 0.82);
+  --icon-color: #AEBFFF;
+  --hebrew-color: #AEBFFF;
 
-  /* Header — flat green by night. */
-  --header-bg: #6fcb9f;
-  --header-ink: #101410;
-  --header-btn-bg: rgba(0, 0, 0, 0.1);
-  --header-btn-border: rgba(0, 0, 0, 0.25);
-  --header-active-bg: #101410;
-  --header-active-ink: #6fcb9f;
+  /* Header — flat royal blue by night. */
+  --header-bg: #1E40AF;
+  --header-ink: #ffffff;
+  --header-btn-bg: rgba(255, 255, 255, 0.12);
+  --header-btn-border: rgba(255, 255, 255, 0.35);
+  --header-active-bg: #ffffff;
+  --header-active-ink: #1E40AF;
 }
 
 /* Desktop only: a little more breathing room. Mobile keeps 40rem. */
