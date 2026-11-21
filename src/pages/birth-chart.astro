@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Birth chart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Baskervville:ital,wght@0,400;0,500;0,700;1,400&family=Oswald:wght@400;500;600&family=IM+Fell+French+Canon:ital@0;1&family=Frank+Ruhl+Libre:wght@400;500&family=Redaction+10&family=Teko:wght@500;600&display=swap" rel="stylesheet" />
+    <!-- Apply saved theme before paint; day is the default, night follows
+         the saved choice or the system preference -->
+    <script is:inline>
+      const saved = localStorage.getItem('theme');
+      const night = saved === 'night' || (saved !== 'day' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (night) document.documentElement.setAttribute('data-theme', 'night');
+    </script>
+    <style is:global>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2.25rem; }
+      * { box-sizing: border-box; }
+      :root {
+        color-scheme: light dark;
+        /* Type scale — Material Design 3 role ratios against the 21.6px
+           body: headline large 2.0x, headline medium 1.75x, headline
+           small 1.5x, title large 1.375x. These tokens match
+           src/styles/tokens.css exactly; the html root is 1.35rem so 1rem
+           here is the base size on this page, same as BaseLayout pages. */
+        --text-xs: 0.86rem;
+        --text-sm: 1.08rem;
+        --text-base: 1.35rem;
+        --text-lg: 1.375rem;
+        --text-xl: 1.5rem;
+        --text-2xl: 1.75rem;
+        --text-3xl: 2.0rem;
+        /* Spacing — 8-point scale. Every gap on the page is one of these. */
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 16px;
+        --space-4: 24px;
+        --space-5: 32px;
+        --space-6: 48px;
+        --space-7: 64px;
+        /* Radius — cards 16px, buttons 10px, matching tokens.css. */
+        --radius-card: 16px;
+        --radius-sm: 10px;
+        /* Motion — one clean ease-out everywhere. */
+        --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+        --bg: #f7f5f0;
+        --surface: #ffffff;
+        --surface-2: #efede6;
+        --ink: #1c1e26;
+        --ink-soft: #4a4d59;
+        --line: #d8d4c8;
+        --accent: #191970;
+        --accent-soft: #e3e4f2;
+        --heb: #191970;
+        --fire: #b34a1f; --fire-bg: #fbe9df;
+        --earth: #6d5a2e; --earth-bg: #f1ead3;
+        --air: #3e6b7a; --air-bg: #e0eef2;
+        --water: #2c4f9e; --water-bg: #e0e8fa;
+        /* Header — same flat bar as the rest of the site. */
+        --header-bg: #005b96;
+        --header-ink: #ffffff;
+        --header-btn-bg: rgba(255, 255, 255, 0.12);
+        --header-btn-border: rgba(255, 255, 255, 0.35);
+        --header-active-bg: #ffffff;
+        --header-active-ink: #005b96;
+      }
+      /* Night — driven by data-theme="night" on <html>, set by the head
+         script from the saved choice or the system preference, and flipped
+         by the floating toggle. A manual choice always wins over the
+         system theme. */
+      :root[data-theme="night"] {
+          /* Royal Ink night — same palette as tokens.css, in this page's
+             variable names. Element hues stay as they are: they are
+             categorical (fire/earth/air/water identity), not theme. */
+          --bg: #0D1330;
+          --surface: #171E42;
+          --surface-2: #1C2450;
+          --ink: #E3E6F0;
+          --ink-soft: #AEB8D6;
+          --line: #2E3A6B;
+          --accent: #8AA5FF;
+          --accent-soft: #1B2452;
+          --heb: #F5F7FF;
+          --fire: #eda27c; --fire-bg: #3a2a22;
+          --earth: #d9c48a; --earth-bg: #37321f;
+          --air: #9fd3e0; --air-bg: #22383d;
+          --water: #a9c2f5; --water-bg: #232f47;
+          /* Header — flat royal blue by night. */
+          --header-bg: #1E40AF;
+          --header-ink: #ffffff;
+          --header-btn-bg: rgba(255, 255, 255, 0.12);
+          --header-btn-border: rgba(255, 255, 255, 0.35);
+          --header-active-bg: #ffffff;
+          --header-active-ink: #1E40AF;
+      }
+      html { font-size: 1.35rem; -webkit-font-smoothing: antialiased; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Baskervville", "IM Fell French Canon", Georgia, serif;
+        font-size: 1rem;
+        line-height: 1.6;
+        letter-spacing: 0.02em;
+        word-spacing: 0.1em;
+        transition: background 0.5s var(--ease-out), color 0.5s var(--ease-out), border-color 0.5s var(--ease-out);
+      }
+      .wrap { max-width: 1200px; margin: 0 auto; padding: var(--space-7) var(--space-6) var(--space-7); }
+      h1, h2, h3 { font-family: "Teko", "Oswald", "Arial Narrow", sans-serif; letter-spacing: .01em; word-spacing: normal; }
+      h1 { font-size: var(--text-3xl); font-weight: 600; letter-spacing: .01em; line-height: 1.15; margin: 0 0 var(--space-2); }
+      h2 { font-size: var(--text-2xl); font-weight: 600; line-height: 1.2; margin: var(--space-7) 0 var(--space-3); }
+      h3 { font-size: var(--text-xl); font-weight: 600; line-height: 1.2; margin: 0; }
+      p { margin: 0 0 var(--space-3); max-width: 31rem; }
+      .lede { color: var(--ink-soft); font-size: var(--text-lg); line-height: 1.55; }
+      .heb { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-weight: 500; letter-spacing: 0; word-spacing: normal; }
+      .heb-big { font-size: var(--text-2xl); line-height: 1; }
+      .heb-md { font-size: var(--text-lg); line-height: 1; }
+
+      /* Site header — the same bar as the rest of the site: wordmark left,
+         nav buttons right, burger on a narrow screen. Entrance is a plain
+         fade only (opacity, no movement) — the menu bar animation is
+         deliberately subtle. */
+      @keyframes header-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      #site-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        padding: 0.5rem 1.5rem;
+        background: var(--header-bg);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+        color: var(--header-ink);
+        animation: header-in 500ms var(--ease-out) both;
+      }
+      #site-header .site-name { justify-self: start; text-decoration: none; }
+      #site-header .site-wordmark { font-family: "Redaction 10", "Cormorant Garamond", Georgia, serif; font-size: var(--text-sm); letter-spacing: 0.08em; color: var(--header-ink); }
+      #site-header .site-wordmark .cursor { color: var(--header-ink); }
+      #site-header nav { display: flex; gap: 0.6rem; justify-self: end; }
+      #site-header nav a {
+        font-family: "Teko", "Oswald", sans-serif;
+        font-size: var(--text-sm);
+        font-weight: 600;
+        line-height: 1.25;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 0.45rem 1.1rem;
+        border: 1px solid var(--header-btn-border);
+        border-radius: var(--radius-sm);
+        background-color: var(--header-btn-bg);
+        color: var(--header-ink);
+        text-decoration: none;
+        transition: background-color 250ms var(--ease-out), border-color 250ms var(--ease-out);
+      }
+      #site-header nav a:hover { background-color: rgba(255, 255, 255, 0.22); border-color: var(--header-ink); }
+      #site-header nav a.active {
+        background-color: var(--header-active-bg);
+        border-color: transparent;
+        color: var(--header-active-ink);
+      }
+      #site-header nav a:active { background-color: rgba(255, 255, 255, 0.18); }
+      #site-header nav a:focus-visible { outline: 2px solid var(--header-ink); outline-offset: 2px; }
+      .nav-toggle {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        width: 48px;
+        height: 48px;
+        padding: 0;
+        border: 1px solid var(--header-btn-border);
+        border-radius: var(--radius-sm);
+        background: var(--header-btn-bg);
+        color: var(--header-ink);
+        cursor: pointer;
+        justify-self: end;
+      }
+      .nav-toggle span {
+        display: block;
+        width: 1.25rem;
+        height: 2px;
+        background: currentColor;
+        border-radius: 1px;
+      }
+      @media (max-width: 640px) {
+        #site-header { grid-template-columns: 1fr auto; row-gap: 0.5rem; padding: 0.6rem 1rem; }
+        #site-header .site-wordmark { font-size: var(--text-xs); }
+        .nav-toggle { display: inline-flex; }
+        #site-header nav { display: none; grid-column: 1 / -1; grid-row: 2; flex-direction: column; align-items: flex-end; gap: 0.4rem; justify-content: flex-start; }
+        #site-header.nav-open nav { display: flex; }
+        #site-header nav a { padding: 0.35rem 0.8rem; }
+      }
+
+      /* Theme toggle: a floating button near the right edge of the screen,
+         vertically centred, gently bobbing — detached from the edge, not
+         stuck to it. Same button as the BaseLayout pages. */
+      @keyframes float-y {
+        0%, 100% { translate: 0 calc(-50% - 3px); }
+        50%     { translate: 0 calc(-50% + 3px); }
+      }
+      #theme-toggle {
+        position: fixed;
+        right: 1rem;
+        top: 50%;
+        translate: 0 -50%;
+        animation: float-y 5s ease-in-out infinite;
+        z-index: 20;
+        background-color: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-sm);
+        padding: 0.45rem;
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        color: var(--ink);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+        transition: transform 150ms var(--ease-out), background 200ms var(--ease-out), border-color 200ms var(--ease-out);
+      }
+      #theme-toggle:hover { transform: translateX(-2px); }
+      #theme-toggle:active { transition-duration: 100ms; transform: scale(0.97); }
+      #theme-toggle:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 2px;
+      }
+      #theme-toggle svg { width: 1.26rem; height: 1.26rem; display: block; color: var(--ink); }
+      #theme-toggle .icon-moon { display: none; }
+      [data-theme="night"] #theme-toggle .icon-sun { display: none; }
+      [data-theme="night"] #theme-toggle .icon-moon { display: block; }
+      @media (hover: none) {
+        #theme-toggle:hover { transform: none; }
+        .card:hover { transform: none; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #theme-toggle { animation: none; }
+        .card { animation: none; }
+        *, *::before, *::after { transition-duration: 0.001ms !important; }
+      }
+
+      /* Shared card surface — one treatment for every card on the page.
+         Hover lift: MD3 medium2 (300ms) on the site's one ease-out. */
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-card);
+        padding: var(--space-4);
+        transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out), background-color 300ms var(--ease-out), border-color 300ms var(--ease-out);
+      }
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.20);
+      }
+
+      /* Card entrance — staggered fade-up on page load (MD3
+         emphasized-decelerate, medium4 400ms; 60ms stagger). Fill is
+         backwards, so the hover lift still works once the entrance ends. */
+      @keyframes card-in {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .card { animation: card-in 400ms var(--ease-out) backwards; }
+      .cards > :nth-child(2) { animation-delay: 60ms; }
+      .cards > :nth-child(3) { animation-delay: 120ms; }
+      .cards > :nth-child(4) { animation-delay: 180ms; }
+      .cards > :nth-child(5) { animation-delay: 240ms; }
+      .cards > :nth-child(6) { animation-delay: 300ms; }
+      .cards > :nth-child(7) { animation-delay: 360ms; }
+
+      /* Birth form */
+      .form-card { margin: var(--space-3) 0 var(--space-4); }
+      .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+      .field { display: flex; flex-direction: column; gap: var(--space-2); }
+      .field label { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+      .field input, .field select {
+        font-family: "Baskervville", "IM Fell French Canon", Georgia, serif;
+        font-size: 1rem; color: var(--ink); background: var(--surface);
+        border: 1px solid var(--line); border-radius: var(--radius-sm);
+        padding: 0.6rem 0.8rem; width: 100%;
+      }
+      .field input:focus-visible, .field select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      .btn {
+        font-family: "Teko", "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+        background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm);
+        padding: 0.6rem 1.6rem; cursor: pointer; margin-top: var(--space-4);
+        transition: background-color 200ms var(--ease-out), filter 200ms var(--ease-out);
+      }
+      .btn:hover { filter: brightness(1.15); }
+      [data-theme="night"] .btn { color: #0D1330; }
+      @media (max-width: 680px) { .form-grid { grid-template-columns: 1fr; } }
+
+      /* Birth moment snapshot */
+      .snapshot { margin: var(--space-3) 0 var(--space-4); }
+      .snapshot .chain { font-family: "Teko", "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; margin: 0 0 var(--space-2); }
+      .snapshot p { margin-bottom: var(--space-2); }
+      .snapshot p:last-child { margin-bottom: 0; }
+
+      /* Three mothers */
+      .mothers { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-4); }
+      @media (max-width: 640px) { .mothers { grid-template-columns: 1fr; } }
+
+      /* Filters */
+      .filters { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-5) 0 var(--space-4); align-items: center; }
+      .filters span { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin-right: var(--space-1); }
+      .chip {
+        font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .03em;
+        padding: var(--space-2) var(--space-3); border-radius: 999px; cursor: pointer;
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+        min-height: 2.5rem;
+        transition: transform 150ms var(--ease-out), border-color 200ms var(--ease-out), background-color 200ms var(--ease-out);
+      }
+      .chip:hover { border-color: var(--ink); transform: translateY(-1px); }
+      .chip:active { transition-duration: 100ms; transform: scale(0.97); }
+      .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+      [data-theme="night"] .chip[aria-pressed="true"] { color: #0D1330; }
+
+      /* Planet card grid */
+      .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); align-items: stretch; margin-bottom: var(--space-4); }
+      @media (min-width: 1024px) { .cards { grid-template-columns: repeat(3, 1fr); } }
+      .planet-card.hidden { display: none; }
+      .empty-card { color: var(--ink-soft); }
+      .planet-card {
+        display: flex; flex-direction: column; gap: var(--space-3);
+        border-top: 4px solid var(--elem-color, var(--line));
+      }
+      .planet-card.mother-alef { --elem-color: var(--air); }
+      .planet-card.mother-mem { --elem-color: var(--water); }
+      .planet-card.mother-shin { --elem-color: var(--fire); }
+      .card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
+      .planet-name { font-family: "Teko", "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; }
+      .athome {
+        font-family: "Oswald", sans-serif; font-size: var(--text-xs); letter-spacing: .07em; text-transform: uppercase;
+        padding: var(--space-1) 0.75rem; border-radius: 999px; white-space: nowrap;
+        background: var(--accent); color: #fff;
+      }
+      [data-theme="night"] .athome { color: #0D1330; }
+      .week-pair { display: flex; align-items: center; justify-content: space-around; gap: var(--space-3); padding: var(--space-1) 0; }
+      .week-letter { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); text-align: center; flex: 1; }
+      .week-plus { font-size: var(--text-2xl); color: var(--ink-soft); }
+      .lv-name { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-size: var(--text-lg); font-weight: 500; letter-spacing: 0; word-spacing: normal; }
+      .lv-english { font-size: 1rem; }
+      .card-div { height: 1px; background: var(--line); }
+      .sign-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-2) var(--space-3); }
+      .sign-name { font-size: var(--text-lg); font-weight: 600; }
+      .sign-dates { color: var(--ink-soft); font-size: var(--text-sm); }
+      .cusp-note { color: var(--ink-soft); font-size: var(--text-sm); font-style: italic; }
+      .facts { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+      .fact { display: flex; flex-direction: column; gap: var(--space-1); }
+      .fact-label { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+      .fact-value { font-size: 1rem; display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+      .reading { border-top: 1px solid var(--line); padding-top: var(--space-2); color: var(--ink-soft); font-style: italic; font-size: 1rem; }
+      .empty-card { color: var(--ink-soft); font-style: italic; border-top-color: var(--line); }
+
+      /* Element pills */
+      .elem {
+        display: inline-block; font-family: "Oswald", sans-serif; font-size: var(--text-xs); letter-spacing: .07em; text-transform: uppercase;
+        padding: var(--space-1) 0.75rem; border-radius: 999px; white-space: nowrap;
+      }
+      .elem-fire { background: var(--fire-bg); color: var(--fire); }
+      .elem-earth { background: var(--earth-bg); color: var(--earth); }
+      .elem-air { background: var(--air-bg); color: var(--air); }
+      .elem-water { background: var(--water-bg); color: var(--water); }
+
+      .note { color: var(--ink-soft); font-size: var(--text-sm); }
+      .src { border-top: 1px solid var(--line); margin-top: var(--space-7); padding-top: var(--space-4); color: var(--ink-soft); font-size: var(--text-sm); }
+      .src p { margin-bottom: var(--space-2); }
+
+      /* Mobile: single column, tighter card padding, same scale */
+      @media (max-width: 680px) {
+        .wrap { padding: var(--space-5) var(--space-4) var(--space-6); }
+        .cards { grid-template-columns: 1fr; gap: var(--space-3); }
+        .card { padding: 20px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header id="site-header">
+      <a class="site-name" href="../"><span class="site-wordmark">KABBALISTIC MEDITATIONS<span class="cursor">▌</span></span></a>
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav id="site-nav">
+        <a href="../">today</a>
+        <a href="../current-horoscope/">horoscope</a>
+        <a href="../birth-chart/" class="active">birth chart</a>
+        <a href="../practice/">practice</a>
+        <a href="../prayer/">prayer</a>
+        <a href="../blog/">blog</a>
+      </nav>
+    </header>
+    <!-- Day/night switch: a plain side button on the right edge of the screen, vertically centred -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle day and night mode" title="Toggle day and night mode">
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g fill="currentColor"><path d="M11.17 6.06 12.83 6.06 12 2.5Z"/><path d="M15.61 7.21 16.79 8.39 18.72 5.28Z"/><path d="M17.94 11.17 17.94 12.83 21.5 12Z"/><path d="M16.79 15.61 15.61 16.79 18.72 18.72Z"/><path d="M12.83 17.94 11.17 17.94 12 21.5Z"/><path d="M8.39 16.79 7.21 15.61 5.28 18.72Z"/><path d="M6.06 12.83 6.06 11.17 2.5 12Z"/><path d="M7.21 8.39 8.39 7.21 5.28 5.28Z"/></g></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/><path fill="currentColor" d="M18.5 3.5 19.2 5.3 21 6 19.2 6.7 18.5 8.5 17.8 6.7 16 6 17.8 5.3Z"/></svg>
+    </button>
+    <main class="wrap">
+
+      <h1>Birth chart</h1>
+      <p class="lede">The seven planets as they stood at the moment of birth — each one in its sign, with its letters, its body part, its sense, and its temperament. A snapshot of one moment, read in the order of the week, Sunday first.</p>
+
+      <p>Every planet stacks in layers. Its own letter is one of the seven doubles of Sefer Yetzirah, chapter 4 — the letter made king over that planet in the world, over one day in the year, and over one gate in the soul. Its sign carries one of the twelve simple letters of chapter 5, and that letter is king over a stretch of dates in the year, a body part in the person, and a sense — a faculty — in the soul. The element of the sign gives the temperament, the mother it answers to. When a planet stands in a sign it rules, it is at home, and its influence is doubled.</p>
+
+      <h2>Your birth moment</h2>
+      <p>Enter the date, the time, and the place of birth. The timezone turns the local time into the one moment the planets are worked out from — the signs depend on the date and the time, not the place. The place is shown on the chart as it was given. Nothing you enter leaves this page; the chart is worked out in your browser.</p>
+
+      <form class="form-card card" id="birth-form">
+        <div class="form-grid">
+          <div class="field">
+            <label for="birth-date">Birth date</label>
+            <input type="date" id="birth-date" required />
+          </div>
+          <div class="field">
+            <label for="birth-time">Birth time</label>
+            <input type="time" id="birth-time" />
+            <span class="note">If the time is not known, leave it blank — noon is used.</span>
+          </div>
+          <div class="field">
+            <label for="birth-place">Birthplace</label>
+            <input type="text" id="birth-place" placeholder="City, country" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="birth-tz">Timezone</label>
+            <select id="birth-tz"></select>
+          </div>
+        </div>
+        <button class="btn" type="submit">Calculate the chart</button>
+        <p class="note" id="form-error" role="alert" hidden>Please enter a birth date.</p>
+      </form>
+
+      <div class="snapshot card" id="snapshot" aria-label="The birth moment" hidden>
+        <p class="chain" id="snap-chain">—</p>
+        <p id="snap-note">—</p>
+      </div>
+
+      <h2>The chart — in the order of the week</h2>
+      <p>The seven planets, in the order of the week — Sunday first. Each card shows the planet's double and its day to meditate, its sign as it stood at the birth moment, and the sign's letter with its body part, its sense, and its mother. The chips filter by mother; they are a filter, not the order.</p>
+      <div class="filters" role="group" aria-label="Filter the chart by mother">
+        <span>Mother</span>
+        <button class="chip" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" data-filter="alef" aria-pressed="false">Alef</button>
+        <button class="chip" data-filter="mem" aria-pressed="false">Mem</button>
+        <button class="chip" data-filter="shin" aria-pressed="false">Shin</button>
+      </div>
+
+      <div id="chart" aria-live="polite">
+        <p class="note">Enter a birth date, time, and place above, then calculate — the seven planets will appear here, in the order of the week, Sunday first.</p>
+      </div>
+
+      <h2>The three mothers</h2>
+      <p>Above the doubles and the simples stand the three mothers of chapter 3 — Alef, Mem, and Shin. Each mother is a temperament, and every sign's element places it under one of them. An air sign belongs to Alef. A water sign belongs to Mem. A fire sign belongs to Shin. And an earth sign belongs to Mem as well, because in chapter 3 the earth was created from water — so earth carries Mem's temperament, the water underneath it.</p>
+      <p>So the element is not only a nature — it is a belonging. Read a sign's element and you know its mother: Gemini, Libra, and Aquarius under Alef; Cancer, Scorpio, and Pisces under Mem, with Taurus, Virgo, and Capricorn beside them; Aries, Leo, and Sagittarius under Shin.</p>
+
+      <p class="note" style="margin-top:1rem;">The body parts are named here in plain words. In the language of the text itself: the first stomach, under Ayin and Capricorn, is the rumen; the stomach, under Tzadi and Aquarius, is the abomasum, the true stomach; the gizzard, under Qof and Pisces, is the craw, the grinding chamber; and the bile, under Samekh and Sagittarius, is the gall.</p>
+
+      <div class="src">
+        <p><strong>Sources.</strong> All letter assignments follow Sefer Yetzirah on Sefaria — the Warsaw 1884 Hebrew text, in the Sefaria Community Translation. The three mothers and their temperaments: chapter 3 — Alef air, trunk in the soul; Mem water, belly in the soul; Shin fire, head in the soul; and the earth created from water, which is why the earth signs belong to Mem. Planet letters, days, and gates in the soul: chapter 4 — each double made king over a planet in the world, a day in the year, and a gate in the soul, the week beginning on Sunday. Sign letters, body parts, and senses: chapter 5. The dates shown for each sign are the conventional English calendar ranges of the signs, standing in place of the Hebrew months named in the text. Sign rulerships: the traditional assignments — Saturn over Capricorn and Aquarius, Jupiter over Sagittarius and Pisces, Mars over Aries and Scorpio, the Sun over Leo, Venus over Taurus and Libra, Mercury over Gemini and Virgo, the Moon over Cancer. Elements: the classical four, three signs each.</p>
+        <p>Positions are worked out live in the browser from the birth date, time, and timezone you enter. The Sun and the Moon follow the site's own reckoning; the five wandering planets — Mercury, Venus, Mars, Jupiter, Saturn — are placed by a low-precision planetary calculation, good to a few minutes of arc. That is enough to place the sign, except within about a degree of a cusp, where either side is possible.</p>
+      </div>
+    </main>
+    <script>
+      (function () {
+        /* ---- Data: Sefer Yetzirah on Sefaria, Warsaw 1884 ---- */
+        var SIGNS = [
+          { name: 'Aries',       letter: 'He',     heb: 'ה', dates: 'Mar 21 – Apr 19', organ: 'Right hand',    sense: 'Seeing',        element: 'fire',  mother: 'Shin', motherHeb: 'ש' },
+          { name: 'Taurus',      letter: 'Vav',    heb: 'ו', dates: 'Apr 20 – May 20', organ: 'Left hand',     sense: 'Hearing',       element: 'earth', mother: 'Mem',  motherHeb: 'מ' },
+          { name: 'Gemini',      letter: 'Zayin',  heb: 'ז', dates: 'May 21 – Jun 20', organ: 'Right leg',     sense: 'Smelling',      element: 'air',   mother: 'Alef', motherHeb: 'א' },
+          { name: 'Cancer',      letter: 'Chet',   heb: 'ח', dates: 'Jun 21 – Jul 22', organ: 'Left leg',      sense: 'Talking',       element: 'water', mother: 'Mem',  motherHeb: 'מ' },
+          { name: 'Leo',         letter: 'Tet',    heb: 'ט', dates: 'Jul 23 – Aug 22', organ: 'Right kidney',  sense: 'Eating',        element: 'fire',  mother: 'Shin', motherHeb: 'ש' },
+          { name: 'Virgo',       letter: 'Yod',    heb: 'י', dates: 'Aug 23 – Sep 22', organ: 'Left kidney',   sense: 'Sex',           element: 'earth', mother: 'Mem',  motherHeb: 'מ' },
+          { name: 'Libra',       letter: 'Lamed',  heb: 'ל', dates: 'Sep 23 – Oct 22', organ: 'Liver',         sense: 'Work',          element: 'air',   mother: 'Alef', motherHeb: 'א' },
+          { name: 'Scorpio',     letter: 'Nun',    heb: 'נ', dates: 'Oct 23 – Nov 21', organ: 'Spleen',        sense: 'Movement',      element: 'water', mother: 'Mem',  motherHeb: 'מ' },
+          { name: 'Sagittarius', letter: 'Samekh', heb: 'ס', dates: 'Nov 22 – Dec 21', organ: 'Bile',          sense: 'Excitement',    element: 'fire',  mother: 'Shin', motherHeb: 'ש' },
+          { name: 'Capricorn',   letter: 'Ayin',   heb: 'ע', dates: 'Dec 22 – Jan 19', organ: 'First stomach', sense: 'Play',          element: 'earth', mother: 'Mem',  motherHeb: 'מ' },
+          { name: 'Aquarius',    letter: 'Tzadi',  heb: 'צ', dates: 'Jan 20 – Feb 18', organ: 'Stomach',       sense: 'Contemplation', element: 'air',   mother: 'Alef', motherHeb: 'א' },
+          { name: 'Pisces',      letter: 'Qof',    heb: 'ק', dates: 'Feb 19 – Mar 20', organ: 'Gizzard',       sense: 'Sleep',         element: 'water', mother: 'Mem',  motherHeb: 'מ' }
+        ];
+        // Index by Date.getDay(): 0 = Sunday ... 6 = Saturday (Sefer Yetzirah, Sunday first)
+        var DAYS = [
+          { weekday: 'Sunday',    letter: 'Bet',   heb: 'ב', planet: 'Saturn',  gate: 'Right eye',     holy: 'El',           holyHeb: 'אֵל' },
+          { weekday: 'Monday',    letter: 'Gimel', heb: 'ג', planet: 'Jupiter', gate: 'Left eye',      holy: 'Elohim',       holyHeb: 'אֱלֹהִים' },
+          { weekday: 'Tuesday',   letter: 'Dalet', heb: 'ד', planet: 'Mars',    gate: 'Right ear',     holy: 'YHWH',         holyHeb: 'יְהוָה' },
+          { weekday: 'Wednesday', letter: 'Kaf',   heb: 'כ', planet: 'Sun',     gate: 'Left ear',      holy: 'YHWH Tzevaot', holyHeb: 'יְהוָה צְבָאוֹת' },
+          { weekday: 'Thursday',  letter: 'Pe',    heb: 'פ', planet: 'Venus',   gate: 'Right nostril', holy: 'Elohim Tzevaot', holyHeb: 'אֱלֹהִים צְבָאוֹת' },
+          { weekday: 'Friday',    letter: 'Resh',  heb: 'ר', planet: 'Mercury', gate: 'Left nostril',  holy: 'Shaddai',      holyHeb: 'שַׁדַּי' },
+          { weekday: 'Saturday',  letter: 'Tav',   heb: 'ת', planet: 'Moon',    gate: 'Mouth',         holy: 'Adonai',       holyHeb: 'אֲדֹנָי' }
+        ];
+        var RULED_SIGNS = { Sun: ['Leo'], Moon: ['Cancer'], Mercury: ['Gemini', 'Virgo'], Venus: ['Taurus', 'Libra'], Mars: ['Aries', 'Scorpio'], Jupiter: ['Sagittarius', 'Pisces'], Saturn: ['Capricorn', 'Aquarius'] };
+        function moonLon(now) {
+          var d = now.getTime() / 86400000 - 10957.5; // days since J2000.0
+          var rad = Math.PI / 180;
+          var L = 218.3165 + 13.17639648 * d;
+          var M = 134.9634 + 13.06499295 * d;
+          var F = 93.2721 + 13.22935024 * d;
+          var D = 297.8502 + 12.19074912 * d;
+          var Ms = 357.5291 + 0.98560028 * d;
+          var lon = L
+            + 6.2888 * Math.sin(M * rad)
+            + 1.2740 * Math.sin((2 * D - M) * rad)
+            + 0.6580 * Math.sin(2 * D * rad)
+            + 0.2136 * Math.sin(2 * M * rad)
+            - 0.1855 * Math.sin(Ms * rad)
+            - 0.1143 * Math.sin(2 * F * rad);
+          return ((lon % 360) + 360) % 360;
+        }
+
+        /* ---- Ephemeris: low-precision planetary positions (Schlyter) ---- */
+        var ORBIT = {
+          Mercury: { a: [0.38709927, 0.00000037], e: [0.20563593, 0.00001906], i: [-7.00497902, -0.00594749], L: [252.25032350, 149472.67411175], lp: [77.45779628, 0.16047689], om: [48.33076593, -0.12534081] },
+          Venus:   { a: [0.72333566, 0.00000390], e: [0.00677672, -0.00004107], i: [3.39467605, -0.00078890], L: [181.97909950, 58517.81538729], lp: [131.60246718, 0.00268329], om: [76.67984255, -0.27769418] },
+          Earth:   { a: [1.00000261, 0.00000562], e: [0.01671123, -0.00004392], i: [-0.00001531, -0.01294668], L: [100.46457166, 35999.37244981], lp: [102.93768193, 0.32327364], om: [0.0, 0.0] },
+          Mars:    { a: [1.52371034, 0.00001847], e: [0.09339410, 0.00007882], i: [1.84969142, -0.00813131], L: [-4.55343205, 19140.30268499], lp: [-23.94362959, 0.44441088], om: [49.55953891, -0.29257343] },
+          Jupiter: { a: [5.20288700, -0.00011607], e: [0.04838624, -0.00013253], i: [1.30439695, -0.00183714], L: [34.39644051, 3034.74612775], lp: [14.72847983, 0.21252668], om: [100.47390909, 0.20469106] },
+          Saturn:  { a: [9.53667594, -0.00125060], e: [0.05386179, -0.00050991], i: [2.48599187, 0.00193609], L: [49.95424423, 1222.49362201], lp: [92.59887831, -0.41897216], om: [113.66242448, -0.28867794] }
+        };
+        var RAD = Math.PI / 180, DEG = 180 / Math.PI;
+        function norm360(x) { return ((x % 360) + 360) % 360; }
+        function helio(el, T) {
+          var a = el.a[0] + el.a[1] * T, e = el.e[0] + el.e[1] * T, i = (el.i[0] + el.i[1] * T) * RAD;
+          var L = norm360(el.L[0] + el.L[1] * T), lp = norm360(el.lp[0] + el.lp[1] * T), om = norm360(el.om[0] + el.om[1] * T);
+          var w = (lp - om) * RAD, M = norm360(L - lp), Mr = M * RAD;
+          var E = M + DEG * e * Math.sin(Mr) * (1 + e * Math.cos(Mr));
+          for (var k = 0; k < 10; k++) {
+            var Er = E * RAD;
+            E = E - (E - DEG * e * Math.sin(Er) - M) / (1 - e * Math.cos(Er));
+          }
+          var Er2 = E * RAD;
+          var xv = a * (Math.cos(Er2) - e), yv = a * Math.sqrt(1 - e * e) * Math.sin(Er2);
+          var cw = Math.cos(w), sw = Math.sin(w), co = Math.cos(om * RAD), so = Math.sin(om * RAD), ci = Math.cos(i), si = Math.sin(i);
+          var xh = (cw * co - sw * so * ci) * xv + (-sw * co - cw * so * ci) * yv;
+          var yh = (cw * so + sw * co * ci) * xv + (-sw * so + cw * co * ci) * yv;
+          var zh = (sw * si) * xv + (cw * si) * yv;
+          return { x: xh, y: yh, z: zh, lon: norm360(Math.atan2(yh, xh) * DEG) };
+        }
+        function geoLon(planet, T, earth) {
+          var h = helio(ORBIT[planet], T);
+          return norm360(Math.atan2(h.y - earth.y, h.x - earth.x) * DEG);
+        }
+        /* Days since J2000.0 (2000 Jan 1.5), the epoch the orbital
+           elements below are given for. The textbook form ends in
+           - 730530, which counts from 2000 Jan 0.0 — a day and a half
+           earlier — and that would push every planet about 1.5 days
+           along its orbit (the Sun ~1.5° too far). The extra -1.5
+           puts the count on J2000.0. */
+        function dayNumber(y, m, d, ut) {
+          return 367 * y - Math.floor(7 * (y + Math.floor((m + 9) / 12)) / 4) + Math.floor(275 * m / 9) + d - 730531.5 + ut / 24;
+        }
+
+        /* ---- A planet's longitude at one UTC moment ---- */
+        function planetLonAt(planet, utcDate) {
+          var d = dayNumber(utcDate.getUTCFullYear(), utcDate.getUTCMonth() + 1, utcDate.getUTCDate(), utcDate.getUTCHours() + utcDate.getUTCMinutes() / 60 + utcDate.getUTCSeconds() / 3600);
+          var T = d / 36525;
+          var earth = helio(ORBIT.Earth, T);
+          if (planet === 'Sun') return norm360(earth.lon + 180);
+          if (planet === 'Moon') return moonLon(utcDate);
+          return geoLon(planet, T, earth);
+        }
+        function planetEntry(planet, lon) {
+          var dbl = null;
+          for (var i = 0; i < DAYS.length; i++) if (DAYS[i].planet === planet) dbl = DAYS[i];
+          var signIdx = Math.floor(lon / 30) % 12;
+          return { planet: planet, dbl: dbl, sign: SIGNS[signIdx], deg: lon % 30 };
+        }
+
+        /* ---- Pointed letter names and the prayer verses (Genesis 1) ---- */
+        var POINTED = { Alef: 'אָלֶף', Bet: 'בֵּית', Gimel: 'גִּימֶל', Dalet: 'דָּלֶת', He: 'הֵא', Vav: 'וָו', Zayin: 'זַיִן', Chet: 'חֵית', Tet: 'טֵית', Yod: 'יוּד', Kaf: 'כַּף', Lamed: 'לָמֶד', Mem: 'מֵם', Nun: 'נוּן', Samekh: 'סָמֶךְ', Ayin: 'עַיִן', Pe: 'פֵּא', Tzadi: 'צַדִּי', Qof: 'קוּף', Resh: 'רֵישׁ', Shin: 'שִׁין', Tav: 'תָּו' };
+        var VERSES = {
+          Alef: 'God made the firmament', Bet: 'God saw the light that it was good', Gimel: 'God saw that it was good', Dalet: 'God saw that it was good',
+          He: 'The spirit of God hovered', Vav: 'God divided between the light and darkness', Zayin: 'God called the light day', Chet: 'God called the firmament heaven',
+          Tet: 'God called the dry land earth', Yod: 'God placed them in the firmament', Kaf: 'God saw that it was good', Lamed: 'God created great whales',
+          Mem: 'God made two luminaries', Nun: 'God blessed them, be fruitful and multiply', Samekh: 'God created man', Ayin: 'In the form of God He created him',
+          Pe: 'God saw that it was good', Tzadi: 'God blessed them', Qof: 'God said, behold I have given you', Resh: 'God saw that it was good',
+          Shin: 'God made the beasts of the field', Tav: 'God saw all that He had made'
+        };
+
+        /* ---- Timezone: turn a local wall time into the UTC moment ----
+           The offset is read from the browser's own timezone data, so
+           daylight saving is handled for the date given. */
+        function tzOffsetMs(date, tz) {
+          var dtf = new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' });
+          var parts = dtf.formatToParts(date);
+          function get(t) { for (var i = 0; i < parts.length; i++) if (parts[i].type === t) return parts[i].value; }
+          var asUTC = Date.UTC(+get('year'), +get('month') - 1, +get('day'), +get('hour'), +get('minute'), +get('second'));
+          return asUTC - date.getTime();
+        }
+        function localToUTC(y, m, d, hh, mm, tz) {
+          var guess = Date.UTC(y, m - 1, d, hh, mm);
+          var off1 = tzOffsetMs(new Date(guess), tz);
+          var utc = guess - off1;
+          var off2 = tzOffsetMs(new Date(utc), tz);
+          if (off2 !== off1) utc = guess - off2;
+          return utc;
+        }
+
+        /* ---- Timezone list: the browser's own list where it has one,
+           otherwise a short list of common zones. Defaults to the
+           visitor's own timezone. ---- */
+        var FALLBACK_ZONES = [
+          'UTC', 'America/Toronto', 'America/Vancouver', 'America/Winnipeg', 'America/Edmonton', 'America/Halifax',
+          'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles', 'America/Mexico_City',
+          'America/Sao_Paulo', 'Atlantic/Reykjavik', 'Europe/London', 'Europe/Dublin', 'Europe/Paris', 'Europe/Berlin',
+          'Europe/Madrid', 'Europe/Rome', 'Europe/Athens', 'Europe/Moscow', 'Africa/Cairo', 'Africa/Lagos',
+          'Asia/Jerusalem', 'Asia/Dubai', 'Asia/Karachi', 'Asia/Kolkata', 'Asia/Dhaka', 'Asia/Bangkok',
+          'Asia/Singapore', 'Asia/Shanghai', 'Asia/Tokyo', 'Asia/Seoul', 'Australia/Sydney', 'Australia/Melbourne',
+          'Australia/Perth', 'Pacific/Auckland'
+        ];
+        var tzSelect = document.getElementById('birth-tz');
+        var localTz = 'UTC';
+        try { localTz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch (e) { localTz = 'UTC'; }
+        var zones = FALLBACK_ZONES;
+        try {
+          if (Intl.supportedValuesOf) {
+            var all = Intl.supportedValuesOf('timeZone');
+            if (all && all.length) zones = all;
+          }
+        } catch (e) { zones = FALLBACK_ZONES; }
+        if (zones.indexOf(localTz) === -1) zones = [localTz].concat(zones);
+        // Some systems list the old name Asia/Calcutta and not Asia/Kolkata;
+        // the modern name works everywhere, so make sure it is offered.
+        if (zones.indexOf('Asia/Kolkata') === -1) zones.push('Asia/Kolkata');
+        zones.forEach(function (z) {
+          var opt = document.createElement('option');
+          opt.value = z;
+          opt.textContent = z;
+          if (z === localTz) opt.selected = true;
+          tzSelect.appendChild(opt);
+        });
+
+        /* ---- Render the chart ---- */
+        function set(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
+        function fact(label, valueHtml) {
+          return '<div class="fact"><span class="fact-label">' + label + '</span><span class="fact-value">' + valueHtml + '</span></div>';
+        }
+        function fmtTime(hh, mm) {
+          var ap = hh >= 12 ? 'PM' : 'AM';
+          var h12 = hh % 12; if (h12 === 0) h12 = 12;
+          return h12 + ':' + (mm < 10 ? '0' : '') + mm + ' ' + ap;
+        }
+        function renderChart(y, mo, dd, hh, mm, tz, loc) {
+          var utcDate = new Date(localToUTC(y, mo, dd, hh, mm, tz));
+          var planets = [
+            planetEntry('Saturn', planetLonAt('Saturn', utcDate)),
+            planetEntry('Jupiter', planetLonAt('Jupiter', utcDate)),
+            planetEntry('Mars', planetLonAt('Mars', utcDate)),
+            planetEntry('Sun', planetLonAt('Sun', utcDate)),
+            planetEntry('Venus', planetLonAt('Venus', utcDate)),
+            planetEntry('Mercury', planetLonAt('Mercury', utcDate)),
+            planetEntry('Moon', planetLonAt('Moon', utcDate))
+          ];
+
+          /* Snapshot of the birth moment, as entered */
+          var wallDate = new Date(y, mo - 1, dd);
+          var dateStr = wallDate.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+          var snap = document.getElementById('snapshot');
+          snap.hidden = false;
+          set('snap-chain', dateStr);
+          set('snap-note', 'Born ' + fmtTime(hh, mm) + ' in ' + tz + (loc ? ' — ' + loc : '') + '. The chart below is the seven planets as they stood at that moment, in the order of the week, Sunday first.');
+
+          /* The seven cards, Sunday first */
+          var html = '<div class="cards">';
+          planets.forEach(function (p) {
+            var motherKey = p.sign.mother.toLowerCase();
+            var atHome = RULED_SIGNS[p.planet].indexOf(p.sign.name) !== -1;
+            var cusp = (p.deg < 1 || p.deg > 29) ? ' <span class="cusp-note">near the cusp</span>' : '';
+            html += '<article class="planet-card card mother-' + motherKey + '" data-mother="' + motherKey + '">';
+            html += '<div class="card-head"><span class="planet-name">' + p.dbl.weekday + ' — ' + p.planet + '</span>'
+              + (atHome ? '<span class="athome">At home — doubled</span>' : '')
+              + '</div>';
+            html += '<div class="week-pair">'
+              + '<div class="week-letter"><span class="heb heb-big">' + p.dbl.heb + '</span><span class="lv-name">' + POINTED[p.dbl.letter] + '</span><span class="lv-english">' + p.dbl.letter + ' — day letter</span></div>'
+              + '<span class="week-plus">+</span>'
+              + '<div class="week-letter"><span class="heb heb-big">' + p.sign.heb + '</span><span class="lv-name">' + POINTED[p.sign.letter] + '</span><span class="lv-english">' + p.sign.letter + ' — sign letter</span></div>'
+              + '</div>';
+            html += '<div class="card-div"></div>';
+            html += '<div class="sign-row"><span class="sign-name">' + p.sign.name + ' ' + p.deg.toFixed(0) + '°</span>'
+              + '<span class="sign-dates">' + p.sign.dates + '</span>' + cusp + '</div>';
+            html += '<div class="facts">'
+              + fact('Body part', p.sign.organ)
+              + fact('Sense', p.sign.sense)
+              + fact('Element', '<span class="elem elem-' + p.sign.element + '">' + p.sign.element[0].toUpperCase() + p.sign.element.slice(1) + '</span>')
+              + fact('Mother', p.sign.mother + ' <span class="heb heb-md">' + p.sign.motherHeb + '</span>')
+              + fact('Gate', p.dbl.gate)
+              + fact('Holy name', p.dbl.holy + ' <span class="heb heb-md">' + p.dbl.holyHeb + '</span>')
+              + '</div>';
+            html += '<div class="reading">“' + VERSES[p.sign.letter] + '.” — From the prayer, Genesis 1</div>';
+            html += '</article>';
+          });
+          html += '<div class="planet-card card empty-card" id="chart-empty" hidden></div>';
+          html += '</div>';
+          document.getElementById('chart').innerHTML = html;
+          apply('all');
+        }
+
+        /* ---- Mother filter ---- */
+        var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
+        function apply(filter) {
+          var cards = Array.prototype.slice.call(document.querySelectorAll('#chart .planet-card'));
+          var visible = 0;
+          cards.forEach(function (c) {
+            if (c.id === 'chart-empty') return;
+            var show = filter === 'all' || c.dataset.mother === filter;
+            c.classList.toggle('hidden', !show);
+            if (show) visible++;
+          });
+          var empty = document.getElementById('chart-empty');
+          if (empty) {
+            empty.hidden = visible !== 0;
+            if (visible === 0) empty.textContent = 'No planet under ' + filter.charAt(0).toUpperCase() + filter.slice(1) + ' at this birth moment.';
+          }
+        }
+        chips.forEach(function (chip) {
+          chip.addEventListener('click', function () {
+            chips.forEach(function (c) { c.setAttribute('aria-pressed', 'false'); });
+            chip.setAttribute('aria-pressed', 'true');
+            apply(chip.dataset.filter);
+          });
+        });
+
+        /* ---- Form ---- */
+        var form = document.getElementById('birth-form');
+        var errorEl = document.getElementById('form-error');
+        form.addEventListener('submit', function (ev) {
+          ev.preventDefault();
+          var dateVal = document.getElementById('birth-date').value;
+          if (!dateVal) { errorEl.hidden = false; return; }
+          errorEl.hidden = true;
+          var dp = dateVal.split('-');
+          var y = +dp[0], mo = +dp[1], dd = +dp[2];
+          var timeVal = document.getElementById('birth-time').value || '12:00';
+          var tp = timeVal.split(':');
+          var hh = +tp[0], mm = +tp[1];
+          var tz = document.getElementById('birth-tz').value;
+          var loc = document.getElementById('birth-place').value.trim();
+          renderChart(y, mo, dd, hh, mm, tz, loc);
+        });
+      })();
+    </script>
+    <script>
+      (function () {
+        var header = document.getElementById('site-header');
+        var toggle = document.getElementById('nav-toggle');
+        if (!header || !toggle) return;
+        toggle.addEventListener('click', function () {
+          var open = header.classList.toggle('nav-open');
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        header.querySelectorAll('nav a').forEach(function (a) {
+          a.addEventListener('click', function () {
+            header.classList.remove('nav-open');
+            toggle.setAttribute('aria-expanded', 'false');
+          });
+        });
+      })();
+    </script>
+    <script>
+      // Day/night switch: same behaviour as the BaseLayout pages — the
+      // saved choice wins, otherwise the system preference; the toggle
+      // flips it and persists the choice under the same 'theme' key, so
+      // the setting carries across every page.
+      (function () {
+        var root = document.documentElement;
+        var toggle = document.getElementById('theme-toggle');
+        if (!toggle) return;
+        function currentTheme() {
+          return root.getAttribute('data-theme') || 'day';
+        }
+        function applyTheme(theme) {
+          localStorage.setItem('theme', theme);
+          theme === 'night'
+            ? root.setAttribute('data-theme', 'night')
+            : root.removeAttribute('data-theme');
+        }
+        toggle.addEventListener('click', function () {
+          applyTheme(currentTheme() === 'night' ? 'day' : 'night');
+        });
+      })();
+    </script>
+  </body>
+</html>

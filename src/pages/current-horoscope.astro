@@ -8,7 +8,7 @@
     <title>Current Horoscope</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IM+Fell+French+Canon:ital@0;1&family=Frank+Ruhl+Libre:wght@400;500&family=Redaction+10&family=Teko:wght@500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Baskervville:ital,wght@0,400;0,500;0,700;1,400&family=Oswald:wght@400;500;600&family=IM+Fell+French+Canon:ital@0;1&family=Frank+Ruhl+Libre:wght@400;500&family=Redaction+10&family=Teko:wght@500;600&display=swap" rel="stylesheet" />
     <!-- Apply saved theme before paint; day is the default, night follows
          the saved choice or the system preference -->
     <script is:inline>
@@ -96,12 +96,12 @@
           --header-active-bg: #ffffff;
           --header-active-ink: #1E40AF;
       }
-      html { font-size: 1.35rem; }
+      html { font-size: 1.35rem; -webkit-font-smoothing: antialiased; }
       body {
         margin: 0;
         background: var(--bg);
         color: var(--ink);
-        font-family: "IM Fell French Canon", Georgia, serif;
+        font-family: "Baskervville", "IM Fell French Canon", Georgia, serif;
         font-size: 1rem;
         line-height: 1.6;
         letter-spacing: 0.02em;
@@ -111,7 +111,7 @@
       .wrap { max-width: 1200px; margin: 0 auto; padding: var(--space-7) var(--space-6) var(--space-7); }
       h1, h2, h3 { font-family: "Teko", "Oswald", "Arial Narrow", sans-serif; letter-spacing: .01em; word-spacing: normal; }
       h1 { font-size: var(--text-3xl); font-weight: 600; letter-spacing: .01em; line-height: 1.15; margin: 0 0 var(--space-2); }
-      h2 { font-size: var(--text-2xl); font-weight: 600; line-height: 1.2; margin: var(--space-6) 0 var(--space-3); }
+      h2 { font-size: var(--text-2xl); font-weight: 600; line-height: 1.2; margin: var(--space-7) 0 var(--space-3); }
       h3 { font-size: var(--text-xl); font-weight: 600; line-height: 1.2; margin: 0; }
       p { margin: 0 0 var(--space-3); max-width: 31rem; }
       .lede { color: var(--ink-soft); font-size: var(--text-lg); line-height: 1.55; }
@@ -120,7 +120,13 @@
       .heb-md { font-size: var(--text-lg); line-height: 1; }
 
       /* Site header — the same bar as the rest of the site: wordmark left,
-         nav buttons right, burger on a narrow screen. */
+         nav buttons right, burger on a narrow screen. Entrance is a plain
+         fade only (opacity, no movement) — the menu bar animation is
+         deliberately subtle. */
+      @keyframes header-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
       #site-header {
         position: sticky;
         top: 0;
@@ -133,6 +139,7 @@
         border-bottom: 1px solid rgba(0, 0, 0, 0.15);
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
         color: var(--header-ink);
+        animation: header-in 500ms var(--ease-out) both;
       }
       #site-header .site-name { justify-self: start; text-decoration: none; }
       #site-header .site-wordmark { font-family: "Redaction 10", "Cormorant Garamond", Georgia, serif; font-size: var(--text-sm); letter-spacing: 0.08em; color: var(--header-ink); }
@@ -151,15 +158,15 @@
         background-color: var(--header-btn-bg);
         color: var(--header-ink);
         text-decoration: none;
-        transition: transform 150ms var(--ease-out), border-color 200ms var(--ease-out), background-color 200ms var(--ease-out);
+        transition: background-color 250ms var(--ease-out), border-color 250ms var(--ease-out);
       }
-      #site-header nav a:hover { border-color: var(--header-ink); transform: translateY(-1px); }
+      #site-header nav a:hover { background-color: rgba(255, 255, 255, 0.22); border-color: var(--header-ink); }
       #site-header nav a.active {
         background-color: var(--header-active-bg);
         border-color: transparent;
         color: var(--header-active-ink);
       }
-      #site-header nav a:active { transition-duration: 100ms; transform: scale(0.97); }
+      #site-header nav a:active { background-color: rgba(255, 255, 255, 0.18); }
       #site-header nav a:focus-visible { outline: 2px solid var(--header-ink); outline-offset: 2px; }
       .nav-toggle {
         display: none;
@@ -268,7 +275,7 @@
       .cards > :nth-child(7) { animation-delay: 360ms; }
 
       /* Today */
-      .today-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-2); }
+      .today-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-4); }
       .day { text-align: center; }
       .day .dname { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); display: block; }
       .day .pname { display: block; font-size: 1rem; margin-top: var(--space-2); }
@@ -277,13 +284,13 @@
       @media (max-width: 640px) { .today-grid { grid-template-columns: repeat(2, 1fr); } }
 
       /* Strongest day panel */
-      .strongest { margin: var(--space-3) 0 var(--space-2); }
+      .strongest { margin: var(--space-3) 0 var(--space-4); }
       .strongest .chain { font-family: "Teko", "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; margin: 0 0 var(--space-2); }
       .strongest p { margin-bottom: var(--space-2); }
       .strongest p:last-child { margin-bottom: 0; }
 
       /* Today's letters — the day's two letters, in the main page's card scheme */
-      .today-letters-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-2); align-items: stretch; }
+      .today-letters-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-4); align-items: stretch; }
       .letter-verse-card { display: flex; flex-direction: column; gap: var(--space-2); }
       .lv-label { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
       .lv-name { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-size: var(--text-lg); font-weight: 500; letter-spacing: 0; word-spacing: normal; }
@@ -294,11 +301,11 @@
       @media (max-width: 680px) { .today-letters-grid { grid-template-columns: 1fr; } }
 
       /* Three mothers */
-      .mothers { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-2); }
+      .mothers { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-4); }
       @media (max-width: 640px) { .mothers { grid-template-columns: 1fr; } }
 
       /* Filters */
-      .filters { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-4) 0 var(--space-3); align-items: center; }
+      .filters { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-5) 0 var(--space-4); align-items: center; }
       .filters span { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin-right: var(--space-1); }
       .chip {
         font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .03em;
@@ -313,7 +320,7 @@
       [data-theme="night"] .chip[aria-pressed="true"] { color: #0D1330; }
 
       /* Planet card grid */
-      .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); align-items: stretch; }
+      .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); align-items: stretch; margin-bottom: var(--space-4); }
       @media (min-width: 1024px) { .cards { grid-template-columns: repeat(3, 1fr); } }
       .planet-card.hidden { display: none; }
       .empty-card { color: var(--ink-soft); }
@@ -362,7 +369,7 @@
       .elem-water { background: var(--water-bg); color: var(--water); }
 
       .note { color: var(--ink-soft); font-size: var(--text-sm); }
-      .src { border-top: 1px solid var(--line); margin-top: var(--space-6); padding-top: var(--space-4); color: var(--ink-soft); font-size: var(--text-sm); }
+      .src { border-top: 1px solid var(--line); margin-top: var(--space-7); padding-top: var(--space-4); color: var(--ink-soft); font-size: var(--text-sm); }
       .src p { margin-bottom: var(--space-2); }
 
       /* Mobile: single column, tighter card padding, same scale */
@@ -380,6 +387,7 @@
       <nav id="site-nav">
         <a href="../">today</a>
         <a href="../current-horoscope/" class="active">horoscope</a>
+        <a href="../birth-chart/">birth chart</a>
         <a href="../practice/">practice</a>
         <a href="../prayer/">prayer</a>
         <a href="../blog/">blog</a>
@@ -554,8 +562,14 @@
           var h = helio(ORBIT[planet], T);
           return norm360(Math.atan2(h.y - earth.y, h.x - earth.x) * DEG);
         }
+        /* Days since J2000.0 (2000 Jan 1.5), the epoch the orbital
+           elements below are given for. The textbook form ends in
+           - 730530, which counts from 2000 Jan 0.0 — a day and a half
+           earlier — and that would push every planet about 1.5 days
+           along its orbit (the Sun ~1.5° too far). The extra -1.5
+           puts the count on J2000.0. */
         function dayNumber(y, m, d, ut) {
-          return 367 * y - Math.floor(7 * (y + Math.floor((m + 9) / 12)) / 4) + Math.floor(275 * m / 9) + d - 730530 + ut / 24;
+          return 367 * y - Math.floor(7 * (y + Math.floor((m + 9) / 12)) / 4) + Math.floor(275 * m / 9) + d - 730531.5 + ut / 24;
         }
 
         /* ---- Work out today ---- */

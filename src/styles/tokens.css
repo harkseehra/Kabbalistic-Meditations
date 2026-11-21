@@ -11,16 +11,18 @@
 }
 
 :root {
-  /* Moonwhite — day. White body; the colour lives in the header only. */
-  --ink:        #111111;
-  --ink-dim:    #555555;
+  /* Day — the horoscope page's warm white, site-wide. The body is a
+     warm paper white and the cards are pure white, so the cards read
+     as white against the page. The colour lives in the header only. */
+  --ink:        #1c1e26;
+  --ink-dim:    #4a4d59;
   --ink-bright: #000000;
-  --paper:      #ffffff;
-  --paper-raised: #f5f5f5;
-  --rule:       #e0e0e0;
+  --paper:      #f7f5f0;
+  --paper-raised: #ffffff;
+  --rule:       #d8d4c8;
   --accent:     #1e6b41;
   --accent-ink: #ffffff;
-  --paper-glass: rgba(255, 255, 255, 0.82);
+  --paper-glass: rgba(247, 245, 240, 0.82);
   /* Motion: one clean ease-out everywhere — fast start, long soft
      settle. No symmetric ease-in-out anywhere on the site. */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -38,12 +40,12 @@
   --header-active-bg: #ffffff;
   --header-active-ink: #005b96;
 
-  /* Type — body serif is IM Fell French Canon, the font he asked for
-     (not IM Fell English). Cormorant Garamond and Libre Baskerville
-     are fallbacks. Medium 500 base, semibold 600 at night — real weights.
-     Headings in Teko, the GTA 5 subtitle look — condensed, bold, direct.
-     Small uppercase labels stay Oswald, which reads better small. */
-  --font-serif: "IM Fell French Canon", "Cormorant Garamond", "Libre Baskerville", Georgia, serif;
+  /* Type — body serif is Baskervville (the Baskerville revival),
+     an experiment he asked for — IM Fell French Canon stays as the
+     fallback, so reverting is a one-token swap. Headings in Teko, the
+     GTA 5 subtitle look — condensed, bold, direct. Small uppercase
+     labels stay Oswald, which reads better small. */
+  --font-serif: "Baskervville", "IM Fell French Canon", "Cormorant Garamond", "Libre Baskerville", Georgia, serif;
   --font-wordmark: "Redaction 10", "Cormorant Garamond", Georgia, serif;
   --font-heading: "Teko", "Oswald", "Arial Narrow", sans-serif;
   --font-sans: "Oswald", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
