@@ -55,6 +55,7 @@
         --accent: #191970;
         --accent-soft: #e3e4f2;
         --heb: #191970;
+        --shape-ink: #191970;
         --fire: #b34a1f; --fire-bg: #fbe9df;
         --earth: #6d5a2e; --earth-bg: #f1ead3;
         --air: #3e6b7a; --air-bg: #e0eef2;
@@ -84,6 +85,7 @@
           --accent: #8AA5FF;
           --accent-soft: #1B2452;
           --heb: #F5F7FF;
+          --shape-ink: #AEBFFF;
           --fire: #eda27c; --fire-bg: #3a2a22;
           --earth: #d9c48a; --earth-bg: #37321f;
           --air: #9fd3e0; --air-bg: #22383d;
@@ -97,6 +99,15 @@
           --header-active-ink: #1E40AF;
       }
       html { font-size: 1.35rem; -webkit-font-smoothing: antialiased; }
+
+      /* Letter shapes — a letter's gematria drawn as points on a circle:
+         small numbers join into their polygon, big numbers read as a ring
+         of dots. The tint is the icon tint, so the marks sit inside the
+         design in both themes. */
+      .shape-mark { color: var(--shape-ink); display: inline-flex; flex: none; }
+      .shape-mark svg { display: block; }
+      .shape-row { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-2) 0 var(--space-3); }
+      .shape-caption { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
       body {
         margin: 0;
         background: var(--bg);
@@ -425,24 +436,31 @@
       <p>The Pokedox is the whole system in one place, so a practitioner can study it and use it. The assignments are Sefer Yetzirah's, on Sefaria — the Warsaw 1884 Hebrew text, in the Sefaria Community Translation. The week begins on Sunday. Each double is king over a planet, a day, and a gate. Each simple is king over a sign, a stretch of dates, a body part, and a sense. The mothers are Alef, king over air; Mem, king over water — and over earth, which was created from water; and Shin, king over fire. The way of reading them here is simple: a day is strongest when the Sun stands in the signs its planet rules. That is when its letters are recited and practiced, when its organs are healed, and when its mothers are meditated on. Seven days, seven entries. This is the first iteration — each entry will be expanded.</p>
 
       <h3>Sunday — Saturn</h3>
+      <div class="shape-row"><span class="shape-mark" data-shape="2" role="img" aria-label="Bet — 2 points"></span><span class="shape-caption">Bet · 2 points — a line</span></div>
       <p>Sunday — Saturn — Capricorn and Aquarius, Dec 22 to Feb 18. Two letters: Ayin and Tzadi. Two mothers: Mem, earth, and Alef, air. Two organs to heal: the gut and the taste. Ayin is the first stomach, and its sense is play. Tzadi is the stomach, and its sense is contemplation. These are the cold days, and there are eight Sundays in them — eight full weeks. That is why Sunday is strong here: Saturn rules both signs, and the Sun stands in them. Recite Ayin and Tzadi on Sunday, and meditate on the pronunciation of these magical Hebrew letters. Move, even though the days are full cold — if you move, it is rewarding. Take vacation in this period for spiritual benefit and meditation and relaxation. Meditate on the mother letters as well, Mem and Alef, and the gut and the taste will be healed — the first stomach and the stomach, and the taste that belongs to the mouth and feeds the gut. We generate ourselves new life by resting and moving in the right measure.</p>
 
       <h3>Monday — Jupiter</h3>
+      <div class="shape-row"><span class="shape-mark" data-shape="3" role="img" aria-label="Gimel — 3 points"></span><span class="shape-caption">Gimel · 3 points — a triangle</span></div>
       <p>Monday — Jupiter — Sagittarius and Pisces, Nov 22 to Dec 21 and Feb 19 to Mar 20. Two letters: Samekh and Qof. Two mothers: Shin, fire, and Mem, water. Samekh is the gall, and its sense is excitement. Qof is the gizzard, and its sense is sleep. Jupiter rules both signs, and the Sun stands in them in late autumn and late winter. Recite Samekh and Qof on Monday, and meditate on the pronunciation. The gall and the gizzard are the organs that break down and rest — excitement by day, sleep by night. Meditate on Shin and Mem, fire and water, and the two are brought into balance.</p>
 
       <h3>Tuesday — Mars</h3>
+      <div class="shape-row"><span class="shape-mark" data-shape="4" role="img" aria-label="Dalet — 4 points"></span><span class="shape-caption">Dalet · 4 points — a square</span></div>
       <p>Tuesday — Mars — Aries and Scorpio, Mar 21 to Apr 19 and Oct 23 to Nov 21. Two letters: He and Nun. Two mothers: Shin, fire, and Mem, water. He is the right hand, and its sense is seeing. Nun is the spleen, and its sense is movement. Mars rules both signs, and the Sun stands in them in spring and in autumn. Recite He and Nun on Tuesday, and meditate on the pronunciation. The right hand acts, and the spleen moves — seeing and movement are the two senses of Mars's day. Meditate on Shin and Mem, and the hand and the spleen are healed.</p>
 
       <h3>Wednesday — the Sun</h3>
+      <div class="shape-row"><span class="shape-mark" data-shape="20" role="img" aria-label="Kaf — 20 points"></span><span class="shape-caption">Kaf · 20 points — a ring</span></div>
       <p>Wednesday — the Sun — Leo, Jul 23 to Aug 22. One letter: Tet. One mother: Shin, fire. The right kidney, and the sense is eating. The Sun rules Leo, and the Sun stands in Leo from Jul 23 to Aug 22 — the Sun's own day, in the Sun's own sign. Recite Tet on Wednesday, and meditate on the pronunciation. The right kidney filters, and eating is the sense that feeds the body. Meditate on Shin, fire, and the kidney and the eating are brought into order. Wednesday is the month's strongest day for meditating the Sun's letters — Kaf and Tet.</p>
 
       <h3>Thursday — Venus</h3>
+      <div class="shape-row"><span class="shape-mark" data-shape="80" role="img" aria-label="Pe — 80 points"></span><span class="shape-caption">Pe · 80 points — a ring</span></div>
       <p>Thursday — Venus — Taurus and Libra, Apr 20 to May 20 and Sep 23 to Oct 22. Two letters: Vav and Lamed. Two mothers: Mem, earth, and Alef, air. Vav is the left hand, and its sense is hearing. Lamed is the liver, and its sense is work. Venus rules both signs, and the Sun stands in them in spring and in autumn. Recite Vav and Lamed on Thursday, and meditate on the pronunciation. The left hand receives, and the liver works — hearing and work are the two senses of Venus's day. Meditate on Mem and Alef, and the hand and the liver are healed.</p>
 
       <h3>Friday — Mercury</h3>
+      <div class="shape-row"><span class="shape-mark" data-shape="200" role="img" aria-label="Resh — 200 points"></span><span class="shape-caption">Resh · 200 points — a ring</span></div>
       <p>Friday — Mercury — Gemini and Virgo, May 21 to Jun 20 and Aug 23 to Sep 22. Two letters: Zayin and Yod. Two mothers: Alef, air, and Mem, earth. Zayin is the right leg, and its sense is smelling. Yod is the left kidney, and its sense is sex. Mercury rules both signs, and the Sun stands in them in early summer and late summer. Recite Zayin and Yod on Friday, and meditate on the pronunciation. The right leg moves, and the left kidney filters — smelling and sex are the two senses of Mercury's day. Meditate on Alef and Mem, and the leg and the kidney are healed.</p>
 
       <h3>Saturday — the Moon</h3>
+      <div class="shape-row"><span class="shape-mark" data-shape="400" role="img" aria-label="Tav — 400 points"></span><span class="shape-caption">Tav · 400 points — a ring</span></div>
       <p>Saturday — the Moon — Cancer, Jun 21 to Jul 22. One letter: Chet. One mother: Mem, water. The left leg, and the sense is talking. Saturday is Shabbat, the day of rest — that is why it is strong. The Moon rules Cancer, and the Sun stands in Cancer from Jun 21 to Jul 22, so those are Saturday's strongest days. Recite Chet on Shabbat, and meditate on the pronunciation. Follow the Shabbat commandments: do not engage in restricted labour, including the use of electronic devices. Rest, and let the leg and the speech heal. The left leg carries you, and talking is the gate of the mouth — on Shabbat both are given rest, and both are healed. We generate ourselves new life by following Shabbat.</p>
 
       <h2>The table</h2>
@@ -800,6 +818,39 @@
         }
         toggle.addEventListener('click', function () {
           applyTheme(currentTheme() === 'night' ? 'day' : 'night');
+        });
+      })();
+    </script>
+    <script>
+      // Letter shapes in the theory entries: each day's double drawn as
+      // points on a circle — small numbers join into their polygon, big
+      // numbers read as a ring of dots, drawn bigger so the points
+      // breathe. Tint is --shape-ink, the icon tint, in both themes.
+      (function () {
+        function shapeSVG(n, size) {
+          var s = size || (n > 10 ? 60 : 44);
+          var c = s / 2, r = s / 2 - 4;
+          var pts = [];
+          for (var i = 0; i < n; i++) {
+            var a = -Math.PI / 2 + i * 2 * Math.PI / n;
+            pts.push([c + r * Math.cos(a), c + r * Math.sin(a)]);
+          }
+          var dotR = n > 100 ? 1.5 : n > 20 ? 2 : 3;
+          var inner = '';
+          if (n === 2) {
+            inner += '<line x1="' + pts[0][0].toFixed(1) + '" y1="' + pts[0][1].toFixed(1) + '" x2="' + pts[1][0].toFixed(1) + '" y2="' + pts[1][1].toFixed(1) + '" stroke="currentColor" stroke-width="1.5"/>';
+          } else if (n > 2 && n <= 10) {
+            inner += '<polygon points="' + pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') + '" fill="none" stroke="currentColor" stroke-width="1.5"/>';
+          }
+          pts.forEach(function (p) {
+            inner += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="' + dotR + '" fill="currentColor"/>';
+          });
+          return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 ' + s + ' ' + s + '" aria-hidden="true">' + inner + '</svg>';
+        }
+        document.querySelectorAll('.shape-mark[data-shape]').forEach(function (el) {
+          var n = parseInt(el.getAttribute('data-shape'), 10);
+          var size = n > 20 ? 72 : n > 10 ? 60 : 44;
+          el.innerHTML = shapeSVG(n, size);
         });
       })();
     </script>
