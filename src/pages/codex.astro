@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Codex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Baskervville:ital,wght@0,400;0,500;0,700;1,400&family=Oswald:wght@400;500;600&family=IM+Fell+French+Canon:ital@0;1&family=Frank+Ruhl+Libre:wght@400;500&family=Amiri:wght@400;700&family=Redaction+10&family=Teko:wght@500;600&display=swap" rel="stylesheet" />
+    <!-- Apply saved theme before paint; day is the default, night follows
+         the saved choice or the system preference -->
+    <script is:inline>
+      const saved = localStorage.getItem('theme');
+      const night = saved === 'night' || (saved !== 'day' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (night) document.documentElement.setAttribute('data-theme', 'night');
+    </script>
+    <style is:global>
+      button, [role="button"], select, summary, input:not([type="checkbox"], [type="radio"]) { min-height: 2.25rem; }
+      * { box-sizing: border-box; }
+      :root {
+        color-scheme: light dark;
+        /* Type scale — Material Design 3 role ratios against the 21.6px
+           body: headline large 2.0x, headline medium 1.75x, headline
+           small 1.5x, title large 1.375x. These tokens match
+           src/styles/tokens.css exactly; the html root is 1.35rem so 1rem
+           here is the base size on this page, same as BaseLayout pages. */
+        --text-xs: 0.86rem;
+        --text-sm: 1.08rem;
+        --text-base: 1.35rem;
+        --text-lg: 1.375rem;
+        --text-xl: 1.5rem;
+        --text-2xl: 1.75rem;
+        --text-3xl: 2.0rem;
+        /* Spacing — 8-point scale. Every gap on the page is one of these. */
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 16px;
+        --space-4: 24px;
+        --space-5: 32px;
+        --space-6: 48px;
+        --space-7: 64px;
+        /* Radius — cards 16px, buttons 10px, matching tokens.css. */
+        --radius-card: 16px;
+        --radius-sm: 10px;
+        /* Motion — one clean ease-out everywhere. */
+        --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+        --bg: #f7f5f0;
+        --surface: #ffffff;
+        --surface-2: #efede6;
+        --ink: #1c1e26;
+        --ink-soft: #4a4d59;
+        --line: #d8d4c8;
+        --accent: #191970;
+        --accent-soft: #e3e4f2;
+        --heb: #191970;
+        --shape-ink: #191970;
+        --fire: #b34a1f; --fire-bg: #fbe9df;
+        --earth: #6d5a2e; --earth-bg: #f1ead3;
+        --air: #3e6b7a; --air-bg: #e0eef2;
+        --water: #2c4f9e; --water-bg: #e0e8fa;
+        /* Header — same flat bar as the rest of the site. */
+        --header-bg: #005b96;
+        --header-ink: #ffffff;
+        --header-btn-bg: rgba(255, 255, 255, 0.12);
+        --header-btn-border: rgba(255, 255, 255, 0.35);
+        --header-active-bg: #ffffff;
+        --header-active-ink: #005b96;
+      }
+      /* Night — driven by data-theme="night" on <html>, set by the head
+         script from the saved choice or the system preference, and flipped
+         by the floating toggle. A manual choice always wins over the
+         system theme. */
+      :root[data-theme="night"] {
+          /* Royal Ink night — same palette as tokens.css, in this page's
+             variable names. Element hues stay as they are: they are
+             categorical (fire/earth/air/water identity), not theme. */
+          --bg: #0D1330;
+          --surface: #171E42;
+          --surface-2: #1C2450;
+          --ink: #E3E6F0;
+          --ink-soft: #AEB8D6;
+          --line: #2E3A6B;
+          --accent: #8AA5FF;
+          --accent-soft: #1B2452;
+          --heb: #F5F7FF;
+          --shape-ink: #AEBFFF;
+          --fire: #eda27c; --fire-bg: #3a2a22;
+          --earth: #d9c48a; --earth-bg: #37321f;
+          --air: #9fd3e0; --air-bg: #22383d;
+          --water: #a9c2f5; --water-bg: #232f47;
+          /* Header — flat royal blue by night. */
+          --header-bg: #1E40AF;
+          --header-ink: #ffffff;
+          --header-btn-bg: rgba(255, 255, 255, 0.12);
+          --header-btn-border: rgba(255, 255, 255, 0.35);
+          --header-active-bg: #ffffff;
+          --header-active-ink: #1E40AF;
+      }
+      html { font-size: 1.35rem; -webkit-font-smoothing: antialiased; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Baskervville", "IM Fell French Canon", Georgia, serif;
+        font-size: 1rem;
+        line-height: 1.6;
+        letter-spacing: 0.02em;
+        word-spacing: 0.1em;
+        transition: background 0.5s var(--ease-out), color 0.5s var(--ease-out), border-color 0.5s var(--ease-out);
+      }
+      .wrap { max-width: 1200px; margin: 0 auto; padding: var(--space-7) var(--space-6) var(--space-7); }
+      h1, h2, h3 { font-family: "Teko", "Oswald", "Arial Narrow", sans-serif; letter-spacing: .01em; word-spacing: normal; }
+      h1 { font-size: var(--text-3xl); font-weight: 600; letter-spacing: .01em; line-height: 1.15; margin: 0 0 var(--space-2); }
+      h2 { font-size: var(--text-2xl); font-weight: 600; line-height: 1.2; margin: var(--space-7) 0 var(--space-3); }
+      h3 { font-size: var(--text-xl); font-weight: 600; line-height: 1.2; margin: 0; }
+      p { margin: 0 0 var(--space-3); max-width: 31rem; }
+      .lede { color: var(--ink-soft); font-size: var(--text-lg); line-height: 1.55; }
+      .heb { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-weight: 500; letter-spacing: 0; word-spacing: normal; }
+      .heb-big { font-size: var(--text-2xl); line-height: 1; }
+      .heb-md { font-size: var(--text-lg); line-height: 1; }
+
+      /* Letter shapes — a letter's gematria drawn as points on a circle:
+         small numbers join into their polygon, big numbers read as a ring
+         of dots. The tint is the icon tint, so the marks sit inside the
+         design in both themes. */
+      .shape-mark { color: var(--shape-ink); display: inline-flex; flex: none; }
+      .shape-mark svg { display: block; }
+
+      /* Site header — the same bar as the rest of the site: wordmark left,
+         nav buttons right, burger on a narrow screen. Entrance is a plain
+         fade only (opacity, no movement) — the menu bar animation is
+         deliberately subtle. */
+      @keyframes header-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      #site-header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        padding: 0.5rem 1.5rem;
+        background: var(--header-bg);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+        color: var(--header-ink);
+        animation: header-in 500ms var(--ease-out) both;
+      }
+      #site-header .site-name { justify-self: start; text-decoration: none; }
+      #site-header .site-wordmark { font-family: "Redaction 10", "Cormorant Garamond", Georgia, serif; font-size: var(--text-sm); letter-spacing: 0.08em; color: var(--header-ink); }
+      #site-header .site-wordmark .cursor { color: var(--header-ink); }
+      #site-header nav { display: flex; gap: 0.6rem; justify-self: end; }
+      #site-header nav a {
+        font-family: "Teko", "Oswald", sans-serif;
+        font-size: var(--text-sm);
+        font-weight: 600;
+        line-height: 1.25;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 0.45rem 1.1rem;
+        border: 1px solid var(--header-btn-border);
+        border-radius: var(--radius-sm);
+        background-color: var(--header-btn-bg);
+        color: var(--header-ink);
+        text-decoration: none;
+        transition: background-color 250ms var(--ease-out), border-color 250ms var(--ease-out);
+      }
+      #site-header nav a:hover { background-color: rgba(255, 255, 255, 0.22); border-color: var(--header-ink); }
+      #site-header nav a.active {
+        background-color: var(--header-active-bg);
+        border-color: transparent;
+        color: var(--header-active-ink);
+      }
+      #site-header nav a:active { background-color: rgba(255, 255, 255, 0.18); }
+      #site-header nav a:focus-visible { outline: 2px solid var(--header-ink); outline-offset: 2px; }
+      .nav-toggle {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        width: 48px;
+        height: 48px;
+        padding: 0;
+        border: 1px solid var(--header-btn-border);
+        border-radius: var(--radius-sm);
+        background: var(--header-btn-bg);
+        color: var(--header-ink);
+        cursor: pointer;
+        justify-self: end;
+      }
+      .nav-toggle span {
+        display: block;
+        width: 1.25rem;
+        height: 2px;
+        background: currentColor;
+        border-radius: 1px;
+      }
+      @media (max-width: 640px) {
+        #site-header { grid-template-columns: 1fr auto; row-gap: 0.5rem; padding: 0.6rem 1rem; }
+        #site-header .site-wordmark { font-size: var(--text-xs); }
+        .nav-toggle { display: inline-flex; }
+        #site-header nav { display: none; grid-column: 1 / -1; grid-row: 2; flex-direction: column; align-items: flex-end; gap: 0.4rem; justify-content: flex-start; }
+        #site-header.nav-open nav { display: flex; }
+        #site-header nav a { padding: 0.35rem 0.8rem; }
+      }
+
+      /* Theme toggle: a floating button near the right edge of the screen,
+         vertically centred, gently bobbing — detached from the edge, not
+         stuck to it. Same button as the BaseLayout pages. */
+      @keyframes float-y {
+        0%, 100% { translate: 0 calc(-50% - 3px); }
+        50%     { translate: 0 calc(-50% + 3px); }
+      }
+      #theme-toggle {
+        position: fixed;
+        right: 1rem;
+        top: 50%;
+        translate: 0 -50%;
+        animation: float-y 5s ease-in-out infinite;
+        z-index: 20;
+        background-color: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-sm);
+        padding: 0.45rem;
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        color: var(--ink);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
+        transition: transform 150ms var(--ease-out), background 200ms var(--ease-out), border-color 200ms var(--ease-out);
+      }
+      #theme-toggle:hover { transform: translateX(-2px); }
+      #theme-toggle:active { transition-duration: 100ms; transform: scale(0.97); }
+      #theme-toggle:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 2px;
+      }
+      #theme-toggle svg { width: 1.26rem; height: 1.26rem; display: block; color: var(--ink); }
+      #theme-toggle .icon-moon { display: none; }
+      [data-theme="night"] #theme-toggle .icon-sun { display: none; }
+      [data-theme="night"] #theme-toggle .icon-moon { display: block; }
+      @media (hover: none) {
+        #theme-toggle:hover { transform: none; }
+        .card:hover { transform: none; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #theme-toggle { animation: none; }
+        .card { animation: none; }
+        *, *::before, *::after { transition-duration: 0.001ms !important; }
+      }
+
+      /* Shared card surface — one treatment for every card on the page.
+         Hover lift: MD3 medium2 (300ms) on the site's one ease-out. */
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-card);
+        padding: var(--space-4);
+        transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out), background-color 300ms var(--ease-out), border-color 300ms var(--ease-out);
+      }
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.20);
+      }
+
+      /* Card entrance — staggered fade-up on page load (MD3
+         emphasized-decelerate, medium4 400ms; 60ms stagger). Fill is
+         backwards, so the hover lift still works once the entrance ends. */
+      @keyframes card-in {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .card { animation: card-in 400ms var(--ease-out) backwards; }
+      .cards > :nth-child(2) { animation-delay: 60ms; }
+      .cards > :nth-child(3) { animation-delay: 120ms; }
+      .cards > :nth-child(4) { animation-delay: 180ms; }
+      .cards > :nth-child(5) { animation-delay: 240ms; }
+      .cards > :nth-child(6) { animation-delay: 300ms; }
+      .cards > :nth-child(7) { animation-delay: 360ms; }
+
+      /* Birth form */
+      .form-card { margin: var(--space-3) 0 var(--space-4); }
+      .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+      .field { display: flex; flex-direction: column; gap: var(--space-2); }
+      .field label { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+      .field input, .field select {
+        font-family: "Baskervville", "IM Fell French Canon", Georgia, serif;
+        font-size: 1rem; color: var(--ink); background: var(--surface);
+        border: 1px solid var(--line); border-radius: var(--radius-sm);
+        padding: 0.6rem 0.8rem; width: 100%;
+      }
+      .field input:focus-visible, .field select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      .btn {
+        font-family: "Teko", "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+        background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm);
+        padding: 0.6rem 1.6rem; cursor: pointer; margin-top: var(--space-4);
+        transition: background-color 200ms var(--ease-out), filter 200ms var(--ease-out);
+      }
+      .btn:hover { filter: brightness(1.15); }
+      [data-theme="night"] .btn { color: #0D1330; }
+      @media (max-width: 680px) { .form-grid { grid-template-columns: 1fr; } }
+
+      /* Birth moment snapshot */
+      .snapshot { margin: var(--space-3) 0 var(--space-4); }
+      .snapshot .chain { font-family: "Teko", "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; margin: 0 0 var(--space-2); }
+      .snapshot p { margin-bottom: var(--space-2); }
+      .snapshot p:last-child { margin-bottom: 0; }
+
+      /* Three mothers */
+      .mothers { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin: var(--space-3) 0 var(--space-4); }
+      @media (max-width: 640px) { .mothers { grid-template-columns: 1fr; } }
+
+      /* Filters */
+      .filters { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-5) 0 var(--space-4); align-items: center; }
+      .filters span { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); margin-right: var(--space-1); }
+      .chip {
+        font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .03em;
+        padding: var(--space-2) var(--space-3); border-radius: 999px; cursor: pointer;
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+        min-height: 2.5rem;
+        transition: transform 150ms var(--ease-out), border-color 200ms var(--ease-out), background-color 200ms var(--ease-out);
+      }
+      .chip:hover { border-color: var(--ink); transform: translateY(-1px); }
+      .chip:active { transition-duration: 100ms; transform: scale(0.97); }
+      .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+      [data-theme="night"] .chip[aria-pressed="true"] { color: #0D1330; }
+
+      /* Planet card grid */
+      .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); align-items: stretch; margin-bottom: var(--space-4); }
+      @media (min-width: 1024px) { .cards { grid-template-columns: repeat(3, 1fr); } }
+      .planet-card.hidden { display: none; }
+      .empty-card { color: var(--ink-soft); }
+      .planet-card {
+        display: flex; flex-direction: column; gap: var(--space-3);
+        border-top: 4px solid var(--elem-color, var(--line));
+      }
+      .planet-card.mother-alef { --elem-color: var(--air); }
+      .planet-card.mother-mem { --elem-color: var(--water); }
+      .planet-card.mother-shin { --elem-color: var(--fire); }
+      .card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
+      .planet-name { font-family: "Teko", "Oswald", sans-serif; font-size: var(--text-lg); font-weight: 600; letter-spacing: .02em; }
+      .athome {
+        font-family: "Oswald", sans-serif; font-size: var(--text-xs); letter-spacing: .07em; text-transform: uppercase;
+        padding: var(--space-1) 0.75rem; border-radius: 999px; white-space: nowrap;
+        background: var(--accent); color: #fff;
+      }
+      [data-theme="night"] .athome { color: #0D1330; }
+      .week-pair { display: flex; align-items: center; justify-content: space-around; gap: var(--space-3); padding: var(--space-1) 0; }
+      .week-letter { display: flex; flex-direction: column; align-items: center; gap: var(--space-1); text-align: center; flex: 1; }
+      .week-plus { font-size: var(--text-2xl); color: var(--ink-soft); }
+      .lv-name { font-family: "Frank Ruhl Libre", serif; color: var(--heb); font-size: var(--text-lg); font-weight: 500; letter-spacing: 0; word-spacing: normal; }
+      .lv-english { font-size: 1rem; }
+      .card-div { height: 1px; background: var(--line); }
+      .sign-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--space-2) var(--space-3); }
+      .sign-name { font-size: var(--text-lg); font-weight: 600; }
+      .sign-dates { color: var(--ink-soft); font-size: var(--text-sm); }
+      .cusp-note { color: var(--ink-soft); font-size: var(--text-sm); font-style: italic; }
+      .facts { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+      .fact { display: flex; flex-direction: column; gap: var(--space-1); }
+      .fact-label { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
+      .fact-value { font-size: 1rem; display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+      .reading { border-top: 1px solid var(--line); padding-top: var(--space-2); color: var(--ink-soft); font-style: italic; font-size: 1rem; }
+      .empty-card { color: var(--ink-soft); font-style: italic; border-top-color: var(--line); }
+
+      /* Element pills */
+      .elem {
+        display: inline-block; font-family: "Oswald", sans-serif; font-size: var(--text-xs); letter-spacing: .07em; text-transform: uppercase;
+        padding: var(--space-1) 0.75rem; border-radius: 999px; white-space: nowrap;
+      }
+      .elem-fire { background: var(--fire-bg); color: var(--fire); }
+      .elem-earth { background: var(--earth-bg); color: var(--earth); }
+      .elem-air { background: var(--air-bg); color: var(--air); }
+      .elem-water { background: var(--water-bg); color: var(--water); }
+
+      .note { color: var(--ink-soft); font-size: var(--text-sm); }
+
+      /* Codex — Arabic letterforms, and the twenty-eight table. */
+      .arb { font-family: "Amiri", serif; }
+      .arb-big { font-size: var(--text-2xl); line-height: 1; }
+      .table-wrap { overflow-x: auto; margin: var(--space-4) 0; }
+      table.codex { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+      table.codex th, table.codex td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+      table.codex th { font-family: "Oswald", sans-serif; font-size: var(--text-xs); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+      table.codex td .arb, table.codex td .heb { font-size: 1.5rem; line-height: 1; }
+      .src { border-top: 1px solid var(--line); margin-top: var(--space-7); padding-top: var(--space-4); color: var(--ink-soft); font-size: var(--text-sm); }
+      .src p { margin-bottom: var(--space-2); }
+
+      /* Mobile: single column, tighter card padding, same scale */
+      @media (max-width: 680px) {
+        .wrap { padding: var(--space-5) var(--space-4) var(--space-6); }
+        .cards { grid-template-columns: 1fr; gap: var(--space-3); }
+        .card { padding: 20px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header id="site-header">
+      <a class="site-name" href="../"><span class="site-wordmark">KABBALISTIC MEDITATIONS<span class="cursor">▌</span></span></a>
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><span></span><span></span><span></span></button>
+      <nav id="site-nav">
+        <a href="../">today</a>
+        <a href="../current-horoscope/">horoscope</a>
+        <a href="../birth-chart/">birth chart</a>
+        <a href="../codex/" class="active">codex</a>
+        <a href="../practice/">practice</a>
+        <a href="../prayer/">prayer</a>
+        <a href="../blog/">blog</a>
+      </nav>
+    </header>
+    <!-- Day/night switch: a plain side button on the right edge of the screen, vertically centred -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle day and night mode" title="Toggle day and night mode">
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g fill="currentColor"><path d="M11.17 6.06 12.83 6.06 12 2.5Z"/><path d="M15.61 7.21 16.79 8.39 18.72 5.28Z"/><path d="M17.94 11.17 17.94 12.83 21.5 12Z"/><path d="M16.79 15.61 15.61 16.79 18.72 18.72Z"/><path d="M12.83 17.94 11.17 17.94 12 21.5Z"/><path d="M8.39 16.79 7.21 15.61 5.28 18.72Z"/><path d="M6.06 12.83 6.06 11.17 2.5 12Z"/><path d="M7.21 8.39 8.39 7.21 5.28 5.28Z"/></g></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/><path fill="currentColor" d="M18.5 3.5 19.2 5.3 21 6 19.2 6.7 18.5 8.5 17.8 6.7 16 6 17.8 5.3Z"/></svg>
+    </button>
+    <main class="wrap">
+
+      <h1>Codex</h1>
+      <p class="lede">A codex to civilisation. The ancient Arabic script — twenty-eight letters — in the correct version, following the Hebrew letter sounds and the organisation of the letters. Hebrew in Arabic script. When they find it, they will know and experience the truth.</p>
+
+      <p>The twenty-two Hebrew letters are the spine. The twenty-eight Arabic letters follow them — each one matched to its Hebrew brother by sound, in the Hebrew order, with the Hebrew values. And the Arabic script kept something the Hebrew script merged: the soft sounds of the seven doubles. Six extra letters hold them — the original sounds, restored. That is the codex: the sounds put back where they belong, and the whole alphabet standing in one order.</p>
+
+      <h2>The seven doubles, restored</h2>
+      <p>Seven letters are doubles. Each one speaks twice — hard and soft. The hard sound is the letter as it stands; the soft sound is the letter loosened. The Arabic script kept a letter for every soft sound, so here the doubles stand whole: the hard sound in its own letter, the soft sound in its own. Each double is king over a planet in the world, a day in the year, and a gate in the soul — and each carries a foundation.</p>
+
+      <div class="cards">
+        <article class="planet-card card">
+          <div class="card-head"><span class="planet-name">Bet — Saturn</span><span class="athome">Sunday</span></div>
+          <div class="week-pair">
+            <div class="week-letter"><span class="arb arb-big">ب</span><span class="lv-name">Ba — hard</span><span class="lv-english">B — Bet</span></div>
+            <span class="week-plus">/</span>
+            <div class="week-letter"><span class="arb arb-big">ف</span><span class="lv-name">Fa — soft</span><span class="lv-english">V — Vet</span></div>
+          </div>
+          <div class="card-div"></div>
+          <div class="facts">
+            <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Right eye</span></div>
+            <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Life</span></div>
+          </div>
+        </article>
+        <article class="planet-card card">
+          <div class="card-head"><span class="planet-name">Gimel — Jupiter</span><span class="athome">Monday</span></div>
+          <div class="week-pair">
+            <div class="week-letter"><span class="arb arb-big">ج</span><span class="lv-name">Jim — hard</span><span class="lv-english">G — Gimel</span></div>
+            <span class="week-plus">/</span>
+            <div class="week-letter"><span class="arb arb-big">غ</span><span class="lv-name">Ghayn — soft</span><span class="lv-english">Gh — Gimel</span></div>
+          </div>
+          <div class="card-div"></div>
+          <div class="facts">
+            <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Left eye</span></div>
+            <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Peace</span></div>
+          </div>
+        </article>
+        <article class="planet-card card">
+          <div class="card-head"><span class="planet-name">Dalet — Mars</span><span class="athome">Tuesday</span></div>
+          <div class="week-pair">
+            <div class="week-letter"><span class="arb arb-big">د</span><span class="lv-name">Dal — hard</span><span class="lv-english">D — Dalet</span></div>
+            <span class="week-plus">/</span>
+            <div class="week-letter"><span class="arb arb-big">ذ</span><span class="lv-name">Dhal — soft</span><span class="lv-english">Dh — Dhalet</span></div>
+          </div>
+          <div class="card-div"></div>
+          <div class="facts">
+            <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Right ear</span></div>
+            <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Wisdom</span></div>
+          </div>
+        </article>
+        <article class="planet-card card">
+          <div class="card-head"><span class="planet-name">Kaf — Sun</span><span class="athome">Wednesday</span></div>
+          <div class="week-pair">
+            <div class="week-letter"><span class="arb arb-big">ك</span><span class="lv-name">Kaf — hard</span><span class="lv-english">K — Kaf</span></div>
+            <span class="week-plus">/</span>
+            <div class="week-letter"><span class="arb arb-big">خ</span><span class="lv-name">Kha — soft</span><span class="lv-english">Kh — Khaf</span></div>
+          </div>
+          <div class="card-div"></div>
+          <div class="facts">
+            <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Left ear</span></div>
+            <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Grace</span></div>
+          </div>
+        </article>
+        <article class="planet-card card">
+          <div class="card-head"><span class="planet-name">Pe — Venus</span><span class="athome">Thursday</span></div>
+          <div class="week-pair">
+            <div class="week-letter"><span class="arb arb-big">—</span><span class="lv-name">Pe — hard</span><span class="lv-english">P — no Arabic letter</span></div>
+            <span class="week-plus">/</span>
+            <div class="week-letter"><span class="arb arb-big">ف</span><span class="lv-name">Fa — soft</span><span class="lv-english">F — Fe</span></div>
+          </div>
+          <div class="card-div"></div>
+          <div class="facts">
+            <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Right nostril</span></div>
+            <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Beauty</span></div>
+          </div>
+        </article>
+        <article class="planet-card card">
+          <div class="card-head"><span class="planet-name">Resh — Mercury</span><span class="athome">Friday</span></div>
+          <div class="week-pair">
+            <div class="week-letter"><span class="arb arb-big">ر</span><span class="lv-name">Ra — one sound</span><span class="lv-english">R — Resh</span></div>
+          </div>
+          <div class="card-div"></div>
+          <div class="facts">
+            <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Left nostril</span></div>
+            <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Fertility</span></div>
+          </div>
+        </article>
+        <article class="planet-card card">
+          <div class="card-head"><span class="planet-name">Tav — Moon</span><span class="athome">Saturday</span></div>
+          <div class="week-pair">
+            <div class="week-letter"><span class="arb arb-big">ت</span><span class="lv-name">Ta — hard</span><span class="lv-english">T — Tav</span></div>
+            <span class="week-plus">/</span>
+            <div class="week-letter"><span class="arb arb-big">ث</span><span class="lv-name">Tha — soft</span><span class="lv-english">Th — Tav</span></div>
+          </div>
+          <div class="card-div"></div>
+          <div class="facts">
+            <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Mouth</span></div>
+            <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Sovereignty</span></div>
+          </div>
+        </article>
+      </div>
+      <p class="note">One Arabic letter, Fa, holds two soft sounds — Vet and Fe. The lips' soft sound is one sound in Arabic. And Pe hard — the P — has no Arabic letter at all; the Arabic tongue kept only the soft Fe. The gap is shown honestly. Resh is counted among the doubles, but it keeps one sound.</p>
+
+      <h2>The twenty-eight</h2>
+      <p>The whole alphabet, in abjad order — the ancient order the two tongues share. The chips filter by group; they are a filter, not the order. Mothers stand where they fall in the order, doubles carry their planet and their day, simples carry their sign, their Hebrew month, and their English dates. The last six are the restored sounds, and they carry the planet and the day of the double they restore.</p>
+      <div class="filters" role="group" aria-label="Filter the codex by group">
+        <span>Group</span>
+        <button class="chip" data-filter="all" aria-pressed="true">All</button>
+        <button class="chip" data-filter="mother" aria-pressed="false">Mothers</button>
+        <button class="chip" data-filter="double" aria-pressed="false">Doubles</button>
+        <button class="chip" data-filter="simple" aria-pressed="false">Simples</button>
+        <button class="chip" data-filter="restored" aria-pressed="false">Restored</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="codex">
+          <thead>
+            <tr><th>#</th><th>Arabic</th><th>Hebrew</th><th>Sound</th><th>Value</th><th>Where it belongs</th></tr>
+          </thead>
+          <tbody>
+            <tr data-group="mother"><td>1</td><td><span class="arb">ا</span> Alif</td><td><span class="heb">א</span> Alef</td><td>A</td><td>1</td><td>Mother — air. Air in the world, moistness in the year, trunk in the soul.</td></tr>
+            <tr data-group="double"><td>2</td><td><span class="arb">ب</span> Ba</td><td><span class="heb">ב</span> Bet</td><td>B</td><td>2</td><td>Double — Saturn, Sunday. Right eye. Life.</td></tr>
+            <tr data-group="double"><td>3</td><td><span class="arb">ج</span> Jim</td><td><span class="heb">ג</span> Gimel</td><td>G</td><td>3</td><td>Double — Jupiter, Monday. Left eye. Peace.</td></tr>
+            <tr data-group="double"><td>4</td><td><span class="arb">د</span> Dal</td><td><span class="heb">ד</span> Dalet</td><td>D</td><td>4</td><td>Double — Mars, Tuesday. Right ear. Wisdom.</td></tr>
+            <tr data-group="simple"><td>5</td><td><span class="arb">ه</span> Ha</td><td><span class="heb">ה</span> He</td><td>H</td><td>5</td><td>Simple — Aries, Nisan, Mar 21–Apr 19. Right hand. Seeing.</td></tr>
+            <tr data-group="simple"><td>6</td><td><span class="arb">و</span> Waw</td><td><span class="heb">ו</span> Vav</td><td>W</td><td>6</td><td>Simple — Taurus, Iyyar, Apr 20–May 20. Left hand. Hearing.</td></tr>
+            <tr data-group="simple"><td>7</td><td><span class="arb">ز</span> Zay</td><td><span class="heb">ז</span> Zayin</td><td>Z</td><td>7</td><td>Simple — Gemini, Siwan, May 21–Jun 20. Right leg. Smelling.</td></tr>
+            <tr data-group="simple"><td>8</td><td><span class="arb">ح</span> Ha</td><td><span class="heb">ח</span> Chet</td><td>deep H</td><td>8</td><td>Simple — Cancer, Tammuz, Jun 21–Jul 22. Left leg. Talking.</td></tr>
+            <tr data-group="simple"><td>9</td><td><span class="arb">ط</span> Ta</td><td><span class="heb">ט</span> Tet</td><td>deep T</td><td>9</td><td>Simple — Leo, Av, Jul 23–Aug 22. Right kidney. Eating.</td></tr>
+            <tr data-group="simple"><td>10</td><td><span class="arb">ي</span> Ya</td><td><span class="heb">י</span> Yod</td><td>Y</td><td>10</td><td>Simple — Virgo, Elul, Aug 23–Sep 22. Left kidney. Sex.</td></tr>
+            <tr data-group="double"><td>11</td><td><span class="arb">ك</span> Kaf</td><td><span class="heb">כ</span> Kaf</td><td>K</td><td>20</td><td>Double — Sun, Wednesday. Left ear. Grace.</td></tr>
+            <tr data-group="simple"><td>12</td><td><span class="arb">ل</span> Lam</td><td><span class="heb">ל</span> Lamed</td><td>L</td><td>30</td><td>Simple — Libra, Tishri, Sep 23–Oct 22. Liver. Work.</td></tr>
+            <tr data-group="mother"><td>13</td><td><span class="arb">م</span> Mim</td><td><span class="heb">מ</span> Mem</td><td>M</td><td>40</td><td>Mother — water. Earth in the world, cold in the year, belly in the soul.</td></tr>
+            <tr data-group="simple"><td>14</td><td><span class="arb">ن</span> Nun</td><td><span class="heb">נ</span> Nun</td><td>N</td><td>50</td><td>Simple — Scorpio, Marcheshwan, Oct 23–Nov 21. Spleen. Movement.</td></tr>
+            <tr data-group="simple"><td>15</td><td><span class="arb">س</span> Sin</td><td><span class="heb">ס</span> Samekh</td><td>S</td><td>60</td><td>Simple — Sagittarius, Kislew, Nov 22–Dec 21. Bile. Excitement.</td></tr>
+            <tr data-group="simple"><td>16</td><td><span class="arb">ع</span> Ayn</td><td><span class="heb">ע</span> Ayin</td><td>deep A</td><td>70</td><td>Simple — Capricorn, Tevet, Dec 22–Jan 19. First stomach. Play.</td></tr>
+            <tr data-group="double"><td>17</td><td><span class="arb">ف</span> Fa</td><td><span class="heb">פ</span> Pe</td><td>F</td><td>80</td><td>Double — Venus, Thursday. Right nostril. Beauty.</td></tr>
+            <tr data-group="simple"><td>18</td><td><span class="arb">ص</span> Sad</td><td><span class="heb">צ</span> Tzadi</td><td>deep S</td><td>90</td><td>Simple — Aquarius, Shevat, Jan 20–Feb 18. Stomach. Contemplation.</td></tr>
+            <tr data-group="simple"><td>19</td><td><span class="arb">ق</span> Qaf</td><td><span class="heb">ק</span> Qof</td><td>deep K</td><td>100</td><td>Simple — Pisces, Adar, Feb 19–Mar 20. Gizzard. Sleep.</td></tr>
+            <tr data-group="double"><td>20</td><td><span class="arb">ر</span> Ra</td><td><span class="heb">ר</span> Resh</td><td>R</td><td>200</td><td>Double — Mercury, Friday. Left nostril. Fertility.</td></tr>
+            <tr data-group="mother"><td>21</td><td><span class="arb">ش</span> Shin</td><td><span class="heb">ש</span> Shin</td><td>SH</td><td>300</td><td>Mother — fire. Heavens in the world, heat in the year, head in the soul.</td></tr>
+            <tr data-group="double"><td>22</td><td><span class="arb">ت</span> Ta</td><td><span class="heb">ת</span> Tav</td><td>T</td><td>400</td><td>Double — Moon, Saturday. Mouth. Sovereignty.</td></tr>
+            <tr data-group="restored"><td>23</td><td><span class="arb">ث</span> Tha</td><td><span class="heb">ת</span> Tav</td><td>Th</td><td>500</td><td>Restored — the soft Tav. Moon, Saturday.</td></tr>
+            <tr data-group="restored"><td>24</td><td><span class="arb">خ</span> Kha</td><td><span class="heb">כ</span> Kaf</td><td>Kh</td><td>600</td><td>Restored — the soft Kaf (Khaf). Sun, Wednesday.</td></tr>
+            <tr data-group="restored"><td>25</td><td><span class="arb">ذ</span> Dhal</td><td><span class="heb">ד</span> Dalet</td><td>Dh</td><td>700</td><td>Restored — the soft Dalet (Dhalet). Mars, Tuesday.</td></tr>
+            <tr data-group="restored"><td>26</td><td><span class="arb">ض</span> Dad</td><td><span class="heb">צ</span> Tzadi</td><td>deep D</td><td>800</td><td>Restored — Tzadi's deep D. Aquarius, Shevat, Jan 20–Feb 18.</td></tr>
+            <tr data-group="restored"><td>27</td><td><span class="arb">ظ</span> Za</td><td><span class="heb">צ</span> Tzadi</td><td>deep Z</td><td>900</td><td>Restored — Tzadi's deep Z. Aquarius, Shevat, Jan 20–Feb 18.</td></tr>
+            <tr data-group="restored"><td>28</td><td><span class="arb">غ</span> Ghayn</td><td><span class="heb">ג</span> Gimel</td><td>Gh</td><td>1000</td><td>Restored — the soft Gimel. Jupiter, Monday.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>The three mothers</h2>
+      <p>Above the doubles and the simples stand the three mothers of chapter 3 — Alef, Mem, and Shin. Each mother is a temperament, and every sign's element places it under one of them. An air sign belongs to Alef. A water sign belongs to Mem. A fire sign belongs to Shin. And an earth sign belongs to Mem as well, because in chapter 3 the earth was created from water — so earth carries Mem's temperament, the water underneath it.</p>
+      <p>So the element is not only a nature — it is a belonging. Read a sign's element and you know its mother: Gemini, Libra, and Aquarius under Alef; Cancer, Scorpio, and Pisces under Mem, with Taurus, Virgo, and Capricorn beside them; Aries, Leo, and Sagittarius under Shin.</p>
+
+      <p class="note" style="margin-top:1rem;">The body parts are named here in plain words. In the language of the text itself: the first stomach, under Ayin and Capricorn, is the rumen; the stomach, under Tzadi and Aquarius, is the abomasum, the true stomach; the gizzard, under Qof and Pisces, is the craw, the grinding chamber; and the bile, under Samekh and Sagittarius, is the gall.</p>
+
+      <div class="src">
+        <p><strong>Sources.</strong> All letter assignments follow Sefer Yetzirah on Sefaria — the Warsaw 1884 Hebrew text, in the Sefaria Community Translation. The three mothers and their temperaments: chapter 3 — Alef air, trunk in the soul; Mem water, belly in the soul; Shin fire, head in the soul; and the earth created from water, which is why the earth signs belong to Mem. Planet letters, days, and gates in the soul: chapter 4 — each double made king over a planet in the world, a day in the year, and a gate in the soul, the week beginning on Sunday. Sign letters, body parts, and senses: chapter 5. The dates shown for each sign are the conventional English calendar ranges of the signs, standing in place of the Hebrew months named in the text. The matching of the twenty-eight Arabic letters to the twenty-two Hebrew letters by sound, in the Hebrew order, and the restoration of the soft sounds of the doubles, are this codex's own work.</p>
+      </div>
+    </main>
+    <script>
+      // Codex filters — the chips filter by group; they are a filter, not the order.
+      (function () {
+        var chips = document.querySelectorAll('.filters .chip');
+        var rows = document.querySelectorAll('table.codex tbody tr');
+        chips.forEach(function (chip) {
+          chip.addEventListener('click', function () {
+            chips.forEach(function (c) { c.setAttribute('aria-pressed', 'false'); });
+            chip.setAttribute('aria-pressed', 'true');
+            var f = chip.getAttribute('data-filter');
+            rows.forEach(function (row) {
+              row.hidden = f !== 'all' && row.getAttribute('data-group') !== f;
+            });
+          });
+        });
+      })();
+    </script>
+    <script>
+      (function () {
+        var header = document.getElementById('site-header');
+        var toggle = document.getElementById('nav-toggle');
+        if (!header || !toggle) return;
+        toggle.addEventListener('click', function () {
+          var open = header.classList.toggle('nav-open');
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+        header.querySelectorAll('nav a').forEach(function (a) {
+          a.addEventListener('click', function () {
+            header.classList.remove('nav-open');
+            toggle.setAttribute('aria-expanded', 'false');
+          });
+        });
+      })();
+    </script>
+    <script>
+      // Day/night switch: same behaviour as the BaseLayout pages — the
+      // saved choice wins, otherwise the system preference; the toggle
+      // flips it and persists the choice under the same 'theme' key, so
+      // the setting carries across every page.
+      (function () {
+        var root = document.documentElement;
+        var toggle = document.getElementById('theme-toggle');
+        if (!toggle) return;
+        function currentTheme() {
+          return root.getAttribute('data-theme') || 'day';
+        }
+        function applyTheme(theme) {
+          localStorage.setItem('theme', theme);
+          theme === 'night'
+            ? root.setAttribute('data-theme', 'night')
+            : root.removeAttribute('data-theme');
+        }
+        toggle.addEventListener('click', function () {
+          applyTheme(currentTheme() === 'night' ? 'day' : 'night');
+        });
+      })();
+    </script>
+  </body>
+</html>
