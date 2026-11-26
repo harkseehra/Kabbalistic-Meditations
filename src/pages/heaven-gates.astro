@@ -1,0 +1,242 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PRAYER_ROWS } from '../lib/prayer.js';
+import { letterFromGlyph, letterRecord, shapeSVG } from '../lib/letters.js';
+
+const GROUP = (cls) => cls.split(' ')[0].toLowerCase();
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Heaven Gates">
+  <h1>Heaven Gates</h1>
+
+  <p>A letter's gates are the letters of its full name. Follow a gate and you arrive at that letter — and from that letter, its own gates open, on and on, until the whole alphabet is one road. Three letters are locked: Vav, Mem and Nun. Each is its own dimension — the letter returns to itself in its own spelling, and its gates open nowhere else.</p>
+
+  <p>The order is the prayer's order. Keter first, simply stated. Then the letters, each with its gematria, its shape, its gates, and everything Sefer Yetzirah gives it.</p>
+
+  <div class="chip-row" role="group" aria-label="Filter by class">
+    <button type="button" class="chip is-active" data-filter="all" aria-pressed="true">All</button>
+    <button type="button" class="chip" data-filter="sefirah" aria-pressed="false">Sefirot</button>
+    <button type="button" class="chip" data-filter="mother" aria-pressed="false">Mothers</button>
+    <button type="button" class="chip" data-filter="double" aria-pressed="false">Doubles</button>
+    <button type="button" class="chip" data-filter="elemental" aria-pressed="false">Elementals</button>
+    <button type="button" class="chip" data-filter="locked" aria-pressed="false">Locked</button>
+  </div>
+
+  <section class="gates-list">
+    {PRAYER_ROWS.map((r) => {
+      const group = GROUP(r.cls);
+      if (group === 'sefirah') {
+        // Sefirot are simply stated. They are not letters: no gates,
+        // no gematria, no shape.
+        return (
+          <article class="gate-sefirah" data-class="sefirah">
+            <div class="gate-sefirah-hebrew">{r.hebrew}</div>
+            <p class="gate-sefirah-name">{r.name} · {r.cls}</p>
+          </article>
+        );
+      }
+      const letter = letterFromGlyph(r.hebrew);
+      const rec = letterRecord(letter);
+      const facts = [];
+      if (rec.group === 'double') {
+        facts.push(['Planet', rec.planet], ['Day', rec.day], ['Face gate', rec.gate], ['Foundation', rec.foundation]);
+      } else if (rec.group === 'simple') {
+        facts.push(['Sign', rec.sign], ['Hebrew month', rec.month], ['Sense', rec.sense], ['Organ', rec.organ]);
+      } else {
+        facts.push(['Element', rec.element], ['Place', rec.place]);
+      }
+      return (
+        <article class="gate-entry" data-class={group} data-locked={rec.locked ? 'true' : 'false'} id={'gate-' + rec.name}>
+          <div class="gate-head">
+            <div class="gate-shape"><span set:html={shapeSVG(rec.name, 64)} /></div>
+            <div class="gate-title">
+              <div class="gate-glyph">{rec.glyph}</div>
+              <p class="gate-name">{rec.name} — {rec.pointed}</p>
+              <p class="gate-meta">{rec.group === 'simple' ? 'Elemental' : rec.group === 'double' ? 'Double' : 'Mother'} · Gematria {rec.gematria} · {rec.shape}</p>
+            </div>
+          </div>
+          <div class="gate-section">
+            <p class="gate-label">Gates — {rec.gates.length}</p>
+            <div class="gate-chips">
+              {rec.gates.map((g) => {
+                const grec = letterRecord(g);
+                return rec.locked ? (
+                  <span class="gate-chip gate-chip-locked"><span class="gate-chip-heb">{grec.glyph}</span> {g}</span>
+                ) : (
+                  <a class="gate-chip" href={base + 'heaven-gates/#gate-' + g}><span class="gate-chip-heb">{grec.glyph}</span> {g}</a>
+                );
+              })}
+            </div>
+            {rec.locked && (
+              <p class="gate-locked-note">Locked — its own dimension. This letter's gates open nowhere else.</p>
+            )}
+          </div>
+          <div class="gate-section">
+            <p class="gate-label">Everything</p>
+            <dl class="gate-facts">
+              {facts.map(([label, value]) => (
+                <div class="gate-fact"><dt>{label}</dt><dd>{value}</dd></div>
+              ))}
+            </dl>
+          </div>
+        </article>
+      );
+    })}
+  </section>
+
+  <p class="note"><strong>Sources.</strong> Letters and their correspondences follow Sefer Yetzirah on Sefaria — the Warsaw 1884 Hebrew text, in the Sefaria Community Translation. Mothers: chapter 3. Doubles, their planets, days, face gates and foundations: chapter 4, the week beginning on Sunday. Simples, their signs, senses and organs: chapter 5. The Hebrew months are the ones stated on the codex. The gates are drawn from the letters' full names as pointed on the prayer page. The locked letters — Vav, Mem and Nun, each its own dimension — are this page's own statement.</p>
+
+  <script>
+    // Chip filter, same pattern as the prayer page: re-bind on every
+    // page switch, since view transitions swap the page HTML without
+    // re-running page scripts. The Locked chip shows only the letters
+    // whose gates open nowhere else.
+    function bindGateChips() {
+      var chips = document.querySelectorAll('.chip-row .chip');
+      var items = document.querySelectorAll('.gates-list > article');
+      if (!chips.length) return;
+      chips.forEach(function (chip) {
+        if (chip.dataset.bound) return;
+        chip.dataset.bound = 'true';
+        chip.addEventListener('click', function () {
+          var f = chip.getAttribute('data-filter');
+          chips.forEach(function (c) {
+            var on = c === chip;
+            c.classList.toggle('is-active', on);
+            c.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+          items.forEach(function (it) {
+            var show = f === 'all'
+              || (f === 'locked' ? it.getAttribute('data-locked') === 'true' : it.getAttribute('data-class') === f);
+            it.hidden = !show;
+          });
+        });
+      });
+    }
+    bindGateChips();
+    document.addEventListener('astro:page-load', bindGateChips);
+  </script>
+</BaseLayout>
+
+<style>
+  /* Heaven Gates — open blocks with room around them, like the
+     prayer: sections separated by space, not rules. The shape is
+     the anchor of each entry, so the eye can find a letter by its
+     shape before it reads a word. */
+  .gates-list { margin-top: 2rem; }
+  .gate-entry {
+    padding: var(--space-6) 0;
+  }
+  .gate-sefirah {
+    padding: var(--space-6) 0;
+  }
+  .gate-sefirah-hebrew {
+    font-family: var(--font-hebrew);
+    font-size: var(--t-2xl);
+    line-height: 1.4;
+    margin-bottom: 1.25rem;
+  }
+  .gate-sefirah-name {
+    font-size: var(--t-sm);
+    color: var(--dim);
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+  .gate-head {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+  .gate-shape {
+    flex: none;
+    padding-top: 0.25rem;
+  }
+  .gate-glyph {
+    font-family: var(--font-hebrew);
+    font-size: var(--t-2xl);
+    line-height: 1.2;
+  }
+  .gate-name {
+    font-size: var(--t-lg);
+    line-height: 1.6;
+    margin: 0.5rem 0 0.25rem;
+  }
+  .gate-meta {
+    font-size: var(--t-sm);
+    color: var(--dim);
+    letter-spacing: 0.02em;
+    margin: 0;
+  }
+  .gate-section {
+    margin-top: var(--space-4);
+  }
+  .gate-label {
+    font-family: var(--font-sans);
+    font-size: var(--t-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin: 0 0 var(--space-2);
+  }
+  .gate-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .gate-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    min-height: 44px;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    text-decoration: none;
+    font-size: var(--t-sm);
+    transition: transform 150ms var(--ease-out), border-color 200ms var(--ease-out), background-color 200ms var(--ease-out);
+  }
+  a.gate-chip:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+  .gate-chip-locked {
+    border-style: dashed;
+    color: var(--dim);
+  }
+  .gate-chip-heb {
+    font-family: var(--font-hebrew);
+    font-size: 1.15em;
+    line-height: 1;
+  }
+  .gate-locked-note {
+    font-size: var(--t-sm);
+    color: var(--dim);
+    margin: var(--space-2) 0 0;
+  }
+  .gate-facts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3) var(--space-4);
+    margin: 0;
+  }
+  @media (max-width: 680px) {
+    .gate-facts { grid-template-columns: 1fr; }
+  }
+  .gate-fact dt {
+    font-family: var(--font-sans);
+    font-size: var(--t-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .gate-fact dd {
+    margin: 0.25rem 0 0;
+    font-size: var(--t-base);
+    line-height: 1.5;
+  }
+</style>

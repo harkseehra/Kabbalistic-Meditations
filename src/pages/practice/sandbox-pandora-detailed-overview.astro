@@ -1,3 +1,6 @@
+---
+import { GEMATRIA, GLYPHS } from '../../lib/letters.js';
+---
 <!doctype html>
 <html lang="en">
   <head>
@@ -106,6 +109,8 @@
          design in both themes. */
       .shape-mark { color: var(--shape-ink); display: inline-flex; flex: none; }
       .shape-mark svg { display: block; }
+      .gem { display: block; font-family: "Oswald", sans-serif; font-size: 0.85rem; letter-spacing: 0.06em; color: var(--ink-soft); margin-top: var(--space-1); }
+      .gem-inline { font-size: 0.85rem; color: var(--ink-soft); }
       .shape-row { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-2) 0 var(--space-3); }
       .shape-caption { font-family: "Oswald", sans-serif; font-size: var(--text-sm); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
       body {
@@ -673,6 +678,7 @@
       </div>
     </main>
 
+    <script id="gematria-data" type="application/json" set:html={JSON.stringify({ gematria: GEMATRIA, glyphs: GLYPHS })}></script>
     <script>
       (function () {
         var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
@@ -852,6 +858,58 @@
           var n = parseInt(el.getAttribute('data-shape'), 10);
           var size = n > 20 ? 72 : n > 10 ? 60 : 44;
           el.innerHTML = shapeSVG(n, size);
+        });
+      })();
+    </script>
+    <script>
+      // Gematria values on every letter, from the shared letters file.
+      // The seven day entries already carry their value in the shape
+      // caption, so this covers the week strip, the mothers, the table,
+      // and the Today grid. It runs last, after the main script has
+      // filled the Today values.
+      (function () {
+        var data = JSON.parse(document.getElementById('gematria-data').textContent);
+        var GEMATRIA = data.gematria, GLYPHS = data.glyphs;
+        function gemTag(name) {
+          var n = GEMATRIA[name] || 0;
+          return n ? ' · ' + n : '';
+        }
+        // Week strip: the seven doubles, by glyph.
+        document.querySelectorAll('.week .day').forEach(function (d) {
+          var heb = d.querySelector('.heb');
+          if (!heb) return;
+          var name = GLYPHS[heb.textContent.trim()];
+          if (!name || !GEMATRIA[name]) return;
+          var s = document.createElement('span');
+          s.className = 'gem';
+          s.textContent = 'Gematria ' + GEMATRIA[name];
+          d.appendChild(s);
+        });
+        // The three mothers, by the name in the heading.
+        document.querySelectorAll('.mothers .day').forEach(function (d) {
+          var head = d.querySelector('.dname');
+          if (!head) return;
+          var name = head.textContent.split(' — ')[0].trim();
+          if (!GEMATRIA[name]) return;
+          var s = document.createElement('span');
+          s.className = 'gem';
+          s.textContent = 'Gematria ' + GEMATRIA[name];
+          d.appendChild(s);
+        });
+        // The table: sign letters and mothers.
+        document.querySelectorAll('#main-table .sign-letter-cell').forEach(function (cell) {
+          var name = cell.textContent.trim().split(/\s+/)[0];
+          cell.insertAdjacentHTML('beforeend', '<span class="gem-inline">' + gemTag(name) + '</span>');
+        });
+        // The table: planet letters.
+        document.querySelectorAll('#main-table .planet-letter-cell .lname').forEach(function (el) {
+          var m = el.textContent.match(/Planet letter — (\w+)/);
+          if (m) el.textContent += gemTag(m[1]);
+        });
+        // Today grid: the main script filled the names before this one ran.
+        ['today-day-name', 'today-sun-name', 'today-moon-name'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el && el.textContent.trim() !== '—') el.textContent += gemTag(el.textContent.trim());
         });
       })();
     </script>

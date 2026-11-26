@@ -1,3 +1,6 @@
+---
+import { GEMATRIA } from '../lib/letters.js';
+---
 <!doctype html>
 <html lang="en">
   <head>
@@ -127,6 +130,7 @@
          design in both themes. */
       .shape-mark { color: var(--shape-ink); display: inline-flex; flex: none; }
       .shape-mark svg { display: block; }
+      .gem-fact { display: inline-flex; align-items: center; gap: 8px; }
 
       /* Site header — the same bar as the rest of the site: wordmark left,
          nav buttons right, burger on a narrow screen. Entrance is a plain
@@ -439,6 +443,7 @@
           <div class="facts">
             <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Right eye</span></div>
             <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Life</span></div>
+            <div class="fact"><span class="fact-label">Gematria</span><span class="fact-value gem-fact"><span class="shape-mark" data-shape="Bet"></span><span>2</span></span></div>
           </div>
         </article>
         <article class="planet-card card">
@@ -452,6 +457,7 @@
           <div class="facts">
             <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Left eye</span></div>
             <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Peace</span></div>
+            <div class="fact"><span class="fact-label">Gematria</span><span class="fact-value gem-fact"><span class="shape-mark" data-shape="Gimel"></span><span>3</span></span></div>
           </div>
         </article>
         <article class="planet-card card">
@@ -465,6 +471,7 @@
           <div class="facts">
             <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Right ear</span></div>
             <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Wisdom</span></div>
+            <div class="fact"><span class="fact-label">Gematria</span><span class="fact-value gem-fact"><span class="shape-mark" data-shape="Dalet"></span><span>4</span></span></div>
           </div>
         </article>
         <article class="planet-card card">
@@ -478,6 +485,7 @@
           <div class="facts">
             <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Left ear</span></div>
             <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Grace</span></div>
+            <div class="fact"><span class="fact-label">Gematria</span><span class="fact-value gem-fact"><span class="shape-mark" data-shape="Kaf"></span><span>20</span></span></div>
           </div>
         </article>
         <article class="planet-card card">
@@ -491,6 +499,7 @@
           <div class="facts">
             <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Right nostril</span></div>
             <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Beauty</span></div>
+            <div class="fact"><span class="fact-label">Gematria</span><span class="fact-value gem-fact"><span class="shape-mark" data-shape="Pe"></span><span>80</span></span></div>
           </div>
         </article>
         <article class="planet-card card">
@@ -502,6 +511,7 @@
           <div class="facts">
             <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Left nostril</span></div>
             <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Fertility</span></div>
+            <div class="fact"><span class="fact-label">Gematria</span><span class="fact-value gem-fact"><span class="shape-mark" data-shape="Resh"></span><span>200</span></span></div>
           </div>
         </article>
         <article class="planet-card card">
@@ -515,6 +525,7 @@
           <div class="facts">
             <div class="fact"><span class="fact-label">Gate</span><span class="fact-value">Mouth</span></div>
             <div class="fact"><span class="fact-label">Foundation</span><span class="fact-value">Sovereignty</span></div>
+            <div class="fact"><span class="fact-label">Gematria</span><span class="fact-value gem-fact"><span class="shape-mark" data-shape="Tav"></span><span>400</span></span></div>
           </div>
         </article>
       </div>
@@ -579,6 +590,49 @@
         <p><strong>Sources.</strong> All letter assignments follow Sefer Yetzirah on Sefaria — the Warsaw 1884 Hebrew text, in the Sefaria Community Translation. The three mothers and their temperaments: chapter 3 — Alef air, trunk in the soul; Mem water, belly in the soul; Shin fire, head in the soul; and the earth created from water, which is why the earth signs belong to Mem. Planet letters, days, and gates in the soul: chapter 4 — each double made king over a planet in the world, a day in the year, and a gate in the soul, the week beginning on Sunday. Sign letters, body parts, and senses: chapter 5. The dates shown for each sign are the conventional English calendar ranges of the signs, standing in place of the Hebrew months named in the text. The matching of the twenty-eight Arabic letters to the twenty-two Hebrew letters by sound, in the Hebrew order, and the restoration of the soft sounds of the doubles, are this codex's own work.</p>
       </div>
     </main>
+    <script id="gematria-data" type="application/json" set:html={JSON.stringify(GEMATRIA)}></script>
+    <script>
+      // Gematria shapes — the value drawn as points on a circle, from
+      // the shared letters file. The doubles cards carry their letter
+      // in data-shape; the table rows take the Hebrew name from the
+      // Hebrew cell. Restored rows are skipped: their values are the
+      // restored sounds', not the Hebrew letter's gematria.
+      (function () {
+        var GEMATRIA = JSON.parse(document.getElementById('gematria-data').textContent);
+        function shapeSVG(n, size) {
+          var s = size || (n > 10 ? 60 : 44);
+          var c = s / 2, r = s / 2 - 4;
+          var pts = [];
+          for (var i = 0; i < n; i++) {
+            var a = -Math.PI / 2 + i * 2 * Math.PI / n;
+            pts.push([c + r * Math.cos(a), c + r * Math.sin(a)]);
+          }
+          var dotR = n > 100 ? 1.5 : n > 20 ? 2 : 3;
+          var inner = '';
+          if (n === 2) {
+            inner += '<line x1="' + pts[0][0].toFixed(1) + '" y1="' + pts[0][1].toFixed(1) + '" x2="' + pts[1][0].toFixed(1) + '" y2="' + pts[1][1].toFixed(1) + '" stroke="currentColor" stroke-width="1.5"/>';
+          } else if (n > 2 && n <= 10) {
+            inner += '<polygon points="' + pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') + '" fill="none" stroke="currentColor" stroke-width="1.5"/>';
+          }
+          pts.forEach(function (p) {
+            inner += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="' + dotR + '" fill="currentColor"/>';
+          });
+          return '<svg width="' + s + '" height="' + s + '" viewBox="0 0 ' + s + ' ' + s + '" aria-hidden="true">' + inner + '</svg>';
+        }
+        document.querySelectorAll('.shape-mark[data-shape]').forEach(function (el) {
+          var n = GEMATRIA[el.getAttribute('data-shape')] || 0;
+          if (n) el.innerHTML = shapeSVG(n, 36);
+        });
+        document.querySelectorAll('table.codex tbody tr:not([data-group="restored"])').forEach(function (tr) {
+          var hebCell = tr.children[2];
+          var name = hebCell.textContent.trim().split(/\s+/).pop();
+          var n = GEMATRIA[name] || 0;
+          if (!n) return;
+          var valCell = tr.children[4];
+          valCell.innerHTML = '<span class="gem-fact"><span class="shape-mark">' + shapeSVG(n, 28) + '</span><span>' + valCell.textContent.trim() + '</span></span>';
+        });
+      })();
+    </script>
     <script>
       // Codex filters — the chips filter by group; they are a filter, not the order.
       (function () {

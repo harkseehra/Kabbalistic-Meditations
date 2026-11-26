@@ -388,6 +388,23 @@ td.hebrew, .card-letter, .prayer-hebrew, article bdi { color: var(--hebrew-color
   color: var(--dim);
   letter-spacing: 0.02em;
 }
+/* Gematria and shape under a letter row. The shape takes the icon
+   tint in both themes — midnight blue by day, #AEBFFF by night —
+   the same tint the horoscope and birth-chart shapes use. Sefirah
+   rows carry no gematria; they are not letters. */
+.shape-mark { color: var(--icon-color); display: inline-flex; flex: none; }
+.shape-mark svg { display: block; }
+.prayer-gem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: 1.25rem;
+}
+.prayer-gem-text {
+  font-size: var(--t-sm);
+  color: var(--dim);
+  letter-spacing: 0.02em;
+}
 .chip-row {
   display: flex;
   flex-wrap: wrap;

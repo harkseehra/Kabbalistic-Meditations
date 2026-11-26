@@ -1,3 +1,6 @@
+---
+import { GEMATRIA } from '../lib/letters.js';
+---
 <!doctype html>
 <html lang="en">
   <head>
@@ -127,6 +130,8 @@
          design in both themes. */
       .shape-mark { color: var(--shape-ink); display: inline-flex; flex: none; }
       .shape-mark svg { display: block; }
+      .shape-wrap { display: inline-flex; flex-direction: column; align-items: center; gap: 2px; flex: none; }
+      .gem-num { font-family: "Oswald", sans-serif; font-size: 0.75rem; letter-spacing: 0.06em; color: var(--ink-soft); line-height: 1; }
 
       /* Site header — the same bar as the rest of the site: wordmark left,
          nav buttons right, burger on a narrow screen. Entrance is a plain
@@ -472,6 +477,7 @@
         <p>Positions are worked out live in the browser from the birth date, time, and timezone you enter. The Sun and the Moon follow the site's own reckoning; the five wandering planets — Mercury, Venus, Mars, Jupiter, Saturn — are placed by a low-precision planetary calculation, good to a few minutes of arc. That is enough to place the sign, except within about a degree of a cusp, where either side is possible.</p>
       </div>
     </main>
+    <script id="gematria-data" type="application/json" set:html={JSON.stringify(GEMATRIA)}></script>
     <script>
       (function () {
         /* ---- Data: Sefer Yetzirah on Sefaria, Warsaw 1884 ---- */
@@ -643,8 +649,12 @@
         /* ---- Letter shapes: a letter's gematria drawn as points on a
            circle. Small numbers join into their polygon; big numbers read
            as a ring of dots, drawn bigger so the points breathe. The tint
-           comes from --shape-ink, the icon tint, in both themes. ---- */
-        var GEMATRIA = { Alef: 1, Bet: 2, Gimel: 3, Dalet: 4, He: 5, Vav: 6, Zayin: 7, Chet: 8, Tet: 9, Yod: 10, Kaf: 20, Lamed: 30, Mem: 40, Nun: 50, Samekh: 60, Ayin: 70, Pe: 80, Tzadi: 90, Qof: 100, Resh: 200, Shin: 300, Tav: 400 };
+           comes from --shape-ink, the icon tint, in both themes. The
+           value itself sits under the shape, so the number and its
+           drawing stand together. ---- */
+        /* Gematria now comes from the shared letters file
+           (src/lib/letters.js) — one source for the whole site. */
+        var GEMATRIA = JSON.parse(document.getElementById('gematria-data').textContent);
         function shapeSVG(letterName, size) {
           var n = GEMATRIA[letterName] || 0;
           var s = size || (n > 10 ? 60 : 44);
@@ -664,7 +674,7 @@
           pts.forEach(function (p) {
             inner += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="' + dotR + '" fill="currentColor"/>';
           });
-          return '<span class="shape-mark" role="img" aria-label="' + letterName + ' — ' + n + ' points"><svg width="' + s + '" height="' + s + '" viewBox="0 0 ' + s + ' ' + s + '" aria-hidden="true">' + inner + '</svg></span>';
+          return '<span class="shape-wrap"><span class="shape-mark" role="img" aria-label="' + letterName + ' — ' + n + ' points"><svg width="' + s + '" height="' + s + '" viewBox="0 0 ' + s + ' ' + s + '" aria-hidden="true">' + inner + '</svg></span><span class="gem-num">' + n + '</span></span>';
         }
 
         /* ---- Render the chart ---- */
