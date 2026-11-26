@@ -766,7 +766,7 @@ import { GEMATRIA } from '../lib/letters.js';
             + shapeSVG(p.dbl.letter)
             + '</div>';
           html += '<div class="double-row"><span class="heb heb-big">' + p.dbl.heb + '</span><div class="dbl-meta">'
-            + '<span class="dbl-line">Planet letter — ' + p.dbl.letter + ', the double</span>'
+            + '<span class="dbl-line">Planet letter — ' + p.dbl.letter + ' ' + POINTED[p.dbl.letter] + ', the double</span>'
             + '<span class="dbl-line soft">Gate — ' + p.dbl.gate + '</span>'
             + '<span class="dbl-line">Meditate ' + p.dbl.weekday + '</span>'
             + '</div></div>';
@@ -774,11 +774,11 @@ import { GEMATRIA } from '../lib/letters.js';
           html += '<div class="sign-row"><span class="sign-name">' + p.sign.name + ' ' + p.deg.toFixed(0) + '°</span>'
             + '<span class="sign-dates">' + p.sign.dates + '</span>' + cusp + shapeSVG(p.sign.letter) + '</div>';
           html += '<div class="facts">'
-            + fact('Sign letter', p.sign.letter + ' <span class="heb heb-md">' + p.sign.heb + '</span>')
+            + fact('Sign letter', p.sign.letter + ' ' + POINTED[p.sign.letter] + ' <span class="heb heb-md">' + p.sign.heb + '</span>')
             + fact('Body part', p.sign.organ)
             + fact('Sense', p.sign.sense)
             + fact('Element', '<span class="elem elem-' + p.sign.element + '">' + p.sign.element[0].toUpperCase() + p.sign.element.slice(1) + '</span>')
-            + fact('Mother', p.sign.mother + ' <span class="heb heb-md">' + p.sign.motherHeb + '</span>')
+            + fact('Mother', p.sign.mother + ' ' + POINTED[p.sign.mother] + ' <span class="heb heb-md">' + p.sign.motherHeb + '</span>')
             + '</div>';
           if (p.planet === 'Saturn' && p.sign.name === 'Aries') {
             html += '<div class="reading">Reading — my own experience, not the teaching: speech is deciding life and death in this transit.</div>';

@@ -39,6 +39,38 @@ export function gematriaOf(name) {
   return GEMATRIA[canonicalName(name)] || GEMATRIA[name] || 0;
 }
 
+// The letter's full name, pointed — how the name is written with
+// its accent marks, so it can be read aloud correctly. Built from
+// the pointed names in transits.js, so it is never typed twice.
+export const POINTED = {};
+for (const arr of [MOTHERS, DOUBLES, LETTERS]) {
+  for (const rec of arr) POINTED[rec.name] = rec.pointed;
+}
+POINTED.Yod = POINTED.Yud;
+POINTED.Pe = POINTED.Peh;
+POINTED.Qof = POINTED.Kuf;
+
+export function pointedOf(name) {
+  return POINTED[canonicalName(name)] || POINTED[name] || '';
+}
+
+// The name sounded out, in plain letters — Bet is Bay-eet. The
+// simples in transits.js carry their own transliterations; these
+// follow the same shape for all twenty-two, so a name can be read
+// even by someone who cannot read Hebrew.
+export const TRANSLIT = {
+  Alef: 'Ah-lef', Bet: 'Bay-eet', Gimel: 'Ghee-mel', Dalet: 'Dah-let',
+  He: 'Hay', Vav: 'Vahv', Zayin: 'Zah-yin', Chet: 'Khet', Tet: 'Tet',
+  Yud: 'Yod', Kaf: 'Kahf', Lamed: 'Lah-med', Mem: 'Mem', Nun: 'Noon',
+  Samekh: 'Sah-mekh', Ayin: 'Ah-yin', Peh: 'Pay', Tzadi: 'Tsah-dee',
+  Kuf: 'Kof', Resh: 'Raysh', Shin: 'Sheen', Tav: 'Tahv',
+  Yod: 'Yod', Pe: 'Pay', Qof: 'Kof',
+};
+
+export function translitOf(name) {
+  return TRANSLIT[canonicalName(name)] || TRANSLIT[name] || '';
+}
+
 export const GATES = {
   Alef: ['Alef', 'Lamed', 'Peh'],
   Bet: ['Bet', 'Yud', 'Tav'],
@@ -105,6 +137,102 @@ export const MONTHS = {
   Pisces: 'Adar',
 };
 
+// Usual weather for each sign's season in Mississauga — the daytime
+// high a day in those dates usually reaches, from the Toronto
+// Pearson 1991–2020 climate normals (Environment and Climate Change
+// Canada). Pearson sits in Mississauga. Simple, as asked: one word
+// and a range.
+export const WEATHER = {
+  Aries: { label: 'Cool', range: '5–12' },
+  Taurus: { label: 'Mild', range: '12–19' },
+  Gemini: { label: 'Warm', range: '19–24' },
+  Cancer: { label: 'Warm', range: '24–27' },
+  Leo: { label: 'Warm', range: '26–27' },
+  Virgo: { label: 'Warm', range: '22–26' },
+  Libra: { label: 'Mild', range: '15–22' },
+  Scorpio: { label: 'Cool', range: '8–15' },
+  Sagittarius: { label: 'Cold', range: '2–8' },
+  Capricorn: { label: 'Cold', range: '-1–2' },
+  Aquarius: { label: 'Cold', range: '-1–0' },
+  Pisces: { label: 'Cold', range: '0–5' },
+};
+
+export function weatherText(sign) {
+  const w = WEATHER[sign];
+  return w ? w.label + ', ' + w.range + '°C' : '';
+}
+
+// The sign's English dates, from the dates in transits.js —
+// Aries Mar 21 – Apr 19.
+const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+export function englishDates(sign) {
+  const l = LETTERS.find((x) => x.sign === sign);
+  if (!l) return '';
+  return MONTH_SHORT[l.start[0] - 1] + ' ' + l.start[1] + ' – ' + MONTH_SHORT[l.end[0] - 1] + ' ' + l.end[1];
+}
+
+// The strongest days of a planet — the dates when the Sun stands in
+// the signs that planet rules, from the Pokedox: a day is strongest
+// when the Sun stands in the signs its planet rules. Ranges that
+// run together are joined; the rest are listed.
+const DAY_OF_YEAR = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334];
+
+function ord(m, d) {
+  return DAY_OF_YEAR[m - 1] + d;
+}
+
+function ordToString(o) {
+  let n = o;
+  while (n > 365) n -= 365;
+  for (let m = 12; m >= 1; m--) {
+    if (n > DAY_OF_YEAR[m - 1]) return MONTH_SHORT[m - 1] + ' ' + (n - DAY_OF_YEAR[m - 1]);
+  }
+  return MONTH_SHORT[0] + ' ' + n;
+}
+
+export function strongestDays(planet) {
+  const signs = LETTERS.filter((l) => l.planet === planet);
+  if (!signs.length) return null;
+  const ranges = signs.map((s) => {
+    const start = ord(s.start[0], s.start[1]);
+    let end = ord(s.end[0], s.end[1]);
+    if (end < start) end += 365;
+    return { start, end, sign: s.sign };
+  });
+  ranges.sort((a, b) => a.start - b.start);
+  const n = ranges.length;
+  if (n === 1) {
+    const r = ranges[0];
+    return { text: ordToString(r.start) + ' – ' + ordToString(r.end) + ' — Sun in ' + r.sign };
+  }
+  // Cut the year at its largest gap, then merge what runs together.
+  const gaps = [];
+  for (let i = 0; i < n - 1; i++) gaps.push({ idx: i, gap: ranges[i + 1].start - ranges[i].end });
+  gaps.push({ idx: n - 1, gap: ranges[0].start + 365 - ranges[n - 1].end });
+  gaps.sort((a, b) => b.gap - a.gap);
+  const cut = gaps[0].idx;
+  const rotated = [];
+  for (let k = 0; k < n; k++) {
+    const r = ranges[(cut + 1 + k) % n];
+    const shift = cut + 1 + k >= n ? 365 : 0;
+    rotated.push({ start: r.start + shift, end: r.end + shift, sign: r.sign });
+  }
+  const merged = [];
+  for (const r of rotated) {
+    const last = merged[merged.length - 1];
+    if (last && r.start <= last.end + 1) {
+      last.end = Math.max(last.end, r.end);
+      last.signs.push(r.sign);
+    } else {
+      merged.push({ start: r.start, end: r.end, signs: [r.sign] });
+    }
+  }
+  const parts = merged.map((m) => ordToString(m.start) + ' – ' + ordToString(m.end));
+  const names = merged.flatMap((m) => m.signs);
+  return { text: parts.join(' · ') + ' — Sun in ' + names.join(' and ') };
+}
+
 // The shape a gematria value draws: the number of points, and what
 // those points form.
 export function shapeName(n) {
@@ -169,37 +297,44 @@ export function letterRecord(name) {
     gates: gatesOf(canon),
     locked: isLocked(canon),
     shape: shapeCaption(canon),
+    pointed: pointedOf(canon),
+    translit: translitOf(canon),
   };
   const mother = MOTHERS.find((m) => m.name === canon);
   if (mother) {
     rec.group = 'mother';
     rec.glyph = mother.glyph;
-    rec.pointed = mother.pointed;
     rec.element = mother.element;
     rec.place = mother.place;
+    rec.signs = LETTERS.filter((l) => l.mother === canon).map((l) => l.sign);
     return rec;
   }
   const dbl = DOUBLES.find((d) => d.name === canon);
   if (dbl) {
     rec.group = 'double';
     rec.glyph = dbl.glyph;
-    rec.pointed = dbl.pointed;
     rec.planet = dbl.planet;
     rec.day = dbl.day;
     rec.gate = dbl.gate;
     rec.foundation = FOUNDATIONS[canon];
+    rec.strongest = strongestDays(dbl.planet);
     return rec;
   }
   const simple = LETTERS.find((l) => l.name === canon);
   if (simple) {
     rec.group = 'simple';
     rec.glyph = simple.glyph;
-    rec.pointed = simple.pointed;
     rec.sign = simple.sign;
     rec.month = MONTHS[simple.sign];
+    rec.dates = englishDates(simple.sign);
+    rec.weather = weatherText(simple.sign);
     rec.sense = simple.sense;
     rec.organ = simple.organ;
     rec.element = simple.element;
+    rec.mother = simple.mother;
+    rec.planet = simple.planet;
+    const ruler = DOUBLES.find((d) => d.planet === simple.planet);
+    rec.rulerDay = ruler ? ruler.day : '';
     return rec;
   }
   return rec;
